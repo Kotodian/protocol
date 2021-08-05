@@ -1,0 +1,22 @@
+syntax = "proto3";
+package Goiot.Protocol.Common;
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/monitor";
+
+// import "rpc/common/resp.proto";
+
+message Resp {
+    int32      code = 1;//状态码,非0为异常，0位正常
+    string     err = 2;//错误描述
+    bytes      obj = 3;//真正的返回对象
+}
+
+message PageReq {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+message PageResp {
+    int32 total_page = 1;
+    int32 total_rows = 2;
+}

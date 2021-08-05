@@ -1,0 +1,1357 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/customer";
+
+import "common.proto";
+
+package customer;
+
+
+// 第三方推送用户信息到平台
+service UserService {
+    // 同步用户信息，登录时候触发
+    rpc Sync(SyncReq) returns (SyncResp);
+
+    // 用户基本信息
+    rpc Info(CustomerInfoReq) returns (CustomerInfoResp);
+
+    // 后台直接充值
+    rpc Charge(CustomerChargeReq) returns (CustomerChargeResp);
+
+    // 后台直接扣款
+    rpc Withhold(CustomerWithholdReq) returns (CustomerWithholdResp);
+     
+    // 用户余额充值申请
+    rpc ChargeApply(CustomerChargeApplyReq) returns (CustomerChargeApplyResp);
+    
+    // 用户余额充值, 微信/支付宝支付成功后回调
+    rpc ChargeCallback(CustomerChargeCallbackReq) returns (CustomerChargeCallbackResp);
+
+    // 用户余额支付
+    rpc Pay(CustomerPayReq) returns (CustomerPayResp);
+
+    // 查询余额支付
+    rpc QueryPay(CustomerQueryPayReq) returns (CustomerPayResp);
+
+    // 退到用户余额
+    rpc RefundToBalance(CustomerRefundReq) returns (CustomerRefundResp);
+
+    // // 绑定卡
+    // rpc BindCard(BindCardReq) returns (BindCardResp);
+
+    // // 解绑卡
+    // rpc UnbindCard(UnbindCardReq) returns (UnbindCardResp);
+
+    // // 挂失卡
+    // rpc ReportLostCard(ReportLostCardReq) returns (ReportLostCardResp);
+
+    // // 获取所有卡
+    // rpc GetCards(GetCardsReq) returns(GetCardsResp);
+
+    // 获取全部客户列表
+    rpc Lists(ListsReq) returns (ListsResp);
+
+    // 获取运营商客户列表
+    rpc ListsByOperator(ListsByOperatorReq) returns (ListsByOperatorResp);
+
+    // 根据ID获取客户列表
+    rpc ListsByIDs(ListsByIDsReq) returns (ListsByIDsResp);
+
+    // 根据电话获取客户列表
+    rpc ListsByPhone(ListsByPhoneReq) returns (ListsByPhoneResp);
+
+    // 根据车牌号获取客户列表
+    rpc ListsByLicensePlateNumber(ListsByLicensePlateNumberReq) returns (ListsByLicensePlateNumberResp);
+
+    // 设置用户状态
+    rpc SetStatus(SetCustomerStatusReq) returns (SetCustomerStatusResp);
+
+    // 绑定桩主
+    rpc BindMerchant(BindMerchantReq) returns (BindMerchantResp);
+
+    // // 绑定VIN
+    // rpc BindVIN(BindVINReq) returns(BindVINResp);
+
+    // // 解绑VIN
+    // rpc UnbindVIN(UnbindVINReq) returns(UnbindVINResp);
+
+    // // VIN列表
+    // rpc ListVINs(CustomerReq) returns (ListVINsResp);
+    
+    // // VIN信息
+    // rpc GetVINInfo(VINReq) returns (VINInfo);
+}
+
+
+service VINService {
+    rpc ListByOperator(VINListByOperatorReq) returns (ListVINsResp);
+    rpc ListByCustomer(VINListByCustomerReq) returns (ListVINsResp);
+    rpc ListByGroup(VINListByGroupReq) returns (ListVINsResp);
+
+    // 获取VIN信息
+    rpc Info(VINReq) returns (VINInfo);
+
+    // 添加
+    rpc Add(VINAddReq) returns (VINInfo);
+
+    // 编辑
+    rpc Edit(VINEditReq) returns (VINInfo);
+
+    // 绑定VIN
+    rpc Bind(VINBindReq) returns(VINInfo);
+
+    // 解绑VIN
+    rpc Unbind(VINReq) returns(VINInfo);
+
+    // // 导入
+    // rpc ImportVIN(VINReq) returns(ImportVINResp);
+
+    // 设置卡的异常状态
+    rpc SetExceptionStatus(SetVINExceptionStatusReq) returns (VINInfo);
+
+    // VIN充值
+    rpc Charge(VINChargeReq) returns (VINInfo);
+
+    // 后台直接扣款
+    rpc Withhold(VINWithholdReq) returns (VINInfo);
+
+    // // vin充值申请
+    // rpc ChargeApply(VINChargeApplyReq) returns (VINChargeApplyResp);
+
+    // // vin充值 微信/支付宝支付成功回调
+    // rpc ChargeCallback(VINChargeCallbackReq) returns (VINChargeCallbackResp);
+}
+
+service CardService {
+    // 清理缓存
+    // rpc CleanCache(CleanCacheReq) returns (CleanCacheResp);
+
+    // 卡列表
+    rpc List(CardListReq) returns (CardListResp);
+ 
+    // 用户卡
+    rpc ListByCustomer(CardsByCustomerReq) returns (CardListResp);
+
+    // 用户卡
+    rpc ListByGroup(CardsByGroupReq) returns (CardListResp);
+
+    // 绑定卡
+    rpc Bind(CardBindReq) returns (CardInfo);
+
+    // 解绑卡
+    rpc Unbind(CardReq) returns (CardInfo);
+
+    // 挂失卡
+    rpc ReportLost(CardReq) returns (CardInfo);
+
+    // 获取卡信息
+    rpc Info(CardReq) returns (CardInfo);
+
+    // 添加
+    rpc Add(CardAddReq) returns (CardInfo);
+
+    // 编辑
+    rpc Edit(CardEditReq) returns (CardInfo);
+
+    // 导入卡片（一般用于鉴权卡）
+    rpc ImportCard(CardReq) returns(ImportCardResp);
+
+    // 卡充值
+    rpc Charge(CardChargeReq) returns (CardChargeResp);
+
+    // 后台直接扣款
+    rpc Withhold(CardWithholdReq) returns (CardWithholdResp);
+
+    // 将卡余额移动用户余额
+    rpc RefundToUserBalance(RefundToUserBalanceReq) returns (RefundToUserBalanceResp);
+
+    // 卡充值申请
+    rpc ChargeApply(CardChargeApplyReq) returns (CardChargeApplyResp);
+
+    // 卡充值 微信/支付宝支付成功回调
+    rpc ChargeCallback(CardChargeCallbackReq) returns (CardChargeCallbackResp);
+
+    // 设置卡的异常状态
+    rpc SetCardExceptionStatus(SetCardExceptionStatusReq) returns (CardInfo);
+    
+    // 获取卡充值延时配置
+    rpc GetChargeDelayConfig(GetChargeDelayConfigReq) returns (GetChargeDelayConfigResp);
+
+    // 添加卡充值延时配置
+    rpc SetChargeDelayConfig(SetChargeDelayConfigReq) returns (SetChargeDelayConfigResp);
+
+    // 删除卡充值延时配置
+    rpc DelChargeDelayConfig(DelChargeDelayConfigReq) returns (DelChargeDelayConfigResp);
+
+    // 获取卡退款延时配置
+    rpc GetRefundDelayConfig(GetRefundDelayConfigReq) returns (GetRefundDelayConfigResp);
+
+    // 添加卡退款延时配置
+    rpc SetRefundDelayConfig(SetRefundDelayConfigReq) returns (SetRefundDelayConfigResp);
+}
+
+service TransactionService {
+    // 交易通知
+    rpc Notify(TransactionNotifyReq) returns (TransactionNotifyResp);
+
+    // 交易刷新
+    rpc Refresh(TransactionRefreshReq) returns (Transaction);
+
+    // 交易推送
+    rpc Push(TransactionPushReq) returns (Transaction);
+
+    // 设置交易状态
+    rpc SetState(TransactionSetStateReq) returns (Transaction);
+
+    // 交易查询
+    rpc QueryByCustomer(TransactionQueryByCustomerReq) returns (TransactionsResp);
+    rpc QueryByOperator(TransactionQueryByOperatorReq) returns (TransactionsResp);
+    rpc QueryByStation(TransactionQueryByStationReq) returns (TransactionsResp);
+    rpc QueryByOrderID(TransactionQueryByOrderIDReq) returns (TransactionsResp);
+
+    // 对账单
+    rpc Statement(StatementReq) returns (StatementResp);
+
+    // 补缴流水处理
+   rpc BackPay(BackPayReq) returns (BackPayResp);
+}
+
+service ActivityService {
+    // 设置活动信息
+    rpc Set(SetActivityReq) returns (SetActivityResp);
+
+    // 设置活动是否打开
+    rpc SetActivityOpen(SetActivityOpenReq) returns (SetActivityOpenResp);
+    
+    //  根据id获得活动
+    rpc GetByID(GetActivityByIDReq) returns (Activity);
+
+    //  根据运营商id获得活动
+    rpc GetByOperatorID(GetActivityByOperatorIDReq) returns (GetActivityByOperatorIDResp);
+}
+
+service GroupServices {
+    // 添加集团
+    rpc AddGroup(AddGroupReq) returns (Group);
+
+    // 编辑集团
+    rpc EditGroup(EditGroupReq) returns (Group);
+
+    // 获取集团列表
+    rpc ListGroups(ListGroupsReq) returns (ListGroupsResp);
+
+    // 设置集团状态
+    rpc SetGroupState(SetGroupStateReq) returns (Group);
+
+    // 获取集团信息
+    rpc GetGroupInfo(GroupIDReq) returns (GetGroupInfoResp);
+
+    // 添加集团成员
+    rpc AddMemeber(AddMemeberReq) returns (GroupMember);
+
+    // 修改集团成员
+    rpc EditMemeber(EditMemeberReq) returns (GroupMember);
+
+    // 删除集团成员
+    rpc DelMemeber(DelMemeberReq) returns (DelMemeberResp);
+
+    // 集团成员列表
+    rpc Memebers(MemebersReq) returns (MemebersResp);
+
+    // 设置集团成员状态
+    rpc SetMemeberState(SetMemeberStateReq) returns (GroupMember);
+
+    // 根据用户获取集团成员信息
+    rpc GetMemberInfoByCustomer(GetMemberInfoByCustomerReq) returns (GroupMember);
+
+     // 根据用户获取集团成员信息
+     rpc GetMemberInfoByID(GetMemberInfoByIDReq) returns (GroupMember);
+
+    // 根据VIN集团获取集团成员信息
+    rpc GetMemberInfoByVIN(GetMemberInfoByVINReq) returns (GroupMember);
+
+    // 根据VIN集团获取集团成员信息
+    rpc GetMemberInfoByCard(GetMemberInfoByCardReq) returns (GroupMember);
+
+    // 集团充值
+    rpc Charge(GroupChargeReq) returns (Group);
+}
+
+
+/////////////////////
+message CleanCacheReq {
+
+}
+message CleanCacheResp {
+
+}
+
+/////////////////////// vin ////////////////////////////////////
+
+message VINListByOperatorReq {
+    common.PageReq  pagereq          = 1;    //翻页
+    uint64 operator_id = 2; // 运营商为0时, 获取全部
+    uint64 station_id = 3; // 搜索站点
+    string search_vin = 4; // 搜索vin
+}
+message VINListByCustomerReq {
+    common.PageReq  pagereq          = 1;    //翻页
+    CustomerReq customer = 2; // 用户请求
+}
+message VINListByGroupReq {
+    common.PageReq  pagereq          = 1;    //翻页
+    uint64 group_id = 2; // 
+    string search_vin = 3; // 搜索vin
+}
+message ListVINsResp {
+    common.PageResp pageresp        = 1;    //
+    repeated VINInfo vin_infos = 2; // vin
+}
+
+message VINAddReq {
+    // string vin                  = 1;  // vin号      
+    // uint64 operator_id          = 2;  // 运营商ID
+    VINReq vin_req                = 1;  // vin基本信息
+    string note                 = 3;  // 备注
+    string license_plate_number = 4;  // 车牌号
+    bool   is_parent_pay        = 5;  // 是否父账户支付
+    uint64 station_id           = 6;  // 站点vin
+    string nick_name            = 7;  // vin昵称，显示在订单表
+    string phone                = 8;  // 手机号
+}
+
+message VINReq {
+    uint64 id                 = 1;  // 平台id
+
+    string vin                = 2;  // vin号      
+    uint64 operator_id        = 3;  // 运营商ID
+}
+
+message VINEditReq {
+    VINReq vin_req = 1; // vin请求
+    bool is_parent_pay = 2; // 是否关联账户支付
+    string  note                  = 3;  // 备注
+    string  license_plate_number  = 4;  // 车牌号
+    string nick_name            = 5;  // vin昵称，显示在订单表
+    string phone                = 6;  // 手机号
+}
+
+message VINBindReq{
+    // VINInfo vin_info = 1;       // vin信息, 绑定时vin可能不存在，用vinreq请求有一些附加参数没办法待过来
+    VINReq  vin_req               = 1;        // vin请求
+    string  note                  = 2;  // 备注
+    string  license_plate_number  = 3;  // 车牌号
+
+    uint64  customer_id  = 4;   // 用户 二选一，不可同时绑定
+    uint64  group_id  = 5;      // 集团 二选一，不可同时绑定
+}
+
+message SetVINExceptionStatusReq {
+    VINReq  vin_req                 = 1; // vin请求
+    AccountExceptionStatusBit Pos   = 2; // 异常状态位
+    bool state = 3; // 状态,1：激活 0：取消
+}
+
+message VINChargeReq{
+    VINReq vin_req                  = 1; // vin请求
+    double  amount                  = 2; // 充值金额(元)
+    common.PayMode pay_mode         = 3; // 支付类型 
+    common.PayChannel pay_channel   = 4; // 支付渠道（一个支付类型对应多个支付渠道） 
+    string  remark                  = 5; // 备注
+    uint64  op_manager_id           = 6; // 充值管理员
+    BalanceType op_balance_type     = 7; // 操作余额类型
+}
+
+message VINWithholdReq{
+    VINReq vin_req              = 1;  // vin请求
+    double  amount              = 2;  // 扣款金额(元)
+    string  remark              = 3;  // 备注
+    uint64  op_manager_id       = 4;  // 扣款管理员
+    BalanceType op_balance_type = 5;  // 操作余额类型
+}
+
+// vin
+message VINInfo {
+    uint64 id                     = 1;  // 平台id
+    string vin_no                 = 2;  // 卡号
+    string note                   = 3;  // 备注
+    uint64 created_at             = 4;  // 创建时间
+    string license_plate_number   = 5;  // 车牌号
+    uint64 operator_id            = 6;  // 运营商ID
+    double balance                = 7;  // 总余额
+    double principal_balance      = 8;  // 本金余额
+    double gift_balance           = 9;  // 赠送余额
+    uint32  exception_status      = 10; // 卡异常状态（0 不冻结， > 1 异常）
+    uint64 order_id               = 11; // 关联订单
+    bool   is_parent_pay          = 12; // 是否父账号支付(默认采用自身余额支付，当绑定用户是，将采用用户余额支付)
+    uint64 station_id             = 13; // 站点id
+    CustomerInfo customer         = 14; // 用户信息
+    Group group                   = 15; // 集团信息
+    string nick_name              = 16; // vin昵称，显示在订单表
+    string phone                  = 17; // 手机号
+}
+
+
+//////////////////////// 集团 begin /////////////////////////////
+message AddGroupReq {
+    string    name                  = 1;    // 名称
+    uint64    operator_id           = 2;    // 运营商ID
+    string    email                 = 3;    // 邮箱
+    string    phone                 = 4;    // 电话
+    GroupType group_type            = 5;    // 公交类型
+}
+
+message EditGroupReq {
+    uint64 id                       = 1;    // 集团ID
+    string name                     = 2;    // 名称
+    string email                    = 3;    // 邮箱
+    string phone                    = 4;    // 电话
+    GroupType group_type            = 5;    // 公交类型
+    uint64 caller_id                = 6;    // 集团id
+}
+
+message ListGroupsReq {
+    common.PageReq  pagereq          = 1;    //翻页
+    uint64          operator_id      = 2;    //运营商ID
+    uint64          group_id         = 3;    //groupid
+}
+
+message ListGroupsResp{
+    common.PageResp pageresp        = 1;    //
+    repeated Group  groups          = 2;    //集团列表
+}
+
+message SetGroupStateReq {
+    uint64      id                   = 1;    //集团ID
+    bool        is_block             = 2;    //是否屏蔽
+    uint64      operator_id          = 3;    //运营商ID
+}
+
+message GroupIDReq {
+    repeated uint64  ids                      = 1;    //ID
+}
+
+message GetGroupInfoResp {
+    repeated Group groups                     = 1;    //集团信息
+}
+
+message Group {
+    uint64      id                  = 1;    // ID
+    string      name                = 2;    // 名称
+    double      balance             = 3;    // 余额
+    bool        is_block            = 4;    // 是否屏蔽
+    uint64      operator_id         = 5;    // 运营商ID
+    string      email               = 6;    // 邮箱
+    string      phone               = 7;    // 电话
+    int64       created_at          = 8;    // 创建时间
+    GroupType   group_type          = 9;    // 公交类型
+    uint64      caller_id           = 10;   // 调用方id
+}
+
+message GroupMember {
+    uint64 id = 1;                      // 成员id
+	uint64 group_id = 3;                // 集团ID
+	uint64 operator_id = 4;             // 运营商ID
+    bool   IsBlock = 5;                 // 是否屏蔽
+    int64  created_at = 6;              // 创建时间
+    GroupMemberBusExtra bus_extra = 7;  // 集团公交成员扩展，公交集团使用
+    GroupMemberResourceType member_resource_type = 8;    // 成员资源类型
+    oneof member_resource_info {
+        CustomerInfo customer_info = 9;          // 用户信息
+        CardInfo    card_info = 10;          // 卡
+        VINInfo     vin_info = 11;          // vin
+    };
+}
+
+// 集团公交成员扩展
+message GroupMemberBusExtra {
+    // string phone                    = 1;    // 手机号
+    // string driver_name              = 3;    // 司机
+    string bus_subsidiary           = 4;    // 公交子公司
+    string bus_line_no              = 5;    // 公交线路
+    // string license_plate_number     = 6;    // 车牌号
+    string vin                      = 7;    // 车架号
+    string car_no                   = 8;    // 车辆号
+}
+
+message GetMemberInfoByCustomerReq{
+    uint64          customer_id     = 1; //客户ID
+	uint64          operator_id     = 2; //运营商ID
+}
+message GetMemberInfoByIDReq {
+    uint64          id     = 1; // 成员id
+}
+
+message GetMemberInfoByVINReq {
+    VINReq vin_req = 1;
+}
+
+message GetMemberInfoByCardReq {
+    CardReq card_req = 1;
+}
+
+message GroupMemberReq {
+    uint64 id                   = 1;    // 成员ID(添加时为空)
+    bool   is_parent_pay        = 2;    // 成员是否集团支付
+    string phone                = 3;    // 成员手机号
+    string nick_name            = 4;    // 成员昵称
+    string license_plate_number = 5;    // 车牌号
+}
+
+message AddMemeberReq {
+    uint64 group_id                     = 1;    // 集团ID
+    // bool is_parent_pay                  = 2;    // 是否集团支付
+    GroupMemberReq member_req           = 2;    // 成员请求
+    GroupMemberBusExtra bus_extra       = 3;    // 集团公交成员扩展，公交集团使用
+    GroupMemberResourceType member_resource_type = 4;    // 成员资源类型
+    oneof member_resource_req {
+        CustomerReq custoemr_req            = 5;    // 客户
+        CardReq     card_req                = 6;    // 卡
+        VINReq      vin_req                 = 7;    // vin
+    };
+}
+
+message EditMemeberReq {
+    // uint64 id                       = 1;    // 成员ID
+    // bool is_parent_pay              = 2;    // 是否集团支付
+    GroupMemberReq member_req       = 1;    // 成员请求
+    GroupMemberBusExtra bus_extra   = 3;    // 集团公交成员扩展，公交集团使用
+}
+
+message SetMemeberStateReq{
+    uint64      member_id            = 1;    // 集团成员id 
+    uint64      group_id             = 2;    // 集团ID
+    bool        is_block             = 3;    // 是否屏蔽
+}
+
+message DelMemeberReq{
+    uint64      id                   = 1;    // 成员ID
+    uint64      group_id             = 2;    // 集团ID
+}
+message DelMemeberResp{
+}
+
+message MemebersReq{
+    common.PageReq  pagereq       = 1;    //翻页
+    uint64          group_id      = 2;    //集团ID
+    GroupMemberResourceType member_resource_type = 3;  // 成员资源类型
+}
+message MemebersResp{
+    common.PageResp     pageresp        = 1;    //
+    repeated GroupMember  members       = 2;    //集团成员列表
+}
+
+message GroupChargeReq {
+    uint64      group_id         = 1;   // 集团ID
+    double      amount           = 2;   // 金额, 单位元
+    // PayChannel  pay_channel      = 3;   // 充值方式
+    common.PayMode pay_mode         = 3; // 支付类型 
+    common.PayChannel pay_channel  = 4; // 支付渠道（一个支付类型对应多个支付渠道）   
+    string      bank_code        = 5;   // 充值银行代码(银行充值时填写)
+    string      charge_order_id  = 6;   // 外部订单号，如微信服务号平台的id
+    string      remark           = 7;   // 备注等
+    uint64      op_manager_id    = 8;   // 充值管理员id
+}
+
+
+
+//////////////////////// 集团 end /////////////////////////////
+
+message BindMerchantReq{
+    CustomerReq customer    = 1;   // 用户信息
+    uint64 bind_manager_id  = 2;   // 绑定桩主管理员
+}
+message BindMerchantResp{
+
+}
+
+message ImportCardResp{
+}
+
+message CustomerChargeReq{
+    CustomerReq customer = 1;         // 用户信息
+    double  amount = 2;               // 充值金额
+    string  remark = 3;               // 备注
+    uint64  op_manager_id = 4;        // 充值管理员id
+    BalanceType op_balance_type = 5;  // 操作余额类型
+    // bool    is_gift = 5;        // 是否充值赠送余额
+}
+message CustomerChargeResp{
+
+}
+message CustomerWithholdReq{
+    CustomerReq customer = 1;         // 用户信息
+    double  amount = 2;               // 充值金额
+    string  remark = 3;               // 备注
+    uint64  op_manager_id = 4;        // 充值管理员id
+    BalanceType op_balance_type = 5;  // 操作余额类型
+    // bool    is_gift = 5;        // 是否扣款赠送余额
+}
+message CustomerWithholdResp{
+
+}
+
+
+message SetActivityOpenReq{
+    uint64 id = 1;      // 活动id
+    bool is_open = 2;   // 是否打开
+}
+message SetActivityOpenResp {
+    
+}
+
+message GetActivityByIDReq {
+    uint64 id = 1 ; 
+}
+
+message GetActivityByOperatorIDReq {
+    common.PageReq  pagereq = 1;   
+    uint64 operator_id = 2; 
+    ActivityType type = 3;
+    ActivityStatus status = 4; 
+}
+message GetActivityByOperatorIDResp {
+    common.PageResp pageresp = 1;
+    repeated Activity activitys = 2;
+}
+
+message SetActivityReq{
+	uint64          id = 1;                 // 活动id
+	uint64          operator_id = 2;        // 运营商id
+	string          name = 3;               // 活动名称
+	string          description = 4;        // 活动描述
+	uint64          op_manager_id = 5;      // 活动创建人
+	int64           begin_time = 6;         // 开始时间
+    int64           end_time = 7;           // 结束时间
+    bool            is_open = 8;            // 是否打开活动
+    ActivityType    type = 9;               // 活动类型
+    repeated ActivityUserBalanceChargeGiftsRule ub_charge_gifts_rule = 10; // 用户余额充值赠送配置
+}
+
+
+message SetActivityResp{
+
+}
+
+message Activity {
+    uint64          id = 1;                 // 活动id
+	uint64          operator_id = 2;        // 运营商id
+	string          name = 3;               // 活动名称
+	string          description = 4;        // 活动描述
+	uint64          op_manager_id = 5;      // 活动创建人
+	int64           begin_time = 6;         // 开始时间
+	int64           end_time = 7;           // 结束时间
+    bool            is_open = 8;            // 是否关闭（0 打开， 1 关闭）
+    ActivityType    type = 9;               // 活动类型
+    ActivityStatus  status = 10;            // 活动状态
+    uint64          created_time = 11;      // 创建时间
+    double          max_amount = 12;        // 活动总金额限制 0 表示时间限制, >0 表示活动总共金额控制 例充值送：如果活动赠送金额超过此金额数据，表示活动结束
+    repeated ActivityUserBalanceChargeGiftsRule ub_charge_gifts_rule = 13; // 用户余额充值赠送配置
+}
+
+// ActivityUserBalanceChargeGifts 用户余额充值赠送配置
+message ActivityUserBalanceChargeGiftsRule {
+    uint64 rule_id      = 1; // 规则id
+    double charge_amount = 2; // 充值金额
+    double gifts_amount = 3; // 赠送金额
+}
+
+
+
+message TransactionRefreshReq {
+    uint64 transaction_id = 1; 
+}
+
+message TransactionQueryByCustomerReq{
+    common.PageReq  pagereq = 1;   
+    CustomerReq     customer = 2; // 用户
+    repeated common.SearchFilter search_filter = 3;
+}
+message TransactionQueryByOperatorReq{
+    common.PageReq  pagereq = 1;   
+    uint64     operator_id = 2; 
+    repeated common.SearchFilter search_filter = 3;
+}
+message TransactionQueryByStationReq{
+    common.PageReq  pagereq = 1;   
+    repeated uint64     station_ids = 2; 
+    repeated common.SearchFilter search_filter = 3;
+}
+message TransactionQueryByOrderIDReq{
+    uint64 operator_id        = 1;
+    string out_order_id       = 2; 
+    string out_pay_id         = 3;  // 支付订单号
+    string out_refund_id      = 4;  // 退款订单号
+    string dialect            = 5;  // "db","es"
+}
+message TransactionsResp{
+    common.PageResp pageresp = 1;   
+    repeated Transaction transactions = 2; 
+}
+
+message Transaction {
+	uint64 id = 1;                              // 交易id
+    uint64 operator_id = 2;                     // 运营商id
+	TransactionFlag flag_type = 3;              // 标示类型
+	uint64 flag_id = 4;                         // 标示id
+	string out_order_id = 5;                    // 订单id(充值订单id/支付)
+    // PayChannel pay_channel = 6;              // 支付渠道(微信支付宝)
+    common.PayMode pay_mode = 6;                 // 支付类型 
+    common.PayChannel pay_channel = 7;          // 支付渠道（一个支付类型对应多个支付渠道）  
+	TransactionType transact_type = 8;          // 交易类型
+	double amount = 9;                          // 交易额
+	double pay_fee = 10;                         // 支付金额
+	double coupon_fee = 11;                     // 券金额(100送20)
+	uint64 coupon_id = 12;                      // 券ID(也可用于红包等)
+	TransactionStatus state = 13;               // 交易状态
+	string out_transac_order_id = 14;           // 支付/退款订单号(退款幂等性保证)
+	string remark = 15;                         // 备注
+	double fee = 16;                            // 手续费
+	double fee_rate = 17;                       // 手续费率
+	string notify_url = 18;                     // 支付通知url
+    TransactionNotifyStatus notify_status= 19;  // 通知状态
+    int64 created_at = 20;                      // 创建时间
+    uint64 customer_id = 21;                    // 客户ID
+    double balance = 22;                        // 交易后余额
+    uint64 op_manager_id = 23;                  // 操作管理员id
+    string license_plate_number= 24;            // 车牌号
+    common.RefundMode refund_mode = 25;         // 退款类型
+    string bank_code = 26;                      // 银行代码
+}
+
+
+message BackPayReq{
+    CustomerReq customer             = 1; // 用户
+    string out_order_id              = 2; // 订单id
+    common.PayMode first_pay_mode          = 3; // 首次支付类型 
+    common.PayChannel first_pay_channel    = 4; // 首次支付渠道（一个支付类型对应多个支付渠道） 
+    string out_back_pay_order_id     = 5; // 补缴支付订单id
+    double  amount                   = 6; // 金额(元)
+    common.PayMode pay_mode          = 7; // 支付类型 
+    common.PayChannel pay_channel    = 8; // 支付渠道（一个支付类型对应多个支付渠道） 
+    string  remark                   = 9; // 备注
+}
+message BackPayResp{
+
+}
+message StatementReq{
+    CustomerReq     customer = 1; // 用户
+    repeated common.SearchFilter search_filter = 2; // 过滤
+}
+
+message StatementResp{
+    repeated StatementElem statements = 1;
+}
+
+message StatementElem {
+    TransactionFlag flag_type = 1;  // 交易账户
+    string transact_account_desc = 2; // 交易账户描述
+    double total_charge = 3;    // 总充值
+    map<string,double> charge_detail = 4; // 充值明细
+    double total_consume = 5;   // 总消费
+    map<string,double> consume_detail = 6;  // 消费明细
+    double balance = 7; // 余额
+}
+
+// CardReq 卡请求对象
+message CardReq {
+    uint64  id            = 1;    // 平台卡ID
+    string  no            = 2;    // 卡号
+    CardType type         = 3;    // 卡类型
+    uint64  operator_id   = 4;    // 运营商ID
+    string  active_code   = 5;    // 激活码
+    uint64  station_id    = 6;    // 站点ID
+}
+
+message CardAddReq {
+    CardReq card_req = 1;   // 卡请求
+    string nick_name = 2;   // 昵称
+    string phone = 3;       // 手机
+    string license_plate_number = 4;  // 车牌号
+}
+
+message CustomerReq {
+    uint64 id = 1; // 平台客户id
+    uint64 operator_id = 2; // 运营商id
+    string user_id  = 3;    // 用户id
+    string vin = 4; //vin
+    uint64 caller_id = 5;   // 调用方ID，如果调用方ID>0,则需要根据调用方找用户
+}
+
+// 同步用户信息
+message SyncReq{
+    CustomerInfo customer = 1;  // 用户信息
+}
+message SyncResp{
+    CustomerInfo customer = 1;  // 返回平台上用户的信息
+}
+
+message CustomerInfoReq {
+    CustomerReq customer  = 1;   // 用户
+}
+message CustomerInfoResp {
+    CustomerInfo customer  = 1;    // 用户基本信息
+}
+
+message CustomerChargeApplyReq {
+    CustomerReq  customer           = 1; // 用户
+    double  amount                  = 2; // 充值金额(元)
+    // PayChannel pay_channel    = 3;    // 充值渠道
+    common.PayMode pay_mode          = 3; // 支付类型 
+    common.PayChannel pay_channel   = 4; // 支付渠道（一个支付类型对应多个支付渠道） 
+    string  remark                  = 5; // 备注
+    repeated uint64 activity_ids    = 6; // 活动id
+    string bank_code                = 7; // 银行代码(银行卡支付是有效)
+}
+message CustomerChargeApplyResp {
+    string charge_order_id = 1; // 充值订单号
+}
+
+
+// 用户充值 
+message CustomerChargeCallbackReq {
+    string  charge_order_id   = 1;    // 外部订单号，如微信服务号平台的id
+    string  remark            = 2;    // 备注
+}
+message CustomerChargeCallbackResp {
+    CustomerInfo customer  = 1;     // 用户基本信息
+    Transaction transaction = 2;    // 交易信息
+}
+// 用户余额支付
+message CustomerPayReq {
+    CustomerReq customer     = 1;    // 用户请求
+    string  out_order_id     = 2;    // 外部订单号
+    double  amount           = 3;    // 支付金额(元)
+    string  notify_url       = 4;    // 支付异步通知回调地址 
+    string  remark           = 5;    // 备注
+}
+
+message CustomerQueryPayReq {
+    uint64  operator_id    = 1;    // 运营商id
+    string  out_order_id   = 2;    // 外部订单号
+}
+message CustomerPayResp {
+    string              out_order_id = 1;       // 订单id(充值订单id/支付)
+    uint64              operator_id = 2;        // 运营商id
+    double              amount = 3;             // 交易额
+    TransactionStatus   status = 4;             // 交易状态
+    string              remark = 5;             // 备注
+    double              balance = 6;            // 余额
+}
+
+// 用户余额退款
+message CustomerRefundReq {
+    uint64  operator_id             = 1;    // 用户请求
+    string  out_order_id            = 2;    // 外部订单号
+    string  out_refund_id           = 3;    // 退款订单号
+    double  amount                  = 4;    // 退款金额(元)
+    string  remark                  = 5;    // 备注
+}
+
+message CustomerRefundResp {
+    string              out_order_id = 1;       // 订单id(充值订单id/支付)
+    uint64              operator_id = 2;        // 运营商id
+    double              amount = 3;             // 交易额
+    TransactionStatus   status = 4;             // 交易状态
+    string              remark = 5;             // 备注
+    double              balance = 6;            // 交易后余额
+}
+
+// 
+message TransactionPushReq {
+    uint64 transaction_id = 1; 
+}
+
+message TransactionSetStateReq {
+    string  out_order_id            = 1;  // 外部订单号
+    string  out_pay_id              = 2;  // 支付订单号
+    string  out_refund_id           = 3;  // 退款订单号
+    TransactionStatus status        = 4;  // 交易状态
+}
+
+// 交易流水记录
+message TransactionNotifyReq {
+    CustomerReq customer            = 1;  // 用户请求
+    string  out_order_id            = 2;  // 外部订单号
+    string  out_pay_id              = 3;  // 支付订单号
+    string  out_refund_id           = 4;  // 退款订单号
+    double  amount                  = 5;  // 金额(元)
+    TransactionType type            = 6;  // 交易类型
+    TransactionStatus status        = 7;  // 交易状态
+    // PayChannel pay_channel          = 8;  // 支付渠道
+    common.PayMode pay_mode          = 8; // 支付类型 
+    common.PayChannel pay_channel   = 9; // 支付渠道（一个支付类型对应多个支付渠道） 
+    common.RefundMode refund_mode   = 10;  // 退款类型
+    string  remark                  = 11; // 备注
+    double  balance                 = 12; // 交易后余额
+    int64   created_at              = 13; // 交易时间(0表示当前时间)
+}
+message TransactionNotifyResp {
+
+}
+
+// 用户修改
+message ModifyReq {
+    CustomerInfo customer = 1; // 用户信息
+}
+message ModifyResp{
+    CustomerInfo customer = 1; // 用户信息
+}
+
+// todo: 等前端改了接口调用后，需要删除
+message BindVINReq{
+    CustomerReq  customer  = 1;     // 用户
+    string no = 2;                  // vin号
+    string note = 3;                // 备注
+    string license_plate_number= 4; // 车牌号
+}
+
+message BindVINResp{
+}
+
+message UnbindVINReq{
+    CustomerReq  customer  = 1;    // 用户
+    string no = 2;  // vin号        二选一
+    uint64 id = 3;  // vin平台id    二选一
+}
+
+message UnbindVINResp{
+}
+// end
+
+// todo: 修完api接口后删除 del start
+// 获取卡信息
+message CardInfoReq{
+    CardReq card       = 1;    // 卡
+}
+message CardInfoResp{
+    CardInfo       card_info = 1;       // 卡信息
+}
+// 绑定卡
+message BindCardReq{
+    CustomerReq  customer  = 1;    // 用户id
+    CardReq      card      = 2;    // 卡
+    string license_plate_number= 3; // 车牌号
+}
+message BindCardResp{
+    CardInfo   card_info = 1; // 卡信息
+}
+// 解绑卡
+message UnbindCardReq{
+    CustomerReq  customer  = 1;    // 用户id
+    CardReq card           = 2;    // 卡
+}
+message UnbindCardResp{
+}
+// 挂失卡
+message ReportLostCardReq {
+    CustomerReq  customer  = 1;    // 用户id
+    CardReq card           = 2;    // 卡
+}
+message ReportLostCardResp {
+}
+// todo: del end
+
+
+// 获取全部客户列表信息
+message ListsReq{
+    common.PageReq pagereq = 1;
+    string          search  = 2;     //搜索的卡号
+    uint64          operator_id = 3; //运营商ID
+}
+message ListsResp{
+    common.PageResp pageresp = 1;            //
+    repeated  CustomerInfo  user_infos = 2;  // 用户信息
+}
+
+
+message ListsByIDsReq {
+    repeated uint64 id      = 1;
+    uint64 operator_id      = 2;
+}
+
+message ListsByIDsResp {
+    repeated CustomerInfo user_infos = 1;  // 用户信息
+}
+
+message ListsByPhoneReq {
+    string phone            = 1;
+    uint64 operator_id      = 2;
+}
+
+message ListsByPhoneResp {
+    repeated CustomerInfo user_infos = 1;  // 用户信息
+}
+
+message ListsByLicensePlateNumberReq {
+    string license_plate_number     = 1; // 车牌号
+    uint64 operator_id              = 2; // 运营商
+}
+message ListsByLicensePlateNumberResp {
+    repeated CustomerInfo user_infos = 1;  // 用户信息
+}
+// 获取运营商客户列表信息
+message ListsByOperatorReq{
+    common.PageReq pagereq = 1;
+    uint64 operator_id = 2;
+}
+message ListsByOperatorResp{
+    common.PageResp pageresp = 1;           //
+    repeated  CustomerInfo  user_infos = 2;  // 用户信息
+}
+
+// 设置用户状态
+message SetCustomerStatusReq{
+    CustomerReq  customer  = 1; // 用户
+    CustomerStatus  status    = 2; // 用户状态
+}
+message SetCustomerStatusResp{
+    CustomerInfo  customer_info = 1;  // 用户信息
+}
+
+message GetCardsReq {
+    CustomerReq  customer  = 1; // 用户
+}
+
+message GetCardsResp {
+   repeated CardInfo   card_infos = 1; // 卡信息
+}
+
+// 获取客户详细信息
+message GetInfoAndCardsReq{
+    CustomerReq  customer  = 1; // 用户
+}
+message GetInfoAndCardsResp{
+    CustomerInfo          customer_info  = 1; // 用户信息
+    repeated CardInfo     cards          = 2; // 卡信息
+}
+
+// 用户信息
+message CustomerInfo{
+    uint64                      customer_id          = 1;    // 用户id
+    string                      user_id              = 2;    // UserID
+    uint64                      operator_id          = 3;    // 运营商id
+    string                      phone                = 4;    // 手机
+    int32                       birthday             = 5;    // 出生
+    Sex                         sex                  = 6;    // 性别
+    string                      nick_name            = 7;    // (第三方平台)用户昵称
+    string                      image_url            = 8;    // (第三方平台)图像url
+    string                      idcard               = 9;    // 身份证号码
+    string                      address              = 10;   // 用户地址
+    string                      email                = 11;   // 邮箱
+    CustomerStatus              status               = 12;   // 状态
+    string                      status_desc          = 13;   // 状态描述
+    int32                       reg_time             = 14;   // 注册时间
+    double                      balance              = 15;   // 总余额
+    double                      principal_balance    = 16;   // 本金余额
+    double                      gift_balance         = 17;   // 赠送余额
+    uint64                      bind_manager_id      = 18;   // 绑定桩主管理员ID
+    string                      license_plate_number = 19;   // 车牌号
+    uint64                      caller_id            = 20;   // 调用方ID
+    string                      remark               = 21;   // 备注
+    Group                       group_info           = 22;   // 所属集团
+    common.CustomerRegChannel   reg_channel          = 23;   // 注册渠道
+}
+
+message CardEditReq {
+    CardReq card       = 1;    // 卡
+    string license_plate_number = 2; // 车牌号
+    string nick_name            = 3; // vin昵称，显示在订单表
+    string phone                = 4; // 手机号
+    bool   is_parent_pay        = 5; // 关联账号支付
+    bool   is_multi_charging    = 6; // 是否支持一卡多充电
+}
+
+// 获取卡充值延时配置
+message GetChargeDelayConfigReq{
+    common.PageReq pagereq = 1;
+    uint64 operator_id  = 2;        // 根据运营商获取
+    uint64 config_id    = 3;        // 根据配置id获取
+}
+message GetChargeDelayConfigResp{
+    common.PageResp pageresp = 1;
+    repeated CardDelayExpiredConfig  card_delay_expired_configs = 2;
+}
+
+// 添加卡充值延时配置
+message SetChargeDelayConfigReq{
+    CardDelayExpiredConfig  card_delay_expired_config = 1;
+}
+message SetChargeDelayConfigResp{
+
+}
+
+// 删除卡充值延时配置
+message DelChargeDelayConfigReq{
+    uint64 id = 1;
+}
+message DelChargeDelayConfigResp{
+
+}
+
+// 获取卡退款延时配置
+message GetRefundDelayConfigReq{
+    common.PageReq pagereq = 1;
+    uint64 operator_id = 2;
+}
+message GetRefundDelayConfigResp{
+    common.PageResp pageresp = 1;
+    repeated CardDelayExpiredConfig  card_delay_expired_configs = 2;
+}
+message SetRefundDelayConfigReq{
+    CardDelayExpiredConfig  card_delay_expired_config = 1;
+}
+message SetRefundDelayConfigResp{
+
+}
+
+message CardListReq {
+    common.PageReq  pagereq = 1;     //翻页
+    string          search  = 2;     //搜索的卡号
+    uint64          operator_id = 3; //运营商ID
+    uint64          station_id = 4;  //站点ID
+}
+// 获取客户卡
+message CardsByCustomerReq {
+    common.PageReq pagereq = 1; // 分页
+    CustomerReq  customer  = 2; // 用户
+}
+// 集团卡
+message CardsByGroupReq {
+    common.PageReq pagereq = 1; // 分页
+    uint64  group_id  = 2; // 用户
+}
+
+message CardListResp {
+    common.PageResp pageresp = 1;
+    repeated CardInfo cards  = 2;
+}
+
+message CardDelayExpiredConfig {
+	uint64  id          = 1; // id
+	uint64  operator_id = 2; // 运营商id
+	double  amount      = 3; // 配置金额
+    int32   delay_days  = 4;
+}
+
+message CardBindReq {
+    CardReq     card_req     = 1;    // 卡
+    string      active_code  = 2;    // 卡激活码
+    uint64      customer_id  = 3;    // 用户ID 二选一
+    uint64      group_id     = 4;    // 集团 二选一
+    string license_plate_number= 5;  // 车牌号
+}
+
+
+// 卡信息
+message CardInfo {
+    uint64 id                     = 1;  // 平台id
+    string card_no                = 2;  // 卡号
+    int32  card_type              = 3;  // 卡类型
+	int32  expired_at             = 4;  // 截止日期(时间戳)
+    double balance                = 5;  // 余额(元)
+    double principal_balance      = 6;  // 本金余额
+    double gift_balance           = 7;  // 赠送余额
+    int32  exception_status       = 8;  // 卡异常状态（0 不冻结， > 1 异常）
+    CustomerInfo customer         = 9;  // 关联客户信息
+    uint64 operator_id            = 10; // 运营商id
+    double today_remain_amount    = 11; // 当天可以使用金额
+    uint64 order_id               = 12; // 关联订单
+    string active_code            = 13; // 激活码
+    uint64 created_at             = 14; // 创建时间
+    uint64 station_id             = 15; // 站点ID
+    string license_plate_number   = 16; // 车牌号
+    bool   is_parent_pay          = 17; // 是否关联账户支付
+    Group  group_info             = 18; // 关联集团信息
+    string nick_name              = 19; // vin昵称，显示在订单表
+    string phone                  = 20; // 手机号
+    bool   is_multi_charging      = 21; // 是否支持一卡多充电
+}
+
+
+message CardChargeApplyReq{
+    CustomerReq  customer     = 1;    // 用户
+    CardReq card              = 2;    // 卡
+    double  amount            = 3;    // 充值金额(元)
+    // PayChannel pay_channel    = 4;    // 充值渠道
+    common.PayMode pay_mode          = 4; // 支付类型 
+    common.PayChannel pay_channel   = 5; // 支付渠道（一个支付类型对应多个支付渠道） 
+    string  remark            = 6;    // 备注
+
+}
+message CardChargeApplyResp{
+    string charge_order_id = 1; // 充值订单号
+}
+
+ // 卡充值
+message CardChargeCallbackReq  {
+    string  charge_order_id   = 1;    // 充值订单号，如微信服务号平台的id
+    string  remark            = 2;    // 备注
+}
+message CardChargeCallbackResp{
+    CardInfo    card_info     = 1; // 卡信息
+    Transaction transaction   = 2; // 交易信息
+}
+
+message CardChargeResp  {
+    CardInfo    card_info      = 1; // 卡信息
+}
+message CardChargeReq{
+    CardReq card                = 1;  // 卡
+    double  amount              = 2;  // 充值金额(元)
+    // PayChannel pay_channel      = 3;  // 支付渠道
+    common.PayMode pay_mode          = 3; // 支付类型 
+    common.PayChannel pay_channel   = 4; // 支付渠道（一个支付类型对应多个支付渠道） 
+    string  remark              = 5;  // 备注
+    uint64  op_manager_id       = 6;  // 充值管理员
+    BalanceType op_balance_type = 7;  // 操作余额类型
+    // bool    is_gift           = 6;  // 是否充值赠送余额
+}
+
+message CardWithholdReq{
+    CardReq card                = 1;  // 卡
+    double  amount              = 2;  // 扣款金额(元)
+    string  remark              = 3;  // 备注
+    uint64  op_manager_id       = 4;  // 扣款管理员
+    BalanceType op_balance_type = 5;  // 操作余额类型
+    // bool    is_gift           = 5;  // 是否扣款赠送余额
+}
+message CardWithholdResp{
+    CardInfo    card_info      = 1; // 卡信息
+}
+
+message RefundToUserBalanceReq{
+    CustomerReq  customer     = 1;  // 用户
+    CardReq card              = 2;  // 卡
+    double  amount            = 3;  // 转账金额， 0表示全部
+}
+message RefundToUserBalanceResp{
+
+}
+
+// 变更卡状态
+message SetCardExceptionStatusReq {
+    CardReq card        = 1;                // 卡
+    AccountExceptionStatusBit Pos     = 2;     // 卡状态位
+    bool state = 3;                         // 状态,1：激活 0：取消
+}
+
+// 集团类型
+enum GroupType {
+    GT_DEFAULT = 0; // 默认
+    GT_BUS     = 1; // 公交车
+}
+
+// 集团成员类型
+enum GroupMemberResourceType {
+    GMRT_CUSTOMER = 0; // 用户
+    GMRT_CARD     = 1; // 卡
+    GMRT_VIN      = 2; // vin
+}
+
+// 性别
+enum Sex {
+    UNKNOWN = 0;    // 保留
+    MALE    = 1;    // 男
+    FEMALE  = 2;    // 女
+}
+
+// 余额类型
+enum BalanceType {
+    PRINCIPAL = 0;    // 本金余额
+    GIFT      = 1;    // 赠送余额
+}
+
+// 卡类型
+enum CardType {
+    ID = 0;        //身份卡/鉴权卡
+    WALLET = 1;    //钱包卡
+}
+
+// 用户状态
+enum CustomerStatus {
+    ENABLE = 0;     // 默认打开
+    DISABLE = 1;    // 禁用用户
+}
+
+// 充电账户异常状态位(鉴权卡/vin)
+enum AccountExceptionStatusBit {
+    UNBIND_POS  = 0;    // 卡未绑定
+    FREEZE_POS  = 1;    // 冻结卡
+    EXPIRED_POS = 2;    // 卡过期
+    LOCK_POS    = 4;    // 卡锁住
+    LOST_POS    = 5;    // 卡挂失
+}
+
+
+// 交易状态
+enum TransactionStatus {
+    TRANSACTION_STATUS_INIT     = 0; // 初始化状态（待处理）
+    TRANSACTION_STATUS_PROCESS  = 1; // 处理中(支付中/退款中/结算中...)
+    TRANSACTION_STATUS_SUCCESS  = 2; // 交易成功
+    TRANSACTION_STATUS_FAIL     = 3; // 交易失败
+    TRANSACTION_STATUS_CLOSE    = 4; // 交易关闭
+}
+
+// // 支付渠道
+// enum PayChannel {
+//     MANUL           = 0;    // 后台手动支付
+//     ALI_PAY         = 1;    // 支付宝
+//     WECHAT_PAY      = 2;    // 微信
+//     USER_BALANCE    = 3;    // 用户余额
+//     CARD_BALANCE    = 4;    // 卡余额
+//     GROUP           = 5;    // 集团
+//     Bank            = 6;    // 银行
+//     Partner         = 7;    // 合作伙伴
+// }
+
+
+// 交易标示
+enum TransactionFlag {
+    TransactionFlagUnknown      = 0; //  
+	TransactionFlagOnline       = 1; //  在线支付(快捷支付)
+	TransactionFlagGroup        = 2; //  集团支付
+	TransactionFlagCard         = 3; //  鉴权卡
+	TransactionFlagUserBalance  = 4; //  用户余额
+	TransactionFlagVIN          = 5; //  VIN
+    TransactionFlagPartner      = 6; //  第三方支付
+}
+
+// 交易类型
+enum TransactionType {
+    TRANSACTION_UNKNOWN      = 0; // 保留
+    TRANSACTION_CHARGE       = 1; // 充值
+    TRANSACTION_PAY          = 2; // 支付
+    TRANSACTION_REFUND       = 3; // 退款
+}
+
+// 交易通知状态
+enum TransactionNotifyStatus {
+    TNS_INIT        = 0; // 未通知
+    TNS_NOTIFYING   = 1; // 通知中
+    TNS_SUSSESS     = 2; // 通知成功
+    TNS_FAIL        = 3; // 通知失败
+}
+
+
+// 活动类型
+enum ActivityType {
+    ActivityType_UNKNOWN = 0; 
+    ACTIVITY_TYPE_USER_BALANCE_CHARGE_GIFTS = 1; // 用户余额充值送
+}
+
+// 活动状态
+enum ActivityStatus {
+    ACTIVITY_STATUS_UNKNOWN     = 0;
+    ACTIVITY_STATUS_NOT_STARTED = 1; // 未开始
+    ACTIVITY_STATUS_IN_ACTION   = 2; // 活动中
+    ACTIVITY_STATUS_CLOSE       = 3; // 活动结束
+}
+
+
+
+
+
+
+
+

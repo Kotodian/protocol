@@ -1,0 +1,125 @@
+syntax = "proto3";
+package pay;
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/pay";
+
+// pay 对外接口定义
+// requestid 和 callerid 通过ctx传过来
+// 第三方调用支付平台
+service PayService {
+    // 交易时触发
+    rpc Trade(TradeReq) returns (TradeResp);
+
+    // 退款时触发
+    rpc Refund(RefundReq) returns (RefundResp);
+
+    // 交易状态查询
+    rpc Status(TradeStatusReq) returns (TradeStatusResp);
+}
+
+// PayMode 支付平台
+enum PayMode
+{
+    Unknow=0;       //未知来源
+    Wechat=1;       //微信
+    Alipay=2;       //支付宝
+    Group=3;        //集团支付
+    Balance=4;      //余额支付
+    WechatApp=5;    //微信App
+    AlipayApp=6;    //支付宝App
+    ThirdWechat=7;  //第三方微信
+    ThirdAlipay=8;  //第三方支付宝 
+    ThirdBalance=9; //第三方余额
+    WechatMin=10;   //微信小程序 
+    AlipayMin=11;   //支付宝小程序
+    WechatPC=12;    //微信PC支付 
+    CmbPay=13;      //招行支付
+    Free=9999;      //免费
+}
+// BizType 业务类型
+enum BizType {
+    OrderCharge=0; //充电
+    CarRecharge=1;//卡充值
+    OrderPayback=2;//订单补缴
+    OrderRefund=3;//退款
+    BalanceRecharge=4;//余额充值
+    SmsRecharge=5;//短信充值
+}
+
+// 交易状态
+enum TradeStatus {
+	Waiting = 0; //待支付
+	Success = 1; //支付成功
+	Failure = 2; //支付失败
+	Paying  = 3; //支付中
+	Closed  = 4; //支付结束
+	Timeout = 5; //支付超时
+}
+
+// 退款状态
+enum RefundStatus {
+    RefundIng =0; //退款中
+    RefundSuccess =1;//退款成功
+    RefundFailure =2;//退款失败
+}
+
+message TradeReq {
+    int32 Amount = 1;       //支付金额
+	int32 PlatformType=2;   //来源平台
+	string Subject=3;       //支付订单描述
+	string OutUserID=4;     //支付平台识别用户ID 微信:openID 支付宝:aliUserID
+	string OutTradeNo=5;    //订单号
+	string AppID=6;         //应用ID
+	string IP=7;            //订单来源IP
+	string TradeType=8;     //支付类型,跟平台有关；微信:jsapi,nativeapi;支付宝又不一样
+    string NotifiyURL=9;    //回调通知接口
+    string Extra=10;        //透传字段
+    int32 PayMode=11;       //支付方式
+    int32 BizType=12;       //业务类型
+    string ReturnURL=13;    //返回页面路径
+    int32 TradeTime=14;     //交易时间
+}
+
+message TradeResp {
+    string TradeID=1; //平台订单号
+    int32 Status=2; //订单状态
+    bytes PayInfo=3;//支付信息
+    TradeReq TradeReq=4;//原路返回请求
+    int64 Balance=5;//付后余额
+}
+
+message TradeStatusReq {
+    string OutTradeNo=1;//第三方
+    string AppID=2; //第三方应用标识
+}
+
+message TradeStatusResp {
+    string       OutTradeNo=1; //第三方交易号
+    TradeStatus  Status=2; //交易状态
+}
+
+message RefundReq {
+    string OutTradeNo=1;//第三方交易号,
+    string OutRefundNo=2;//第三方退款标识符,
+    string AppID=3;//应用ID,
+    int32 TotalFee=4;//订单总额；分为单位,
+    int32 RefundFee=5;//退款额度；分为单位,
+    int32 PlatformType=6;//平台类型：支付宝，微信等
+    int32 PayMode=7;//支付方式
+    string IP=8;//用户IP地址
+    int32 BizType=9;//业务类型
+    int32 TradeTime=10;//交易时间
+    string Extra=11;//预留字段
+}
+
+message RefundResp {
+    int32 RefundID=1; //第三方退款标识
+    int32 Status=2;//退款状态
+    string Response=3;//退款信息
+    RefundReq RefundReq=4;//原路返回请求
+    int64 Balance=5;//付后余额
+}
+
+
+
+

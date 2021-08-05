@@ -1,0 +1,208 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/open";
+
+import "common.proto";
+import "coregw.proto";
+import "api.proto";
+
+package open;
+
+
+// 开放桩主接口
+// ctx传入:  
+//          apikey:yyyy
+//          appsecret:xxxx
+//          operator_id:nnnn
+//          customer_id:zzzz
+//          requestid:cccc
+service MerchantService {
+    // 桩主申请
+    rpc Apply(MerchantApplyReq) returns (MerchantApplyResp);  
+    // 桩主申请信息
+    rpc ApplyInfo(MerchantApplyInfoReq) returns (MerchantApplyInfoResp);  
+    // 桩主站点列表
+    rpc Stations(MerchantStationsReq) returns(MerchantStationsResp);
+    // 根据站点获取设备详情
+    rpc EvsesByStation(EvsesByStationReq) returns(EvsesByStationResp);
+    // 设置站点运营商状态
+    rpc SetStationOperationStatus(SetStationOperationStatusReq)returns(SetStationOperationStatusResp);    
+    // 站点绑定设备
+    rpc StationBindEvse(StationBindEvseReq) returns(StationBindEvseResp);
+    // 站点解绑设备
+    rpc StationUnbindEvse(StationUnbindEvseReq) returns(StationUnbindEvseResp);
+    // 桩主基本信息
+    rpc Info(MerchantInfoReq) returns(MerchantInfoResp);
+    // 绑定银行卡
+    rpc BindBankCard(BindBankCardReq) returns(BindBankCardResp);
+    // 解绑银行卡
+    rpc UnbindBankCard(UnbindBankCardReq) returns(UnbindBankCardResp);
+    // 提现申请
+    rpc WithdrawApply(WithdrawApplyReq) returns(WithdrawApplyResp);
+    // 提现记录
+    rpc WithdrawRecord(WithdrawRecordReq) returns(WithdrawRecordResp);
+    // 订单
+    rpc Orders(MerchantOrdersReq) returns(MerchantOrdersResp);
+}
+
+message MerchantInfoReq{
+
+}
+message MerchantInfoResp{
+    uint64  id                  =1; // id
+    string  name                =2; // 名称
+    string  email               =3; // 邮箱
+    string  phone               =4; // 手机号
+    string  img_url             =5; // 图像
+    double  balance             =6; // 账户余额
+    uint64  customer_id         =7; // 绑定的客户ID，主要用于提现
+    string  bank_account        =8; // 银行卡号
+    string  bank_account_name   =9; // 银行卡用户名
+    string  bank_code           =10; // 银行编号
+    string  bank_name           =11; // 银行名称
+}
+
+message BindBankCardReq{
+    string  bank_account        = 1; // 银行卡号
+    string  bank_account_name   = 2; // 银行卡用户名
+    string  bank_code           = 3; // 银行编号
+    // string  password            = 4; // 庄主密码
+}
+message BindBankCardResp{
+
+}
+message UnbindBankCardReq{
+    string  bank_account        = 1; // 银行卡号
+    // string  password            = 2; // 庄主密码
+}
+message UnbindBankCardResp{
+
+}
+
+message MerchantApplyReq{
+    string  user_name   = 1; // 姓名
+    int32   evse_num    = 2; // 设备数量
+    coregw.VehicleType  vehicle_type  = 3;  // 车类型
+    ApplyResourceType   resource_type = 4;  // 资源类型
+    // string phone = 5;   // 手机号
+}
+message MerchantApplyResp{
+}
+
+message MerchantApplyInfoReq{
+  
+}
+message MerchantApplyInfoResp{
+    string  user_name   = 1; // 姓名
+    int32   evse_num    = 2; // 设备数量
+    coregw.VehicleType  vehicle_type  = 3;  // 车类型
+    ApplyResourceType   resource_type = 4;  // 资源类型
+    MerchantApplyStatus status      = 5;  // 申请状态
+    // string phone = 6;   // 手机号
+}
+enum MerchantApplyStatus {
+    MerchantApplyStatusUnknown      = 0;  // 
+    MerchantApplyStatusPending      = 10; // 待处理
+	MerchantApplyStatusProcess      = 20; // 处理中 - 联系客户/和客户沟通中
+	MerchantApplyStatusProcessed    = 30; // 已处理 - 已建站
+	MerchantApplyStatusClose        = 40; // 关闭
+}
+
+enum ApplyResourceType {
+    ApplyResourceTypeUnknow        = 0; // 未知
+    ApplyResourceTypeCommercial    = 1; // 商业
+    ApplyResourceTypeManufacturer  = 2; // 汽车制造商/厂商
+    ApplyResourceTypeOperator      = 3; // 运营商
+    ApplyResourceTypeHardware      = 4; // 设备厂商
+    ApplyResourceTypeGoverment     = 5; // 地方政府
+    ApplyResourceTypeProperty      = 6; // 物业
+    ApplyResourceTypePersonal      = 7; // 场地方
+}
+
+
+message MerchantStationsReq{
+    common.PageReq   pagereq = 1; // 分页
+}
+message MerchantStationsResp{
+    common.PageResp pageresp  = 1; // 分页
+    repeated api.Station stations = 2; // 站点
+}
+
+message EvsesByStationReq{
+    common.PageReq   pagereq = 1; 
+    uint64  station_id = 2;
+
+}
+message EvsesByStationResp{
+    common.PageResp pageresp  = 1; 
+    repeated coregw.Evse Evses = 2;
+}
+message SetStationOperationStatusReq{
+    uint64 station_id = 1;
+    bool is_in_operation =2;
+}
+message SetStationOperationStatusResp{
+
+}
+
+message StationBindEvseReq{
+    uint64 station_id   = 1; // 站点id
+    string qrcode_path  = 2; // 二维码全路径
+}
+message StationBindEvseResp{
+
+}
+message StationUnbindEvseReq{
+    uint64 station_id   = 1; // 站点id
+    uint64 evse_id      = 2; // 设备id 
+}
+message StationUnbindEvseResp{
+
+}
+
+
+message WithdrawApplyReq{
+    double amount     = 1; 
+}
+message WithdrawApplyResp{
+
+}
+
+enum WithdrawStatus {
+    WithdrawStatus_InProcess = 0;     // 处理中
+	WithdrawStatus_Fail      = -10;   // 失败
+	WithdrawStatus_Success   = 10;    // 成功
+}
+
+message Withdraw {
+    uint64          id                  = 1;  // ID
+	uint64          manager_id          = 2;  // 收款账号ID
+	string          bank_account        = 3;  // 银行卡号
+	string          bank_account_name   = 4;  // 银行卡用户名
+    string          bank_code           = 5;  // 银行编号
+    string          bank_name           = 6;  // 银行卡名称
+	double          amount              = 7;  // 提现总金额(未扣除手续费)
+	double          fee                 = 8;  // 手续费
+	WithdrawStatus  status              = 9;  // 状态
+	string          reason              = 10; // 原因
+    uint64          op_manager_id       = 11; // 操作人
+    uint64          created_at          = 12; // 提现时间
+}
+
+message WithdrawRecordReq{
+    common.PageReq  pagereq = 1;    // 
+}
+message WithdrawRecordResp{
+    common.PageResp pageresp  = 1; // 分页
+    repeated Withdraw withdraws = 2; // 提现列表
+}
+
+message MerchantOrdersReq{
+    common.PageReq  pagereq = 1;    // 
+
+}
+message MerchantOrdersResp{
+    common.PageResp pageresp  = 1;  // 
+    repeated api.OrderInfoResp order_infos = 2;
+}
+

@@ -1,0 +1,43 @@
+syntax = "proto3";
+package xa;
+option go_package = "github.com/Kotodian/protocol/golang/xa";
+option optimize_for = LITE_RUNTIME;
+
+
+enum ACT{
+    PREPARE = 0;
+    ROLLBACK = 1;
+    COMMIT = 2;
+}
+
+message XAReq {
+    uint64 ID = 1;
+    ACT    act = 2;
+}
+
+message XAResp {
+}
+
+message GetXAReq {
+    uint64 ID = 1;
+}
+
+message GetXAResp {
+    ACT act = 1;
+}
+
+//服务
+service RPCServices {
+    rpc XA(XAReq) returns (XAResp);
+    rpc GetXA(GetXAReq) returns (GetXAResp);
+}
+
+
+
+// message MQTTMsgReq {
+//     string      topic = 1;
+//     int32       qos = 2;
+//     bool        retained = 3;
+//     string      evseid = 4;
+//     bytes       payload  = 5;
+// }

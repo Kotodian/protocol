@@ -1,0 +1,850 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/api";
+
+import "common.proto";
+import "customer.proto";
+import "coregw.proto";
+import public "charger/charger.proto";
+
+// api 对外接口定义
+// requestid 和 callerid 通过ctx传过来
+package api;
+
+// 第三方推送用户信息到平台
+service UserService {
+    // 同步用户信息，登录时候触发
+    rpc SyncInfo(SyncUserInfoReq) returns (SyncUserInfoResp);
+    
+    // 获取用户信息
+    rpc GetInfo(customer.CustomerInfoReq) returns (customer.CustomerInfoResp);
+
+    // 用户绑定卡
+    rpc BindCard(customer.BindCardReq) returns (customer.BindCardResp);
+
+    // 解绑卡
+    rpc UnbindCard(customer.UnbindCardReq) returns (customer.UnbindCardResp);
+
+    // 绑定VIN
+    rpc BindVIN(customer.BindVINReq) returns(customer.BindVINResp);
+
+    // 解绑VIN
+    rpc UnbindVIN(customer.UnbindVINReq) returns(customer.UnbindVINResp);
+
+    // vin列表
+    rpc ListVINs(customer.CustomerReq) returns (customer.ListVINsResp);
+
+    // 用户余额充值申请
+    rpc ChargeApply(customer.CustomerChargeApplyReq) returns (customer.CustomerChargeApplyResp);
+
+    // 用户余额充值, 微信/支付宝支付成功后回调
+    rpc ChargeCallback(customer.CustomerChargeCallbackReq) returns (customer.CustomerChargeCallbackResp);
+
+    // 用户余额支付
+    rpc Pay(customer.CustomerPayReq) returns (customer.CustomerPayResp);
+
+    // 查询余额支付
+    rpc QueryPay(customer.CustomerQueryPayReq) returns (customer.CustomerPayResp);
+
+    // 退款到余额 
+    rpc RefundToBalance(customer.CustomerRefundReq) returns (customer.CustomerRefundResp);  
+
+    // 获取活动
+    rpc GetActivity(GetActivityReq) returns (GetActivityResp);
+
+    // 推送告警
+    rpc PushAlertMsg(PushAlertMsgReq) returns (PushAlertMsgResp);
+
+    // 交易流水
+    rpc Transactions(customer.TransactionQueryByCustomerReq) returns (customer.TransactionsResp);
+}
+
+service CardService {
+    // 获取用户卡列表
+    rpc ListByCustomer(customer.CardsByCustomerReq) returns (customer.CardListResp);
+
+    // 获取卡信息
+    rpc Info(customer.CardInfoReq) returns (customer.CardInfoResp);
+
+    // 卡充值申请
+    rpc ChargeApply(customer.CardChargeApplyReq) returns (customer.CardChargeApplyResp);
+
+    // 充值到卡余额 微信/支付宝/用户余额支付成功后回调
+    rpc ChargeCallback(customer.CardChargeCallbackReq) returns (customer.CardChargeCallbackResp);
+}
+
+service ConnectorService {
+    // 获取充电接口详情
+    rpc Info(coregw.ConnectorReq) returns(coregw.ConnectorResp);
+
+    // 根据用户获取充电接口详情
+    rpc InfoByCustomer(ConnectorInfoByCustomeReq) returns(ConnectorInfoByCustomeResp);
+ 
+    // 根据二维码获取枪头信息
+    rpc InfoByQRCode(coregw.ConnectorByQRCodeReq) returns(coregw.ConnectorResp);
+
+    // 根据二维码url获取枪头信息
+    rpc InfoByURL(ConnectorInfoByURLReq) returns(coregw.ConnectorResp);
+
+    // 远程启动充电
+    // rpc RemoteStart(RemoteStartReq) returns(RemoteStartResp);
+    
+    // 远程停止充电 ---> order service
+    rpc RemoteStop(RemoteStopReq) returns(RemoteStopResp);
+
+    // 根据设备获取接口列表
+    rpc ListByEvse(coregw.ConnectorsByEvseReq) returns(coregw.ConnectorsByEvseResp);
+
+    // 根据站点获取枪头列表
+    rpc ListByStation(ConnectorsByStationReq) returns(ConnectorsByStationResp);
+}
+
+service EvseService {
+    // Info 获取设备详情
+    rpc Info(coregw.EvseReq) returns(coregw.EvseResp);  
+ 
+    // InfoByConnectorAndCustomer 根据枪头和用户获取设备详情
+    rpc InfoByConnectorAndCustomer(InfoByConnectorAndCustomerReq) returns(InfoByConnectorAndCustomerResp);
+
+    // WarningEvent 告警
+    rpc WarningEvent(WarningEventReq) returns (WarningEventResp);
+
+    // WarningHistoryEvent 历史告警记录
+    rpc WarningHistoryEvent(WarningHistoryEventReq) returns(WarningHistoryEventResp);
+
+    // License 证书
+    rpc License(LicenseReq) returns(LicenseResp);
+
+    // Active 激活
+    rpc Active(ActiveReq) returns(ActiveResp);
+
+    //Hardware 固件查询--2020/12/23 18:39
+    rpc Hardware(HardwareReq) returns(HardwareResp);
+}
+
+// 站点服务
+service StationService {
+    // List 站点列表
+    rpc List(StationListReq) returns(StationListResp);
+
+    // Info 站点详情
+    rpc Info(StationInfoReq) returns(StationInfoResp);
+
+    // CheckGroupPay 校验站点是否支持集团支付
+    rpc CheckGroupPay(CheckGroupPayReq) returns(CheckGroupPayResp);
+
+    // GetStationManagers 获取站点的管理员
+    rpc GetStationManagers(StationInfoReq) returns(GetStationManagersResp);
+
+    // GetPriceScheme 获取计费模版
+    rpc GetPriceScheme(GetPriceSchemeReq) returns(GetPriceSchemeResp);
+
+    // CheckIsInWhiteList 检查是否在白名单内
+    rpc CheckIsInWhiteList(CheckIsInWhiteListReq) returns(CheckIsInWhiteListResp);
+
+    // CraeteStation 创建站点
+    rpc CreateStation(CreateStationReq) returns(CreateStationResp);
+
+    // UpdateStationLatLng 更新站点经纬度
+    rpc UpdateStationLatLng(UpdateStationLatLngReq) returns(UpdateStationLatLngResp);
+}
+
+// 订单服务
+service OrderService {
+    // 创建订单 外部调用
+    rpc CreateOrder(CreateOrderReq) returns(CreateOrderResp);
+
+    // 申请创建订单  内部调用
+    rpc ApplyOrder(ApplyOrderReq) returns(ApplyOrderResp);
+
+    rpc ConfirmOrder(ConfirmOrderReq)  returns(ConfirmOrderResp);
+
+    // 申请创建订单支付回调 （仅用于先付费）
+    rpc OrderPayCallback(OrderPayCallbackReq) returns(OrderPayCallbackResp);
+
+    // 申请订单补缴单号
+    rpc ApplyOrderBackPay(ApplyOrderBackPayReq) returns(ApplyOrderBackPayResp);
+
+    // 申请订单补缴回调
+    rpc OrderBackPayCallback(OrderBackPayCallbackReq) returns(OrderBackPayCallbackResp);
+
+    // 订单退款成功通知
+    rpc RefundNotify(RefundNotifyReq) returns (RefundNotifyResp);
+
+    // InfoByCallerOrderID  根据调用方订单id获取订单详情
+    rpc InfoByOutChargerOrderID(OrderInfoByOutChargeOrderIDReq) returns(OrderInfoResp);
+
+    // 订单基本信息
+    rpc BaseInfoByID(BaseInfoByIDReq) returns(BaseInfoByIDResp);    
+    
+    // Info 订单详情
+    rpc InfoByID(OrderInfoByIDReq) returns(OrderInfoResp);
+
+    // Infos 批量获取订单详情
+    rpc BatchOrderInfos(BatchOrderInfosReq) returns(BatchOrderInfosResp);
+
+    // // 创建订单快照
+    // rpc CreateOrderSnapshotByAuthorizeMode(CreateOrderSnapshotByAuthorizeModeReq) returns (CreateOrderSnapshotByAuthorizeModeResp);
+
+    // // 补缴订单通知
+    // rpc BackPayOrderNotify(BackPayOrderNotifyReq) returns (BackPayOrderNotifyResp);
+
+    // // 订单退款失败通知
+    // rpc RefundFailNotify(RefundFailNotifyReq) returns (RefundFailNotifyResp);
+
+    // GetPriceScheme 获取计费模版
+    rpc GetPriceScheme(GetPriceSchemeReq) returns(GetPriceSchemeResp);
+}
+
+// 运营商服务
+service OperatorService {
+    rpc GetByCode(GetByCodeReq) returns(Operator);
+
+    // 获取公告
+    rpc GetNotice(GetNoticeReq) returns(GetNoticeResp);
+
+    // 获取横幅
+    rpc GetBanner(GetBannerReq) returns(GetBannerResp);
+
+    // 获取资源配额
+    rpc GetQuotaLimitation(GetQuotaLimitationReq) returns(GetQuotaLimitationResp);
+}
+
+
+// admin服务
+service AdminService {
+    // 运营商登录
+    // 使用商户绑定的管理账号登录
+    rpc Login(LoginReq) returns(LoginResp);
+
+    // 获取调用方信息
+    rpc CallerByID(CallerByIDReq) returns(CallerByIDResp);
+    rpc CallerByOperatorID(CallerByOperatorIDReq) returns (CallerByOperatorIDResp);
+
+    // 根据ID获取运营商信息
+    rpc GetOperatorByID(GetOperatorByIDReq) returns(Operator);
+
+    // 移动订单快照到正式表
+    // rpc SetOrderSnapshootNormal(SetOrderSnapshootNormalReq) returns(SetOrderSnapshootNormalResp);
+
+    // GetStationByID 根据id获取站点
+    rpc GetStationByID(GetStationByIDReq) returns(StationInfoResp);
+}
+
+
+message CreateOrderReq {
+    customer.CustomerReq customer  = 1;  // 用户信息
+    uint64  connector_id           = 2;  // 枪头id
+    int32  authorize_mode          = 3;  // 授权模式(用户远程启动，刷卡启动..., 等同于charger.AuthorizationMode)
+    string  authorization_id       = 4;  // 授权id(根据授权模式来定，例如：authorize_mode=用户远程启动，authorize_id=customer_id)
+    common.PayMode pay_mode        = 5;  // 支付类型 
+    common.PayChannel pay_channel  = 6;  // 支付渠道（一个支付类型对应多个支付渠道）      
+    bool is_prepay                 = 7;  // 是否先付费
+    double prepayment              = 8;  // 预付充电费用(元)
+    int32  service_mode            = 9;  // 启动充电的模式
+    double allowed_kwh             = 10; // 最大充电电量，最大150度电，既150.00
+    int32  allowed_minute          = 11; // 最大充电时间，默认24小时，既1440分钟
+    CouponType coupon_type         = 12; // 优惠类型
+    // uint64 coupon_id            = 13; // 优惠券id
+    int32   schedule_time          = 14; // 定时充电时间戳(秒), 0表示即时充电
+}
+message CreateOrderResp {
+    coregw.Order order      = 1; // 订单信息
+    Station station         = 2; // 站点信息
+}
+
+message ConfirmOrderReq {
+    uint64 id                                 = 1; //订单ID
+}
+
+message ConfirmOrderResp {
+    uint64 code                               = 1; //0: 成功，非0：失败
+    string msg                                = 2; //失败原因描述
+}
+
+message ApplyOrderReq {
+    customer.CustomerInfo customer            = 1;  // 用户信息
+    uint64  connector_id                      = 2;  // 枪头id
+    int32  authorize_mode                     = 3;  // 授权模式(用户远程启动，刷卡启动..., 等同于charger.AuthorizationMode)
+    string  authorization_id                  = 4;  // 授权id(根据授权模式来定，例如：authorize_mode=用户远程启动，authorize_id=customer_id)
+    common.PayMode pay_mode                   = 5; // 支付类型 
+    common.PayChannel pay_channel             = 6; // 支付渠道（一个支付类型对应多个支付渠道）      
+    bool is_prepay                            = 7;  // 是否先付费
+    double prepayment                         = 8;  // 预付充电费用(元)
+    int32  service_mode                       = 9;  // 启动充电的模式
+    double allowed_kwh                        = 10; // 最大充电电量，最大150度电，既150.00
+    int32  allowed_minute                     = 11; // 最大充电时间，默认24小时，既1440分钟
+    CouponType coupon_type                    = 12;  // 优惠类型
+    // uint64 coupon_id                       = 13; // 优惠券id
+    int32   schedule_time                     = 14; // 定时充电时间戳(秒), 0表示即时充电
+    uint64  order_id                          = 15; // 订单id，为0时平台生成，默认为0, 刷卡统一下单时会使用
+    string  caller_order_id                   = 16; // 调用方订单id，如不传将和平台订单id一致
+    bool check                                = 17; // 是否做启动充电检查，如上报的结算报文需要创建订单，就无需做检查
+    common.AuthModeChannel auth_mode_channel  = 18; // 授权模式渠道(微信/支付宝/app等)
+    bool                need_confirm          = 19; //是否需要外部系统对订单做一次确认,一般用于互联互通
+    int32  pre_frozen_amount                  = 20; // 预冻结充电金额，单位分
+}
+message ApplyOrderResp {
+    coregw.Order order      = 1; // 订单信息
+    Station station         = 2; // 站点信息
+}
+
+message OrderPayCallbackReq {
+    uint64 order_id = 1; // 订单id
+    int32 pay_status = 2; // 支付状态 (proto/coregw.KindOrderPayState)
+    int64 pay_time = 3; // 支付成功时间
+}
+message OrderPayCallbackResp{
+}
+
+message ApplyOrderBackPayReq {
+    uint64 order_id = 1; // 订单id
+}
+message ApplyOrderBackPayResp{
+    string back_pay_order_id = 1; // 订单补缴id
+}
+
+message OrderBackPayCallbackReq {
+    uint64 order_id = 1; // 订单id
+    string back_pay_order_id = 2; // 订单补缴id
+    // customer.PayChannel  pay_channel = 3; // 补缴支付渠道
+    common.PayMode pay_mode          = 3; // 支付类型 
+    common.PayChannel pay_channel   = 4; // 支付渠道（一个支付类型对应多个支付渠道） 
+    int32 back_pay_status = 5; // 补缴支付状态 (proto/coregw.KindOrderBackPayState)
+    int64 pay_time = 6; // 支付成功时间
+    string remark = 7; // 备注
+}
+message OrderBackPayCallbackResp {
+}
+
+message RefundNotifyReq {
+    uint64 order_id = 1;
+    string out_refund_no = 2; // 退款单号
+	double amount = 3;  // 退款金额
+    double balance = 4; // 退款后余额
+    string remark = 5;  // 备注
+}
+message RefundNotifyResp {
+
+}
+
+message GetActivityReq{
+    customer.ActivityType type = 1;
+}
+message GetActivityResp{
+   repeated customer.Activity activitys = 1;
+}
+
+
+// message BackPayOrderNotifyReq {
+//     string out_charger_order_id      = 1; // 调用方充电订单id
+//     string out_pay_order_id          = 2; // 支付订单id
+//     double  amount                   = 3; // 金额(元)
+//     // customer.PayChannel pay_channel  = 4; // 支付渠道
+//     common.PayMode pay_mode          = 4; // 支付类型 
+//     common.PayChannel pay_channel   = 5; // 支付渠道（一个支付类型对应多个支付渠道） 
+//     string  remark                   = 6; // 备注
+//     int64  back_pay_time             = 7; // 补缴时间
+// } 
+// message BackPayOrderNotifyResp {
+// }
+
+// message RefundFailNotifyReq{
+//     string out_charger_order_id     = 1; // 调用方充电订单id
+//     string reason                   = 2; // 失败原因
+// }
+// message RefundFailNotifyResp{
+// }
+
+// message CreateOrderSnapshotByAuthorizeModeReq {
+//     uint64 id           = 1;         // 订单id
+//     uint64 connector_id = 2;         // 枪头id
+//     uint64 evse_id      = 3;         // 设备id
+//     uint64 station_id   = 4;         // 站点id
+//     uint64 customer_id  = 5;         // 用户id
+//     uint64 operator_id  = 6;         // 运营商id
+//     int32  authorize_mode = 7;       // 鉴权模式
+//     string payment_channel = 8;      // 支付通道
+//     string license_plate_number = 9; // 车牌号
+// }
+// message CreateOrderSnapshotByAuthorizeModeResp {
+// }
+
+message GetStationByIDReq {
+    uint64 station_id = 1;  // 站点id
+}
+message SetOrderSnapshootNormalReq{
+    uint64 order_id = 1; // 订单id
+}
+message SetOrderSnapshootNormalResp{
+}
+
+message GetOperatorByIDReq {
+    uint64 id = 1;          // ID
+}
+
+message GetByCodeReq {
+    string  code   = 1; //注册码
+	string  vendor = 2; //供应商
+	string  model  = 3; //产品型号
+}
+
+message PushAlertMsgReq {
+    uint64 operator_id = 1; //运营商ID
+    string card_no = 2;     //卡号
+    uint64 customer_id = 3; // customer_id
+    string vin = 4;         // vin
+    string title = 20;      //标题
+    string content = 21;    //消息
+}
+
+message PushAlertMsgResp {
+}
+
+// 登陆
+message LoginReq {
+    string admin_account   = 1;   // 后台账号
+    string admin_phone     = 2;   // 手机号
+    string passwd          = 3;   // 密码
+}
+message LoginResp {
+    Operator    operator    = 1;  // 运营商
+}
+
+message BaseInfoByIDReq{
+    uint64 id   = 1; //订单ID
+}
+message BaseInfoByIDResp{
+    coregw.Order order  = 1; // 订单信息  
+}
+
+message OrderInfoByIDReq{
+    uint64 id = 1; //订单ID
+}
+
+message OrderInfoByOutChargeOrderIDReq{
+    string out_charger_order_id = 1; // 调用方订单id
+}
+message OrderInfoResp{
+    coregw.Order order         = 1; // 订单信息    
+    Station station            = 3; // 站点信息
+    Caller caller              = 4; // 调用方
+    customer.CustomerInfo user = 5; // 用户信息
+    // repeated coregw.OrderStateTimelineData state_timeline = 6; // 订单状态时间轴
+    Goiot.Protocol.Charger.SetTariffReq price_scheme = 7; // 计费模版
+    // repeated customer.Transaction transactions = 8;  // 订单流水
+}
+
+
+message BatchOrderInfosReq {
+    repeated uint64 ids = 1; // 平台订单id
+}
+message BatchOrderInfosResp {
+    repeated OrderInfoResp order_infos = 1;
+}
+
+message GetPriceSchemeReq{
+//    uint64 station_id                   = 1; // 站点
+//    coregw.VehicleType vehicle_type     = 2; // 使用车辆类型
+    uint64      id                      = 1; // ID
+    uint64      evse_id                 = 2; //设备ID
+    int32       authorization_mode      = 3; // 授权类型
+    string      authorization_id        = 4; // 授权ID
+}
+
+
+message GetPriceSchemeResp{
+    Goiot.Protocol.Charger.SetTariffReq price_scheme = 1; // 计费模版
+}
+
+message StationInfoReq {
+    uint64 station_id = 1;  // 站点id
+}
+
+message StationInfoResp {
+    Station station_info = 1; // 站点信息
+}
+
+message CheckGroupPayReq {
+    uint64 station_id = 1;  // 站点id
+    uint64 group_id = 2; // 集团id
+}
+message CheckGroupPayResp{
+    bool is_support = 1; // 是否支持
+}
+
+message StationListReq{
+    common.PageReq   pagereq = 1; // 分页
+    uint64      operator_id  = 2; // 运营商
+    double      lng          = 3; // 用户所在经度
+    double      lat          = 4; // 用户所在维度  
+    double      radius       = 5; // 查询半径 (单位:km)
+}
+message StationListResp{
+    common.PageResp pageresp  = 1; // 分页
+    repeated Station stations = 2; // 站点
+}
+
+
+message Station {
+    uint64              id                          = 1;  // 站点ID
+	string              name                        = 2;  // 站点名称
+	Operator            operator                    = 3;  // 运营商
+	int32               area_code                   = 4;  // 行政区域编码，参考 github.com/damonchen/gb2260
+	string              address                     = 5;  // 地址
+	double              lng                         = 6;  // 经度
+	double              lat                         = 7;  // 维度
+	string              cover                       = 8;  // 封面图片
+	int32               charger_nums                = 9;  // 充电桩数量
+	bool                is_in_operation             = 10; // 营业中，true为营业中
+	bool                is_open                     = 11; // 是否对外开放，true为对外开放，false为内部使用
+	string              contact_name                = 12; // 联系人
+	string              contact_phone               = 13; // 联系人电话
+	string              parking_price               = 14; // 停车费
+	string              charge_price                = 15; // 充电费
+	string              business_time               = 16; // 营业时间
+    repeated Parking    parking_area                = 17; // 停车位所在区域
+    // int32               pay_type                    = 18; // 支付类型
+    double              dist                        = 19; // 和客户之间的距离，单位km
+    // bool                is_support_group_pay        = 20; // 是否支持集团支付
+    uint64              mananger_id                 = 21; // 管理员ID
+	string              contact_email               = 22; // 联系人邮箱，用于告警
+	bool                is_busy                     = 23; // 是否繁忙
+	int64               created_at                  = 24; // 创建时间
+	string              mananger_name               = 25; // 管理员名称
+	bool                is_deleted                  = 26; // 是否已删除
+    enum Type{                                             // 充电站类型
+        VEHICLE_CAR = 0;                                      // 电动汽车
+        VEHICLE_BICYCLE = 1;                                  // 电动自行车
+    }
+    int32               type                        = 27; // 充电站类型
+    bool                has_coupon                  = 28; // 是否有优惠活动
+    enum State{
+        STATE_UNKNOWN = 0;                                      // 未知
+        STATE_FREE = 1;                                         // 空闲
+        STATE_BUSY = 2;                                         // 繁忙
+    }
+    int32               state                       = 29;   //状态
+    uint64 id_card_charge_start_limit               = 30;   // 刷鉴权卡启动金额的限制
+    uint64 vin_charge_start_limit                   = 31;   // VIN启动金额的限制
+    uint32 authorization_mode                       = 32;   // 支持鉴权的方式
+    uint32 remote_start_type                        = 33;   // 支持远程启动充电的方式(bit型)
+    repeated RemoteStartChargerAmount remote_start_charger_amounts    = 34;   // 远程启动充电金额列表, 单位元
+    string qrcode_config                            = 35;  //自定义二维码
+}
+message RemoteStartChargerAmount {
+    enum RemoteStartChargerAmountType{ // 
+        CA_CAR = 0;                      // 电动汽车充电金额列表(交直流)
+        CA_BICYCLE = 1;                  // 电动自行车充电金额列表
+    }
+    int32               type       = 1; // 
+    repeated double     amounts    = 2; // 远程启动充电金额列表, 单位元
+}
+message Operator {
+    uint64  id            = 1;  // id
+	string  name          = 2;  // 名称
+	string  tel           = 3;  // 联系电话
+	string  code          = 4;  // 注册码
+	uint64  manager_id    = 5;  // 管理用户ID
+	string  manager_name  = 6;  // 管理用户ID
+    bool    is_block      = 7;  // 是否屏蔽
+    string  company       = 8;  // 商户公司名称
+	int32   type          = 9;  // 商户类型 
+	string  address       = 10; // 商户公司地址
+    string  logo_url      = 11; // 商户logo
+    int64   created_at    = 12; // 创建时间
+    int64   updated_at    = 13; // 更新时间
+    uint64  id_card_charge_start_limit = 14; //启动充电的金额限制
+    uint32  remote_start_type = 15;  //远程启动充电的类型，bitmap类型，具体查看 coregw.RemoteStartType
+    bool    online_charge = 16; // 是否开通充值余额功能，1：开通，0：没开通
+    uint32  authorization_mode = 17; //支持鉴权的类型
+    string qrcode_domain  = 18;  //二维码的自定义域名
+    repeated double user_balance_charge_amounts = 19;   // 用户余额充值金额列表, 单位元
+    string api_id               = 20;
+    uint64 functional_switch_bit= 21; //设备开关bit位
+    string qrcode_config        = 22; // 二维码配置
+    bool virtual_station = 23; //是否需要建立虚拟站点
+}
+
+message GetNoticeReq{
+
+}
+message GetNoticeResp{
+    string notice = 1; // 公告
+    string notice_url = 2; // 公告url
+}
+message GetBannerReq{
+    BannerLoc loc = 1; // banner位置
+}
+message GetBannerResp{
+    repeated banner banners =1;
+}
+
+message banner {
+    string title    = 1;    // 标题  
+    string img_url  = 2;    // 横幅图片url
+    string link_url = 3;    // 跳转连接
+    BannerType type = 4;    // 类型
+    BannerLoc loc   = 5;    // 位置
+    string centent  = 6;    // 内容
+}
+enum BannerType {
+    BannerTypeLink = 0;     // 跳转详情
+}
+enum BannerLoc {
+    BannerLocHome     = 0;  // 首页，
+    BannerLocCharging = 1;  // 充电中，
+    BannerLocEvse     = 2;  // 桩详情
+}
+
+message Parking {
+    string   name             = 1; // 名称
+	int32    idle_dc_nums     = 2; // 直流空闲数量
+	int32    total_dc_nums    = 3; // 总数量
+	int32    idle_ac_nums     = 4; // 交流空闲数量
+	int32    total_ac_nums    = 5; // 总交流数量
+	int32    total_nums       = 6; // 总数量
+}
+
+message ConnectorInfoByURLReq {
+    string url = 1; // 枪头url
+}
+
+
+message RemoteStopReq{
+	string order_id         = 1; // 订单ID
+}
+message RemoteStopResp{
+    coregw.Order order      = 1; // 订单信息
+    // OrderExtend extend      = 2; // 订单附带信息  
+    Station station         = 3; // 站点信息
+}
+
+message ConnectorsByStationReq{
+    common.PageReq pagereq = 1; 
+    uint64  station_id = 2;
+}
+message ConnectorsByStationResp{
+    common.PageResp pageresp = 1;
+    repeated coregw.Connector connectors = 2;
+}
+
+enum CouponType {
+    CT_Unknown = 0;
+    CT_WhiteList = 1;      // 白名单
+    CT_DiscountCoupon = 2; // 折扣卷
+    CT_CashCoupon = 3;     // 现金卷
+}
+
+// message RemoteStartReq{
+//     uint64 connector_id                 = 1; // 枪头接口ID
+// 	string order_id                     = 2; // 订单ID
+//     customer.CustomerReq  customer      = 3; // 用户
+// 	// double user_balance              = 4; // 使用者余额(元)
+// 	double prepayment                   = 4; // 预付充电费用(元)
+// 	int32  mode                         = 5; // 启动充电的模式,目前只支持自动充满
+// 	double allowed_kwh                  = 6; // 最大充电电量，最大150度电，既150.00
+// 	int32  allowed_minute               = 7; // 最大充电时间，默认24小时，既1440分钟
+// 	string payment_channel              = 8; // 支付渠道（自定义）
+// 	bool   is_payed                     = 9; // 是否已支付
+//     double allowed_money                = 10;// 最大充电金额，默认是0，不限制(元)
+//     CouponType coupon_type              = 11;// 优惠类型
+//     // uint64 coupon_id                    = 12;// 优惠券id
+//     int32   schedule_time               = 13;  // 定时充电时间戳(秒), 0表示即时充电
+// }
+// message RemoteStartResp{
+//     coregw.Order order    = 1; // coregw返回的订单信息
+//     // string order_id       = 2; // 订单ID（第三方请求的订单id, 同start里的orderid）
+// 	// string stationAddress = 3; // 站点地址
+//     // uint32 status_time    = 4; // 状态变更时间
+
+//     // OrderExtend extend      = 2; // 订单附带信息  
+//     Station station         = 3; // 站点信息
+// }
+
+
+enum EvseSupportTypePos {
+    ESTP_WhiteList = 0;             // 白名单
+    ESTP_GroupPay = 1;              // 集团支付启动充电
+    ESTP_ScheduleTimeCharging = 2;  // 定时充电
+}
+
+message InfoByConnectorAndCustomerReq {
+    uint64 connector_id = 1;    // 枪头id
+    uint64 customer_id  = 2;    // 用户id
+}
+message InfoByConnectorAndCustomerResp {
+    coregw.EvseResp evse_info = 1; // 设备信息
+    uint64 bit_evse_support_types = 2;  // 设备支持类型(每一位标示参考EvseSupportTypePos)
+}
+
+message ConnectorInfoByCustomeReq {
+    uint64 connector_id = 1;    // 枪头id
+    uint64 customer_id  = 2;    // 用户id
+}
+message ConnectorInfoByCustomeResp {
+    coregw.ConnectorResp connector_info = 1; // 枪头信息
+    uint64 bit_evse_support_types = 2;  // 设备支持类型(每一位标示参考EvseSupportTypePos)
+}
+
+// 获取调用方信息
+message CallerByIDReq {
+}
+message CallerByIDResp {
+    Caller caller = 1;
+}
+
+message Caller {
+    uint64 id           = 1; //调用方ID
+	uint64 operator_id  = 2; //运营商ID
+	string name         = 3; //名称
+	string api_key      = 4; //通讯的key，生成后就不允许更改了
+	string callback_url = 5; //回调地址
+    string api_id       = 6; // api id
+}
+
+
+// 同步用户信息
+message SyncUserInfoReq{
+    customer.CustomerInfo customer   = 1;    // 用户基本信息
+}
+message SyncUserInfoResp{
+    customer.CustomerInfo   customer = 1;   // 返回平台上用户的信息
+}
+
+
+
+// 结算订单
+message OrderSettlementResp {
+}
+
+// 获取站点的管理员
+message GetStationManagersResp {
+    repeated uint64 ids            = 1;    // 站点的管理员，含父级
+}
+
+
+// 资源配额类型
+enum QuotaLimitationType {
+    QLType_Operator_Cards = 0;  
+    QLType_Station_Cards = 1;
+    QLType_Station_Whitelists = 2; // 站点白名单限制
+}
+
+// 资源配合
+message GetQuotaLimitationReq {
+    QuotaLimitationType type = 1; //类型
+    uint64 resource_id = 2;//资源ID
+}
+
+message GetQuotaLimitationResp {
+    int64 limit = 1; //限制，-1为不限制
+}
+
+// 白名单
+message CheckIsInWhiteListReq {
+    uint64 station_id = 1; //站点ID
+    int32  authorize_mode = 2; // 鉴权模式
+    string authorize_id = 3; //鉴权ID
+}
+
+message CheckIsInWhiteListResp {
+    bool res = 1; //false: 不在, true: 在
+}
+
+//告警
+message WarningEventReq {
+    uint64 evse_id = 1; // 设备ID
+    int32  state   = 2; // 状态
+    string key     = 3; // 告警的key，方便从redis取出值来渲染到事件中
+    string unique_key = 5; // 唯一的key，用于数据库排重
+}
+
+message WarningEventResp {
+
+}
+
+//证书
+message LicenseReq {
+    uint64 id = 1; // 设备ID
+}
+
+message LicenseResp {
+    int32 expired_at = 1;// 过期时间，如果expired_at=0，就说明是永久有效的设备
+}
+
+//ActiveReq
+message ActiveReq {
+    uint64 id = 1; // 设备ID
+    uint64 operator_id = 2; //运营商ID
+    int32 time = 3; // 激活日期
+    bool is_dc = 4; // 是否是直流
+    int32 connector_nums = 5; //枪数量
+    bool is_car = 6; //是否汽车设备，true:汽车 false:电瓶车
+}
+
+message ActiveResp {
+    uint64 license_id = 1; //证书ID
+    int32 expired_at = 2; //过期时间，如果expired_at=0，说明永久有效
+}
+
+//HardwareReq --2020/12/23 17:39
+message HardwareReq{
+    uint64 hardware_id=1;//固件id
+}
+
+message HardwareResp{
+    uint64  id=1;//固件id
+    string url=2;  //路径
+    string note=3;  //备注
+    string check_sum=4;//校验md5
+    bool is_exists=5;//false:不存在 true:存在
+}
+
+//CreateStationReq
+message CreateStationReq {
+    uint64 operator_id = 1; //运营商ID
+    string name = 2; //名称
+    float lat = 3; //纬度
+    float lng = 4; //经度
+}
+
+//CreateStationResp
+message CreateStationResp {
+    uint64 id = 1; //站点ID
+}
+
+//UpdateStationLatLngReq
+message UpdateStationLatLngReq{
+    uint64 id = 1; //站点ID
+    float lat = 3; //纬度
+    float lng = 4; //经度
+}
+
+//UpdateStationLatLngResp
+message UpdateStationLatLngResp{
+}
+
+// WarningHistoryEventReq
+message WarningHistoryEventReq{
+    uint64 id = 1; //设备ID
+    int32 start_time = 2; //开始时间
+    int32 end_time = 3; //结束时间
+}
+
+// WarningHistoryEventResp
+message WarningHistoryEventResp {
+    message Event {
+        int32 end_time = 1; //故障结束时间
+        int32 code = 2; //故障代码
+    }
+    repeated Event events = 1; //事件
+}
+
+message CallerByOperatorIDReq {
+    uint64 operator_id = 1;
+}
+
+message CallerByOperatorIDResp {
+    Caller caller = 1;
+}

@@ -1,0 +1,644 @@
+// cl_message.proto
+//
+//Copyright(c) 2015 www.chargerlink.com (japy@chargerlink.com)
+//All rights reserved.
+//
+syntax = "proto2";
+package cl_message;
+option optimize_for = LITE_RUNTIME;
+
+//Base消息类
+//后台和gateway，以及station之间传递的顶层消息结构
+//cmd格式：hhmmdddd
+//hh--随机数，
+//mm--evse地址，0：广播，1～254：对应的evse id，255：gateway
+//dddd--命令id号，
+//      00000000 00000000
+//      |||_____________|____ 命令id
+//      ||___________________ 0表示req，1表示conf       
+//      |____________________ 1表示出现错误
+//命令id约定：0～1111 1111b 为后台和cp之间的命令
+//      100000000b～111111111b 为cpgw和cpsta之间的命令
+//
+//
+//Base消息序列化之后的格式
+// 08 xx 15 ddl ddh mm hh
+// |  |  |   |   |  |  |__ cmd随机数
+// |  |  |   |   |  |_____ evse地址
+// |  |  |   |   |________ 命令id高字节 
+// |  |  |   |____________ 命令id低字节  
+// |  |  |________________ protobuf格式固定数字
+// |  |___________________ varint格式编码的数据长度值
+// |______________________ protobuf格式固定数字
+
+message Base
+{
+	required int32 length = 1;//除此字段外，base消息序列化后的数据长度
+	required fixed32 cmd = 2;//详细见上面注释
+	required fixed32 timestamp = 3;//时间戳，后台可使用此字段和上面的cmd字段组成一个64bit的unique id
+	optional bytes payload = 4;//存放各种不同类型的消息序列化后的字符串
+}
+
+enum MSG
+{
+    MSG_RequestStart = 1;//远程开启充电
+    MSG_RequestStop = 2;//远程结束充电
+    MSG_GetTransactions = 3;//获取离线交易记录
+    MSG_UpgradeFirmware = 4;//升级固件
+    MSG_SetConfiguration = 5; //目前设置枪头可用状态，设置绑定配对关系，设置电表上报间隔时间
+    MSG_SetPricing = 6;//设置价格模板
+    MSG_Reset = 7;//重置
+    MSG_ParkLock = 8; //控制地锁开关
+    MSG_Authorize = 32;//刷卡授权
+    MSG_TransactionStarted = 33;//充电开启通知
+    MSG_TransactionStopped = 34;//充电结束通知
+    MSG_TransactionRecords = 35;//离线记录上报
+    MSG_Measure = 36;//电表测量数据上报
+    MSG_BootNotification = 37; //开机启动
+    MSG_StatusNotification = 38; //枪头状态
+    MSG_FirmwareStatusNotifcation = 39;//固件状态更新
+    MSG_SensorStatusNotification = 40;//车位传感器状态更新
+    MSG_GetCost = 41; //获得当前交易的价格
+    MSG_LoginGW = 257;
+    MSG_HeartbeatGW = 258;
+    MSG_NetstatGW = 259;
+    MSG_UpgradeGW = 260;
+}
+
+message CallError
+{
+	enum ErrorCode{
+		NOT_IMPLEMENTED = 0; //Requested Action is not known by receiver
+		NOT_SUPPORTED = 1; //Requested Action is recognized but not supported by the receiver
+		INTERNAL_ERROR = 2; //An internal error occurred and the receiver was not able to process the requested Action successfully
+		PROTOCOL_ERROR = 3; //Payload for Action is incomplete
+		SECURITY_ERROR = 4; //During the processing of Action a security issue occurred preventing receiver from completing the Action successfully
+		FORMATION_VIOLATION = 5;//Payload for Action is syntactically incorrect or not conform the PDU structure for Action
+		PROPERTY_CONSTRAINT_VIOLATION = 6;//Payload is syntactically correct but at least one field contains an invalid value
+		OCCURENCE_CONSTRAINT_VIOLATION = 7;//Payload for Action is syntactically correct but at least one of the fields violates occurence constraints
+		TYPE_CONSTRAINT_VIOLATION = 8;//Payload for Action is syntactically correct but at least one of the fields violates data type constraints 
+		GENERIC_ERROR = 9;//Any other error not covered by the previous ones
+	}
+	optional ErrorCode error_code = 2;
+	optional string error_desc = 3;
+	optional string error_details = 4;
+}
+
+//------------------------------------------------------------------
+// 数据类
+//------------------------------------------------------------------
+enum IdType
+{
+	ID_CHONGDIANKA = 1;//充电网充电卡用户
+	ID_CARD_TX = 2;//授权的银行卡号
+	ID_PHONE_NUMBER = 3;//电话号码授权用户
+	ID_APP = 4;//app用户
+	ID_WECHAT = 5;//微信扫描用户
+    ID_BLUETOOTH = 6; // 蓝牙
+    ID_DIRECT = 7; // 即插即充
+	//电子钱包卡类型请设定在10000以后	
+    ID_CHARGE_SHANGHAI_BUS = 10000; // 上海公交卡，卡端扣费
+}
+
+enum ChargerStatus{
+	CSTU_Available = 1;//空闲可以使用
+	CSTU_Occupied = 2;//占用,充电中或者单纯线缆已连接
+	CSTU_Unavailable = 0;//不可用
+}
+
+enum FirmwareStatus
+{
+    FS_Cancelled = 1;
+    FS_DownloadScheduled = 2;
+    FS_DownloadStarted = 3;
+    FS_DownloadPaused = 4;
+    FS_DownloadResumed = 5;
+    FS_DownloadFinished = 6;
+    FS_DownloadAccessFailed = 7;
+    FS_InstallScheduled = 8;
+    FS_InstallVerificationFailed = 9;
+    FS_InstallStarting = 10;
+    FS_InstallRebooting = 11;
+    FS_InstallFinished = 12;
+    FS_InstallFailed = 13;
+}
+
+message IdToken
+{
+	required string id = 1;//Id的卡号
+	optional IdType id_type = 2;//类型
+	optional string password = 3;//IdToken的密码
+}
+
+enum AuthorizationStatus
+{
+	ATH_Accepted = 0;//接受，此用户允许充电
+	ATH_Blocked = 1;//账号被阻塞，不允许充电
+	ATH_ConcurrentTx = 2;//账号已经开启了充电交易，不允许充电
+	ATH_Expired = 3;//账号过期，不允许充电
+	ATH_Invalid = 4;//账号未知错误，不允许充电
+}
+
+message IdTagInfo
+{
+	optional int32 expiry_date = 1;//用户过期期限
+	optional string group_id = 2;//组id号
+	required AuthorizationStatus status = 3;//认证状态
+}
+
+message Transactions
+{
+	optional uint64 transaction_id = 1;//流水ID
+	optional int32 connector_id = 2;//枪头ID
+	required IdToken id_tag = 3;//用户信息
+	required int32 meter_start = 4;//开始电量
+	required int32 meter_stop = 5;//结束电量
+	required int32 time_start = 6;//开始时间
+	required int32 time_stop = 7;//结束时间
+	optional PriceScheme price_scheme = 8;//计费模板
+	required int32 stop_reason = 9;//停止原因
+	optional int32 time_spent_charging = 10;//充电时长
+	optional bytes addon = 11;//附加信息1
+	optional int32 sharp_electricity = 12;//尖电量， * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 sharp_price = 13;//单位分
+	optional int32 peak_electricity = 14;//峰电量， * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 peak_price = 15;//单位分
+	optional int32 flat_electricity = 16;//平电量， * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 flat_price = 17;//单位分
+	optional int32 valley_electricity = 18;//谷电量， * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 valley_price = 19;//单位分
+	optional int32 total_electricity = 20;//总电量， * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 total_electricity_price = 21;//总电价，单位分
+	optional int32 total_services_price = 22;//总服务费，单位分
+	optional int32 total_price = 23;//总价格,单位分
+	optional bool is_calc_price_by_charger = 24;//是否桩端计费
+
+}
+
+enum PricingUnit
+{
+    PU_ChargingHours = 0;//按充电时间收费
+    PU_OccupancyHours = 1;//按占用时间（停了多久，不管有没有充电）
+    PU_Kwh = 2;//按度
+    PU_Session = 3;//按次数
+}
+
+//收费id号是充电网约定的几个固定id号，目前先确定1，2，3号收费标准
+// 1: 按度数电费，即每度电价格
+// 例如：电费每度1.2元收费模板
+// {  tariffid = 1;
+//    price_unit = 2;
+//    price = 120
+// }
+// 2: 按度数服务费，即每度电服务费
+// 例如：充电服务费每度0.8元收费模板
+// {  tariffid = 2;
+//    price_unit = 2;
+//    price = 80
+// }
+// 3: 按时间服务费，即每小时服务费
+// 例如：服务费每小时1元收费模板
+// {  tariffid = 3;
+//    price_unit = 0;
+//    price = 100
+// }
+
+//
+//tariff id:
+//1: 按度收电费        电费：xx元/度
+//2: 按小时收电费      电费：xx元/小时
+//3: 按度服务费        服务费：xx元/度
+//4: 按小时服务费      服务费：xx元/小时
+//5: 24小时服务费上限   服务费上限：xx元/24小时
+//6: 按次收费          服务费：xx元/次
+//7: 尖电量
+//8: 峰电量
+//9: 平电量
+//10: 谷电量
+//
+message Tariff
+{
+    required int32 tariffid = 1; //收费id号
+    optional string display_text = 2; //收费详情显示
+    optional PricingUnit price_unit = 3;//收费单位
+    required int32 price = 4;//收费单位价格,单位是分
+}
+//
+//价格模板举例：电费每度1.2元，服务费每度0.8元
+//{
+//    price_scheme_id = 1;
+//    expiry_date = 1442262112;
+//    {
+//        tariffid = 1;
+//        price_unit = 2;
+//        price = 120
+//    }
+//    {
+//        tariffid = 2;
+//        price_unit = 2;
+//        price = 80
+//    }    
+//}
+
+message PriceScheme
+{
+    required int32 price_scheme_id = 1;//价格模板id号
+    optional string display_text = 2;//价格模板显示的描述
+    optional int32 expiry_date = 3;//价格模板有效截止日期
+    repeated Tariff tariff = 4;//收费方式
+	optional bytes tou = 5;//电价时段，共48bytes，每天24个小时，每半小时做一个时间段占用1个byte,第0个byte代表第1个时间段，以此类推，第47个byte代表第48个时间段
+}
+
+message ConfigOption
+{
+    required string name = 1;//配置项名称
+    required string value = 2;//配置项值
+}
+
+message ConfigSection
+{
+    required string section = 1;
+    optional string name = 2;
+    optional int32 value = 3;
+    repeated ConfigOption options = 4;
+}
+// 命令模版
+/*
+message CmdXxx
+{
+	message Request {
+	}
+	message Confirm {
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+*/
+//
+//-------------------------------------------------------------------
+//由后台发起的命令
+//-------------------------------------------------------------------
+message RequestStart
+{
+	message Request {
+		optional int32 connector_id = 1; //电桩枪头id
+		required IdToken id_tag = 2;//用户卡号
+		optional string pin_code = 3;//电桩pin码
+        optional string transparent = 4; // 透传字段
+		optional bool pin_authorize = 5; //是否需要pin授权开启充电,true就要鉴权，false就绕过pin码认证
+		optional int32 balance = 6;//余额，单位分
+		optional int32 max_allowed_minutes = 7;//最大充电时间，单位分钟
+		optional int32 max_allowed_kwh = 8;//最大充电电量，单位千瓦时
+		optional int32 max_allowed_price = 9;//最大充电价格，单位分
+	}
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message RequestStop
+{
+	message Request {
+		required uint64 transaction_id = 1;//结束充电流水号
+	}
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message GetTransactions
+{
+	message Request {
+		optional int32 start_time = 1;//开始时间
+		optional int32 end_time = 2;//结束时间
+		optional int32 pos = 3;//偏移
+		optional int32 count = 4;//获取数量
+	}
+	message Confirm {
+		required int32 count = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message UpgradeFirmware
+{
+	message Request {
+		required string location = 1;//URL from which to retrieve the firmware
+		required string md5 = 2; //md5 checksum
+		optional int32 retries = 3;
+		optional string retrieve_date = 4;
+		optional int32 retry_interval = 5;
+	}
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message SetConfiguration
+{
+	message Request {
+		required string filename = 1;
+        repeated ConfigSection sections = 2;
+	}
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message SetPricing
+{
+	message Request {
+		required PriceScheme price_scheme = 1;
+	}
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message Reset
+{
+	message Request {
+		required int32 reset_type = 1; //重启类型，0：重启本次充电（关闭充电），1：重启程序（重启客户端网络程序），2：重启系统（重启linux系统）
+	    optional int32 connector_id = 2;//枪头号
+    }
+	message Confirm {
+		required int32 status = 1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message ParkLock
+{
+    message Request {
+        required int32 lockid = 1; //锁的id号
+        required int32 lock = 2;//控制锁开关 0:开锁，1：上锁
+    }
+    message Confirm {
+        required int32 status = 1;//0:接受命令，非0：错误状态
+    }
+    optional Request req = 1;
+    optional Confirm conf = 2;
+}
+//
+//-------------------------------------------------------------------
+//由充电点发起的命令
+//-------------------------------------------------------------------
+
+message Authorize 
+{
+	message Request {
+		required IdToken id_tag = 1;
+		optional int32 connector_id = 2;
+	}
+	message Confirm {
+		optional IdTagInfo id_info = 1;
+		optional int32 price_scheme_id = 2;
+		optional int32 balance = 3;//余额,单位分
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message TransactionStarted
+{
+	message Request {
+		optional int32 connector_id = 1;
+		required IdToken id_tag = 2;
+		required int32 meter_start = 3;//*100 ，比如数据为220，实际表示2.2kwh
+		required int32 timestamp = 4;
+		optional int32 price_scheme_id = 5;
+		optional uint64 transaction_id = 6;
+        optional string pin_code = 7;	//电桩pin码
+        optional string transparent = 8;//透传字段，硬件在transactionStart需要回复
+		optional bool is_calc_price_by_charger = 9;//是否桩端计费
+	}
+	message Confirm {
+		optional uint64 transaction_id = 1;
+		optional IdTagInfo id_info = 2;
+		optional int32 max_allowed_hours = 3;
+		optional int32 max_allowed_kwh = 4;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message TransactionStopped
+{
+	message Request {
+		optional uint64 transaction_id = 1;
+		required IdToken id_tag = 2;
+		required int32 meter_stop = 3;//*100 ，比如数据为220，实际表示2.2kwh
+		required int32 timestamp = 4;
+		required int32 stop_reason = 5;
+		optional int32 time_spent_charging = 6;
+		optional bytes addon = 7;//附加字段1，用户处理刷卡上报对账等信息
+		optional int32 sharp_electricity = 8;//尖电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 sharp_price = 9;//单位分
+		optional int32 peak_electricity = 10;//峰电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 peak_price = 11;//单位分
+		optional int32 flat_electricity = 12;//平电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 flat_price = 13;//单位分
+		optional int32 valley_electricity = 14;//谷电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 valley_price = 15;//单位分
+		optional int32 total_electricity = 16;//总电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 total_electricity_price = 17;//总电价，单位分
+		optional int32 total_services_price = 18;//总服务费，单位分
+		optional int32 total_price = 19;//总价格,单位分
+	}
+	message Confirm {
+		optional int32 total_cost = 1;//费用多少，如果产生费用，则会有这个字段，单位为分，对于有地磁超声波，需要后计算的，不会产生这个字段
+		optional bool is_charged = 2;//是否已扣费，不是所有交易都是
+		optional int32 balance = 3;//余额，如果扣费成功会显示余额
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message TransactionRecords
+{
+	message Request {
+		optional int32 checksum  = 1;
+		repeated Transactions records = 2;
+	}
+
+	message Confirm {
+		required int32 status = 1;
+        repeated uint64 transaction_id = 2;
+	}
+
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message Telesignaling
+{
+	required int32 type = 1;
+	required uint64 value = 2;
+}
+
+message DCTelemetry
+{
+	required int32 voltage = 1;
+	required int32 current = 2;
+	required int32 soc = 3;
+	required int32 bat_temp_l = 4;
+	required int32 bat_temp_h = 5;
+	required int32 bat_vol_l = 6;
+	required int32 bat_vol_h = 7;
+	optional int32 temperature = 8;
+	optional int32 lead_vol =9;
+	optional int32 electricity = 10;// * 100，比如读数为220，表示电量为2.2kwh
+}
+
+message MeasureValue
+{
+	optional int32 Electricity = 1;// * 100，比如读数为220，表示电量为2.2kwh
+	optional int32 Power = 2;// * 10000，比如读数为33000，表示功率为3.3kw
+	optional int32 CurrentA = 3;// * 100
+	optional int32 CurrentB = 4;// * 100
+	optional int32 CurrentC = 5;// * 100
+	optional int32 VoltageA = 6;// * 100 比如读数为22330，表示电压为223.3v
+	optional int32 VoltageB = 7;// * 100
+	optional int32 VoltageC = 8;// * 100	
+	optional int32 Measure_point = 9;
+}
+
+message Measure
+{
+	message Request {
+		optional int32 connector_id = 1;
+		optional uint64 transaction_id = 2;
+		optional MeasureValue value = 3;
+		optional DCTelemetry telemetry = 4;
+		//如果是客户端计费，那么这些逻辑将会用于给APP/微信计费展示
+		optional int32 sharp_electricity = 5;//尖电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 sharp_price = 6;//单位分
+		optional int32 peak_electricity = 7;//峰电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 peak_price = 8;//单位分
+		optional int32 flat_electricity = 9;//平电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 flat_price = 10;//单位分
+		optional int32 valley_electricity = 11;//谷电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 valley_price = 12;//单位分
+		optional int32 total_electricity = 13;//总电量， * 100，比如读数为220，表示电量为2.2kwh
+		optional int32 total_electricity_price = 14;//总电价，单位分
+		optional int32 total_services_price = 15;//总服务费，单位分
+		optional int32 total_price = 16;//总价格,单位分
+	}
+	message Confirm {
+	}
+	
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message BootNotification
+{
+	message Request {
+		optional string version = 1;          //通信版本号，目前的版本为3.0.0
+		optional string cp_version= 2;        //gateway程序版本号
+		optional string client_version = 3;   //client客户端程序版本号
+        optional string firmware_version = 4; //MCU固件版本号
+        optional string device_pn = 5;        //设备的PN号
+		optional string device_sn = 6;        //设备序列号
+	}
+	message Confirm {
+	    optional int32  timestamp = 1;
+        optional int32  hb_interval = 2;           //设置gateway的心跳时间
+        optional int32  meter_idle_interval = 3;   //设置空闲时电表上报频率，单位秒
+        optional int32  meter_charge_interval = 4; //设置充电时电表上报频率，单位秒
+	}
+	
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message StatusNotification
+{
+    optional int32 connector_id   = 1;
+    required ChargerStatus status = 2;
+    optional Telesignaling signal = 3;
+}
+
+message FirmwareStatusNotifcation
+{
+    required FirmwareStatus status = 1;
+}
+
+message SensorStatusNotification
+{
+    optional int32 deviceid = 1; // 可选，设备的序列号
+    required int32 id = 2;       // 设备id，1,2,3...
+    required int32 type = 3;     // 设备类型1：地锁，2：车位探测器，3：地磁探测器
+    required int32 status = 4;   // 锁状态：0上锁，1半开，2锁打开；车位探测状态：0无车，1有车
+    optional int32 capacity = 5; // 电压值，capacity/10为电压值，比如capacity=64，表示6.4v
+}
+
+message Consumption //充电详情
+{
+    required int32 tariffid = 1;   // 计费id，
+    required int32 tariff_qty = 2; // 计费单位
+}
+
+message GetCost 
+{
+	message Request {
+        required int32 price_scheme_id = 1;
+        repeated Consumption local_consumption = 2;
+	}
+	message Confirm {
+        required int32 price_scheme_id = 1;
+        required int32 total_cost = 2;
+        repeated Consumption consum = 3;
+	}
+	
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+
+message LoginGW
+{
+	message Request {
+		required string deviceid=1;
+	}
+	message Confirm {
+        required bool  accept = 1;
+		optional int32 evse_id=2;
+        optional string cpid=3;
+        optional string version=4;
+        optional bool isonline =5;
+        optional int32 timestamp = 6;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message HeartbeatGW
+{
+	message Request {
+		optional int32 timestamp=1;
+	}
+	message Confirm {
+        optional int32 rssi=1;
+	}
+	optional Request req = 1;
+	optional Confirm conf = 2;
+}
+
+message NetstatGW
+{
+	optional bool  isonline = 1;
+    optional int32 timestamp = 2;
+}

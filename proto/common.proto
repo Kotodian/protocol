@@ -1,0 +1,99 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/common";
+
+package common;
+// import "rpc/common/resp.proto";
+
+message Resp {
+    int32      code = 1;//状态码,非0为异常，0位正常
+    string     err = 2;//错误描述
+    bytes      obj = 3;//真正的返回对象
+}
+
+message PageReq {
+    int32 page = 1;     // 页码，从1开始
+    int32 limit = 2;    // 每页显示数量，
+}
+
+message PageResp {
+    int32 total_page = 1;
+    int32 total_rows = 2;
+}
+
+message SearchFilter {
+    string filter_name = 1;     
+    string filter_val = 2;
+    string filter_op = 3;// 过滤类型:(=、!=、LIKE、NOT LIKE、>、<、>=<=、FIND_IN_SET、IN、NOT IN、BETWEEN、NOT BETWEEN、RANGE、NOT RANGE、NULL、NOT NULL、)
+}
+
+
+// 支付类型
+enum PayMode {
+    PM_Unknown      = 0;    // 未知支付
+	PM_Online       = 1;    // 在线支付
+	PM_Group        = 2;    // 集团支付
+	PM_IdCard       = 3;    // 鉴权卡
+	PM_UserBalance  = 4;    // 用户余额
+    PM_WalletCard   = 5;    // 钱包卡
+    PM_Manul        = 6;    // 后台
+    PM_VIN          = 7;    // VIN
+    PM_Partner      = 1000; // 第三方平台
+}
+
+// 支付渠道，一个支付类型对应多个支付渠道
+enum PayChannel {
+    PC_Unknown        = 0;    // 未知
+    PC_AliPay         = 1;    // 支付宝
+    PC_WechatPay      = 2;    // 微信
+    PC_UserBalance    = 3;    // 用户余额
+    PC_CardBalance    = 4;    // 卡余额
+    PC_Group          = 5;    // 集团支付
+    PC_Bank           = 6;    // 银行
+    PC_WalletCard     = 7;    // 钱包卡
+    PC_Manul          = 8;    // 后台操作支付
+    PC_VIN            = 15;   // vin
+    // 9～13 是第三方支付动态的注册进去
+}
+
+enum RefundMode {
+    RM_Unknown     = 0; //  
+    RM_BackTrack   = 1; // 原路退回
+    RM_UserBalance = 2; // 退回到用户余额
+}
+
+enum AuthModeChannel {
+    AMC_Unknown             = 0;    // 
+    AMC_App                 = 1;    // app
+    AMC_WechatService       = 2;    // 微信服务号
+    AMC_ALiService          = 3;    // 支付宝服务号
+    AMC_WechatSmallRoutine  = 4;    // 微信小程序
+    AMC_AliSmallRoutine     = 5;    // 支付宝小程序
+    AMC_LocalPlug           = 6;    // 本地即插即充启动
+    AMC_LocalAdmin          = 7;    // 本地管理员启动
+    AMC_LocalIdentityCard   = 8;    // 鉴权卡刷卡本地鉴权启动
+    AMC_OnlineIdentityCard  = 9;    // 鉴权卡刷卡在线鉴权启动
+    AMC_LocalWalletCard     = 10;   // 本地钱包卡刷卡启动
+    AMC_LocalVIN            = 11;   // 车辆VIN本地鉴权启动
+    AMC_OnlineVIN           = 12;   // 车辆VIN在线鉴权启动
+    AMC_Bluetooth           = 13;   // 本地通过蓝牙启动
+    AMC_MAC                 = 14;   // 本地通过输入校验码启动
+    AMC_RemoteAdmin         = 15;   // 远程管理员启动
+    AMC_Partner             = 1000; // 第三方
+}
+
+
+enum CustomerRegChannel {
+    CRC_Unknown             = 0;    // 
+    CRC_App                 = 1;    // app
+    CRC_WechatService       = 2;    // 微信服务号
+    CRC_ALiService          = 3;    // 支付宝服务号
+    CRC_WechatSmallRoutine  = 4;    // 微信小程序
+    CRC_AliSmallRoutine     = 5;    // 支付宝小程序
+    CRC_Partner             = 1000; // 第三方
+}
+
+
+
+
+

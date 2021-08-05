@@ -1,0 +1,1298 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/coregw";
+
+import "common.proto";
+
+package coregw;
+
+// 管理
+service ManageService {
+    // 申请订单，api申请订单xa调用
+    rpc ApplyOrder(ApplyOrderReq) returns(ApplyOrderResp);
+
+    // // 申请创建订单支付回调,用于先支付变更支付状态
+    // rpc OrderPayCallback(OrderPayCallbackReq) returns(OrderPayCallbackResp);
+   
+    // 设置订单支付状态
+    rpc SetOrderPayStatus(SetOrderPayStatusReq) returns (SetOrderPayStatusResp);
+
+    // 设置退款状态
+    rpc SetOrderRefundStatus(SetOrderRefundStatusReq) returns(SetOrderRefundStatusResp);
+
+    // 设置补缴状态
+    rpc SetOrderBackPayStatus(SetOrderBackPayStatusReq) returns (SetOrderBackPayStatusResp);
+
+    // 确认订单状态
+    rpc SetOrderConfirm(SetOrderConfirmReq) returns(SetOrderConfirmResp);
+
+    // // 设置订单的结算状态
+    // rpc SetOrderSettlemented(OrderInfoReq) returns(SetOrderSettlementedResp);
+
+    // 根据管理员获取告警数量
+    rpc EvseAlarmsByManager(EvseAlarmsByManagerReq) returns(EvseAlarmsResp);
+
+    // 根据运营商获取告警数量
+    rpc EvseAlarmsByOperator(EvseAlarmsByOperatorReq) returns(EvseAlarmsResp);
+
+    // 获取运营商设备
+    rpc EvsesByOperator(EvsesByOperatorReq) returns(EvsesByOperatorResp);
+
+    // 获取设备枪头
+    rpc ConnectorsByEvse(ConnectorsByEvseReq) returns(ConnectorsByEvseResp);
+
+    // 获取设备
+    rpc EvseByID(EvseByIDReq) returns(EvseByIDResp);
+
+    // 根据枪头号获取设备信息
+    rpc EvseByConnectorID(EvseByConnectorIDReq) returns(EvseResp);
+
+    // 更新设备告警
+    rpc UpdateEvseAlarms(UpdateEvseAlarmsReq) returns(UpdateEvseAlarmsResp);
+
+    // 获取枪头信息
+    rpc Connector(ConnectorReq) returns(ConnectorResp);
+
+    // 设置枪头信息
+    rpc SetConnector(SetConnectorReq) returns(SetConnectorResp);
+
+    // 根据站点获取枪头状态统计信息
+    rpc ConnectorStateCalcByStationID(ConnectorStateCalcByStationIDReq) returns(ConnectorStateCalcByStationIDResp);
+
+    // 根据站点获取枪头列表
+    rpc ConnectorsByStationID(ConnectorsByStationIDReq) returns(ConnectorsByStationIDResp);
+
+    // 根据QRCode的ID获取枪头
+    rpc ConnectorByQRCode(ConnectorByQRCodeReq) returns(ConnectorResp);
+
+    // 绑定二维码到枪头
+    rpc ConnectorBindQRCode(ConnectorBindQRCodeReq) returns(ConnectorBindQRCodeResp);
+
+    // 获取站点设备
+    rpc EvsesByStation(EvsesByStationReq) returns(EvsesByStationResp);
+
+    // 根据管理员获取设备
+    rpc EvsesByManager(EvsesByManagerReq) returns(EvsesByManagerResp);
+
+    // 根据是否被访问过获取设备
+    rpc EvsesByVisited(EvsesByVisitedReq) returns (EvsesByVisitedResp);
+
+    // 获取订单状态的时间轴
+    rpc OrderStateTimeline(OrderStateTimelineReq) returns (OrderStateTimelineResp);
+
+    // 获取订单详情
+    rpc OrderInfo(OrderInfoReq) returns (OrderInfoResp);
+
+    // 手动支付订单
+    rpc ManualOrderSettlement(ManualOrderSettlementReq) returns (ManualOrderSettlementResp);
+
+    // 数据修复
+    rpc EditOrderData(EditOrderDataReq) returns (EditOrderDataResp);
+
+    // 根据topicprefix和uuid获取设备信息
+    rpc EvseWithTopicPrefixAndUUID(EvseWithTopicPrefixAndUUIDReq) returns (EvseResp);
+
+    // 给支付渠道回复是否允许发起充电
+    rpc SetPaymentCheckIsCanStart(SetPaymentCheckIsCanStartReq) returns (SetPaymentCheckIsCanStartResp);
+
+    // 绑定证书
+    rpc BindLicense(BindLicenseReq) returns(BindLicenseResp);
+
+    // 解绑证书
+    rpc UnbindLicense(UnbindLicenseReq) returns(UnbindLicenseResp);
+
+    // 清理订单缓存
+    rpc CleanOrderMC(CleanOrderMCReq) returns(CleanOrderMCResp);
+
+    // 设置状态
+    rpc SetBlocked(SetBlockedReq) returns (SetBlockedResp);
+
+    // 设置参数
+    rpc SetEvseConfig(SetEvseConfigReq) returns(SetEvseConfigResp);
+
+    // 设置桩被访问过
+    rpc SetEvsesVisited(SetEvsesVisitedReq) returns (SetEvsesVisitedResp);
+}
+
+// 服务
+service LogicServices {
+    // 
+    rpc TransparentMQTTMsg(MQTTMsgReq) returns (MQTTMsgResp);
+
+    // 设备断网
+    rpc EvseDisconnected(EvseDisconnectedReq) returns (EvseDisconnectedResp);
+
+    // 启动充电
+    rpc RemoteStart(RemoteStartReq) returns (RemoteStartResp);
+
+    // 停止充电
+    rpc RemoteStop(RemoteStopReq) returns (RemoteStopResp);
+
+    // 设置变量
+    rpc SetVariables(SetVariablesReq) returns (SetVariablesResp);
+
+    // 获取日志
+    rpc GetLog(GetLogReq) returns(GetLogResp);
+
+    // 设置计费模版
+    rpc SetPriceScheme(SetTariffReq) returns (SetPriceSchemeResp);
+
+    // 获取离线订单请求
+    rpc GetTransactions(GetTransactionsReq) returns (GetTransactionsResp);
+
+    // 获取基本报告
+    rpc GetBaseReport(GetBaseReportReq) returns(GetBaseReportResp);
+
+    // 设备绑定站点
+    rpc BindEvseStation(BindEvseStationReq) returns (BindEvseStationResp);
+
+    // 设备和站点解绑
+    rpc UnbindEvseStation(BindEvseStationReq) returns (BindEvseStationResp);
+
+    // 获取设备信息
+    rpc Evse(EvseReq) returns (EvseResp);
+
+    // 远程控制
+    rpc RemoteControl(RemoteControlReq) returns (RemoteControlResp);
+
+    // 获取设备诊断日志
+    rpc GetDiagnostics(GetDiagnosticsReq) returns (GetDiagnosticsResp);
+
+    // 远程升级
+    rpc UpdateFirmware(UpdateFirmwareReq) returns (UpdateFirmwareResp);
+
+    // 设置配置
+    rpc ChangeConfiguration(ChangeConfigurationReq) returns(ChangeConfigurationResp);
+
+    // 触发设备命令，使其重新发出数据包
+    rpc TriggerDeviceCMD(TriggerDeviceCMDReq) returns (TriggerDeviceCMDResp);
+
+    // 同步本地授权
+    rpc SyncLocalAuthorizationList(SyncLocalAuthorizationListReq) returns(SyncLocalAuthorizationListResp);
+
+    // 预约定时充电
+    rpc ReserveNow(ReserveNowReq) returns(ReserveNowResp);
+
+    // 取消预约定时
+    rpc CancelReservation(CancelReservationReq) returns(CancelReservationResp);
+
+    // 远程诊断
+    rpc RemoteDiagnosis(RemoteDiagnosisReq) returns(RemoteDiagnosisResp);
+
+    // 预约停止充电
+    rpc ReserveStop(ReserveStopTransactionReq) returns (ReserveStopTransactionResp);
+
+    // 取消预约停止充电
+    rpc CancelReserveStop(CancelReserveStopTransactionReq) returns (CancelReserveStopTransactionResp);
+}
+
+
+//  core申请订单, api申请订单xa调用
+message ApplyOrderReq{
+    uint64              order_id            =1;   // 订单ID
+    uint64              customer_id         =2;   // 客户ID
+    uint64              connectorId         =3;   // 枪头id
+    string              pin                 =4;   // pin
+    int32               authorize_mode      =5;   // 授权模式(用户远程启动，刷卡启动..., 等同于charger.AuthorizationMode)
+    string              authorization_id    =6;   // 授权id(根据授权模式来定，例如：authorize_mode=用户远程启动，authorize_id=customer_id)
+    common.PayMode      pay_mode            =7;   // 支付模式
+    string              payment_channel     =8;   // 支付渠道
+    int32               service_mode        =9;   // 启动充电的模式
+    double              allowed_kwh         =10;  // 最大充电电量，最大150度电，既150.00
+    int32               allowed_minute      =11;  // 最大充电时间，默认24小时，既1440分钟
+    bool                is_prepay           =12;  // 是否预付费
+    double              prepayment          =13;  // 预付充电费用(元)
+    uint64              tariff_id           =14;  // 计费模版id
+    int32               coupon_type         =15;  // 优惠类型(只有现金券或者折扣券两种，参考CouponTypePos)
+    double              coupon_value        =16;  // 优惠券信息,根据coupon_type来解析此值，分别表示金额或者折扣两种
+    int32               schedule_time       =17;  // 定时充电时间戳(秒), 0表示即时充电
+    bool                check               =18; // 检查枪状态，如果在启动充电的时候就要检查枪的状态，否则不需要检查，可直接创建订单
+    bool                need_confirm        =19; //是否需要外部系统对订单做一次确认,一般用于互联互通
+    bool                need_interval_push  =20; //是否需要定期推送到第三方系统
+    int32               pre_frozen_amount   =21;  // 预冻结金额，单位分
+}
+message ApplyOrderResp{
+    Order order      = 1; // 订单信息
+}
+// message OrderPayCallbackReq {
+//     uint64 order_id = 1; // 订单id
+//     int32   pay_status = 2; // 支付状态 (common/models.KindPayRetState: 0 等待支付, 1 支付成功, 2 失败, 3 支付中)
+//     string  remark = 3; // 备注
+// }
+// message OrderPayCallbackResp{
+// }
+
+// 设置订单支付
+message SetOrderPayStatusReq {
+    uint64  order_id            = 1; // 订单ID
+    int32   pay_status          = 2; // 支付状态 (具体值参考coregw.KindOrderPayState)
+    int64   pay_time            = 3; // 支付时间 
+    double  balance             = 4; // 余额（后付费在支付的时候，填写支付后余额到订单）
+    string  remark              = 5; // 备注
+}
+message SetOrderPayStatusResp {
+}
+
+
+message SetOrderRefundStatusReq{
+    uint64 order_id = 1;
+    int32 refund_status = 2;
+    double balance = 3;
+    // int64 refund_time = 4;
+    string remark = 5;
+}
+message SetOrderRefundStatusResp{
+}
+
+
+message RebuildEsOrderReq{
+}
+
+message RebuildEsOrderResp{
+}
+
+message RebuildEsEvseReq{
+}
+
+message RebuildEsEvseResp{
+}
+
+message TriggerDeviceCMDReq{
+    int32 message_id = 1; // 触发的设备命令
+    uint64 connector_id = 2; // 枪头ID
+}
+message TriggerDeviceCMDResp {
+
+}
+
+
+message EditOrderDataReq {
+    uint64  ID              = 1;    // 订单id
+    double  electricity     = 2;    // 电量
+    double  total_elec_cost   = 3;    // 总电费
+    double  total_service_cost= 4;    // 总服务费
+    double  discount_amount = 5;    // 优化金额
+    double  pay_amount = 6;         // 支付金额
+}
+
+message EditOrderDataResp {
+
+}
+
+message ManualOrderSettlementReq {
+    uint64   ID             = 1;    // 订单id
+    double  electricity     = 2;    // 电量
+    double  totalElecCost   = 3;    // 总电费
+    double  totalServiceCost= 4;    // 总服务费
+    double  discount_amount = 5;    // 优化金额
+    // int64   stopDate        = 5;    // 停止时间
+    int32   reason          = 6;    // 理由
+}
+message ManualOrderSettlementResp {
+}
+
+message SetOrderSettlementedResp {
+}
+
+message OrderStateTimelineReq {
+    int32    offset = 1;
+	int32    limit  = 2;
+    uint64   ID     = 3;
+}
+
+message OrderStateTimelineResp {
+    int32    total_row = 1;
+    repeated OrderStateTimelineData rows = 2;
+}
+
+message OrderStateTimelineData {
+    int64 time          = 1;   //时间
+    string desc         = 2;   //内容
+}
+
+message ConnectorBindQRCodeReq {
+    uint64      evse_id              = 1; //设备ID
+    repeated    string codes         = 2; //自定义二维码编号
+}
+
+message ConnectorBindQRCodeResp {
+}
+
+enum RemoteStartType {
+    WechatOrAli      = 0; // 微信或支付宝
+    Balance          = 1; // 余额
+    Group            = 2; // 集团
+    Partner          = 3; // 合作方
+}
+
+enum CouponTypePos {
+    CTP_Unknown = 0;      // 白名单
+    CTP_DiscountCoupon = 2; // 折扣卷
+    CTP_CashCoupon = 3;     // 现金卷
+}
+
+// 启动充电
+message RemoteStartReq {
+    uint64 order_id = 1;   // 订单id
+    SetTariffReq priceScheme =2;    // 计费模版
+    // int32               connectorId         =1;     // 枪头id
+    // IdToken             IdData              =2;     //
+    // string              transactionId       =3;     // 交易id
+    // string              pin                 =4;     // pin
+    // int32               serviceMode         =5;     // 服务模式
+    // int32               timingStart         =6;     // 开始时间
+    // int32               allowedMinute       =7;     // 按时间
+    // int32               allowedKwh          =8;     // 按电量
+    // int32               allowedRMB          =9;     // 按钱
+    // SetTariffReq        priceScheme         =10;    // 计费模版
+    // string              payment_channel     =11;    // 支付渠道
+    // bool                is_payed            =12;    // 是否已支付
+    // int32               coupon_type         =13;    // 优惠类型(只有现金券或者折扣券两种，参考CouponTypePos)
+    // double              coupon_value        =14;    // 优惠券信息,根据coupon_type来解析此值，分别表示金额或者折扣两种
+    // uint64              customer_id         =15;    // 客户ID
+    // int32               schedule_time       =16;    // 定时充电时间戳(秒), 0表示即时充电
+}
+message RemoteStartResp {
+    coregw.Order order = 1; // 订单信息
+    // uint64   ID                            = 1;   // ID
+	// string   stationName                   = 2;   // 站点名称
+	// uint64   evseID                        = 3;   // 设备ID
+	// uint64   connectorID                   = 4;   // 枪头ID
+	// uint64   recordID                      = 5;   // 硬件充电流水号
+	// int32    state                         = 6;   // 订单状态
+	// string   pin                           = 7;   // pin
+	// int32    authorizationMode             = 8;   // 授权启动方式
+	// string   authorizationID               = 9;   // 授权用户的ID
+	// int32    serviceMode                   = 10;  // 充电服务模式
+	// double   startElectricity              = 11;  // 启动时的电量
+	// int32    chargeStartTime               = 12;  // 开始时间
+    // uint64   priceSchemeID                 = 13;  // 计费模板ID
+    // int32    isOfflineSync                 = 14;  // 是否离线订单
+}
+
+// 停止充电
+message RemoteStopReq {
+    string transactionId = 1; // 平台交易id
+}
+message RemoteStopResp {
+    uint64                ID                       = 1;   //ID
+    string                stationName              = 2;   //站点
+    uint64                evseID                   = 3;   //设备ID
+    uint64                connectorID              = 4;   //枪头ID
+    string                recordID                 = 5;   //硬件充电流水号
+    int32                 state                    = 6;   //订单状态
+    uint32                stateTime                = 7;   //订单变更时间（时间戳）
+    string                pin                      = 8;   //pin
+    int32                 authorizationMode        = 9;   //授权启动方式
+    string                authorizationID          = 10;  //授权用户的ID
+    int32                 serviceMode              = 11;  //充电服务模式
+    int32                 isOfflineSync            = 12;  //是否离线订单
+    double                totalCost                = 13;  //总费用
+    double                totalElectricity         = 14;  //总电量
+    double                sharpElectricity         = 15;  //“尖”时刻电量
+    double                peakElectricity          = 16;  //“峰”时刻电量
+    double                flatElectricity          = 17;  //“平”时刻电量
+    double                valleyElectricity        = 18;  //“谷”时刻电量
+    double                sharpElectricityCost     = 19;  //“尖”时刻电费
+    double                peakElectricityCost      = 20;  //“峰”时刻电费
+    double                flatElectricityCost      = 21;  //“平”时刻电费
+    double                valleyElectricityCost    = 22;  //“谷”时刻电费
+    double                sharpServicesCost        = 23;  //“尖”时刻服务费
+    double                peakServicesCost         = 24;  //“峰”时刻服务费
+    double                flatServicesCost         = 25;  //“平”时刻服务费
+    double                valleyServicesCost       = 26;  //“谷”时刻服务费
+    double                startElectricity         = 27;  //启动时的电量
+    double                stopElectricity          = 28;  //结束时的电量
+    string                stopReason              = 29;  //停止原因
+    int32                 chargeStartTime          = 30;  //开始时间
+    int32                 chargeStopTime           = 31;  //结束时间
+    int32                 endTime                  = 32;  //订单结束时间
+    uint64                priceSchemeID            = 33;  //计费模板ID
+}
+
+// 设置计费模版
+message SetTariffReq {
+    uint64                   tariffid          = 1; // 计费模版版本id
+    string                   description       = 2; // 描述
+	repeated TariffCharge    chargetariffs     = 3; // 
+	repeated TariffTime      timetariffs       = 4; // 
+    repeated TariffParking   parkingtariffs    = 5; // 
+    int32                    unitprice         = 7; //计费单价，分辨率RMB 0.1分。
+    int32                    free_charger_time = 8; //免费充电时间
+}
+message SetPriceSchemeResp {
+
+}
+
+// 获取离线订单请求
+message GetTransactionsReq {
+    uint64  connectorID = 1;   // 枪头ID
+	int32   startTime   = 2;   // 开始时间
+	int32   endTime     = 3;   // 结束时间
+}
+message GetTransactionsResp {
+    int32 count = 1; // 总计数
+}
+
+// 设备绑定站点
+message BindEvseStationReq {
+    uint64 stationID = 1; // 站点id
+    uint64 managerID = 2; // 管理员id
+}
+message BindEvseStationResp {
+
+}
+
+// 获取设备信息
+message EvseReq {
+    uint64 evseID = 1;  // 设备id
+}
+
+message EvseWithTopicPrefixAndUUIDReq {
+    string topic_prefix = 1;  //topic前缀
+    string uuid         = 2;  //uuid
+}
+message EvseByConnectorIDReq {
+    uint64   connector_id = 1;
+}
+message EvseResp {
+    Evse     evse                 = 1;   // 设备信息
+	repeated Connector connectors = 2;   // 枪头信息
+}
+
+// 远程控制
+message RemoteControlReq {
+    string function  = 1;
+	string parameter = 2;
+
+}
+message RemoteControlResp {
+    int32  status = 1;
+}
+
+// 获取设备诊断日志
+message GetDiagnosticsReq {
+    string  url             = 1;
+    int32   retries         = 2;
+    int32   retryInterval   = 3;
+    int32   startTime       = 4;
+    int32   endTime         = 5;
+}
+message GetDiagnosticsResp {
+    string filename  = 1;
+}
+
+// 远程升级
+message UpdateFirmwareReq {
+    uint64  id             = 1;
+    string  url            = 2;
+    string  checksum       = 3;
+    int32   retries         = 4;
+    int32   retryDate       = 5;
+    int32   retryInterval   = 6;
+    int32   request_id = 7;
+}
+message UpdateFirmwareResp {
+    int32 status = 1;
+}
+
+// 设置配置
+message ChangeConfigurationReq {
+    map<string, string> confs = 1;
+    int32 connector_id = 2;
+}
+
+message ChangeConfigurationResp {
+    int32 status = 1;
+}
+
+message MQTTMsgReq {
+    string      topic = 1;
+    int32       qos = 2;
+    bool        retained = 3;
+    string      evseid = 4;
+    bytes       payload  = 5;
+}
+
+message MQTTMsgResp {
+}
+
+// 设备断网
+message EvseDisconnectedReq {
+    uint64     id  = 1; // 客户端ID
+    string     msg = 2; // 原因
+}
+
+message EvseDisconnectedResp {
+}
+
+// 订单详情
+message OrderInfoReq {
+    repeated uint64 ids  = 1;   // 平台ID
+}
+message OrderInfoResp {
+    repeated Order orders = 2; //  订单列表
+}
+
+message Order {
+    uint64  ID = 1;                           // 平台ID
+    repeated Bill bills = 2;                  // 分时收费
+    string      stationName = 3;              // 站点
+    Evse        evse = 4;                     // 设备信息
+    Connector   connector = 5;                // 枪头信息
+    string      recordID = 6;                 // 硬件充电流水号
+    int32       state = 7;                    // 订单状态
+    string      pin = 8;                      // pin
+    int32       onlineState = 9;              // 订单在枪头在线时候的状态，用于在枪头恢复网络时候恢复订单为离线前的状态
+    int32       authorizationMode = 10;       // 授权启动方式
+    string      authorizationID = 11;         // 授权用户的ID
+    int32       serviceMode = 12;             // 充电服务模式
+    int32       isOfflineSync = 13;           // 是否离线订单
+    double      payAmount = 14;               // 支付金额 元
+    double      totalElecCost = 15;           // 总电费 元
+    double      totalServiceCost = 16;        // 总服务费 元
+    double      totalCost = 17;               // 总费用(应结费用) 元
+    double      totalElectricity = 18;        // 总电量
+    double      sharpElectricity = 19;        // “尖”时刻电量
+    double      peakElectricity = 20;         // “峰”时刻电量
+    double      flatElectricity = 21;         // “平”时刻电量
+    double      valleyElectricity = 22;       // “谷”时刻电量
+    double      unknownElectricity = 23;      // “未知”时刻电量
+    double      sharpElectricityCost = 24;    // “尖”时刻电费
+    double      peakElectricityCost = 25;     // “峰”时刻电费
+    double      flatElectricityCost = 26;     // “平”时刻电费
+    double      valleyElectricityCost = 27;   // “谷”时刻电费
+    double      unknownElectricityCost = 28;   // “未知”时刻电费
+    double      sharpServicesCost = 29;       // “尖”时刻服务费
+    double      peakServicesCost = 30;        // “峰”时刻服务费
+    double      flatServicesCost = 31;        // “平”时刻服务费
+    double      valleyServicesCost = 32;      // “谷”时刻服务费
+    double      unknownServicesCost = 33;      // “未知”时刻服务费
+    double      startElectricity = 34;        // 启动时的电量
+    double      stopElectricity = 35;         // 结束时的电量
+    string      stopReasonDesc = 36;          // 停止原因
+    int64       bookTime = 37;                // 预约时间
+    int64       parkTime = 38;                // 停车时间
+    int64       startTime = 39;               // 订单开始时间
+    int64       chargeStartTime = 40;         // 开始充电时间
+    int64       chargeStopTime = 41;          // 结束充电时间
+    int64       endTime = 42;                 // 订单结束时间
+    int64       leaveTime = 43;               // 离开车位时间
+    uint64      priceSchemeID = 44;           // 计费模板ID
+    string      priceSchemeInfo = 45;         // 计费描述
+    int64       createdAt       = 46;         // 创建时间
+    int32       stopReasonCode = 47;          // 停止原因代码
+    // int32       authorization_type = 47;      // 授权类型
+    // bool        is_payed = 48;                // 是否已支付
+    // bool        is_settlement = 49;           // 是否已结算，用于出对账单，退款后、费用刚好等于支付的费用或费用为0的订单在停止充电后会变更到此状态
+    string      out_order_id  = 50;           // 订单ID（第三方请求的订单id）
+    common.PayMode     pay_mode  = 51;        // 支付方式
+    common.RefundMode  refund_mode = 52;      // 退款方式
+    int64       remain_time = 53;             // 剩余充电时间 ，-1，没有值或不支持，单位秒，时间戳格式
+    double      consumed_electric = 54;       // 已充电量
+    int32       soc = 55;                     // 剩余soc，soc=-1，没有值或不支持，可以展示为"-"，如 55.5 展示为"55.5%"
+    double      receivable_amount = 56;       // 应收费用 元
+    double      discount_amount = 57;         // 优惠金额
+    int32       start_soc = 58;               // 启动soc
+    int32       stop_soc = 59;                // 停止soc
+    string      pricescheme_channel_key = 60; // 计费策略渠道键值
+    int32       schedule_time = 61;           // 定时充电时间
+    double      conflict_total_cost = 62;     // 冲突费用，单位：元
+    string      payment_channel = 63;         // 支付渠道
+    int32       bit_coupon_type = 64;         // 折扣类型
+    double      coupon_value = 65;            // 折扣值
+    int32       pay_state = 66;               // 支付状态
+    int64       pay_time = 67;                // 支付时间
+	int32       refund_state = 68;            // 退款状态
+	int32       back_pay_state = 69;          // 补缴状态
+	int32       settlement_state = 70;        // 结算状态
+	string      remark = 71;                  // 备注
+    common.PayChannel pay_channel = 72;       // 支付渠道（一个支付类型对应多个支付渠道）
+    double      balance = 73;                 // 余额
+    bool        is_prepay = 74;               // 是否先付费
+    int64       updated_at       = 75;         // 更新时间
+    uint64      group_id        = 76;           // 集团
+    uint64      customer_id     = 77;           // 客户
+    double      pre_frozen_amount = 78;        // 预冻结金额，一般用于第三方平台对接
+
+    string      chart_current_voltage  = 100; // 电流电压图表
+    string      chart_power_soc_temp   = 101; // 功率、SOC、温度图表
+}
+
+// enum PayMode {
+//     PayModeUnknown      = 0; //
+// 	PayModeOnline       = 1; // 在线支付
+// 	PayModeGroup        = 2; // 集团支付
+// 	PayModeIdCard       = 3; // 鉴权卡
+// 	PayModeUserBalance  = 4; // 用户余额
+//     PayModeWalletCard   = 5; // 钱包卡
+//     PaymodeVIN          = 6; // VIN卡
+//     PaymodePartner      = 1000; // 第三方平台
+// }
+// enum RefundMode {
+//     RefundModeUnknown     = 0; //  
+//     RefundModeBackTrack   = 1; // 原路退回
+//     RefundModeUserBalance = 2; // 退回到用户余额
+// }
+
+enum VehicleType {
+    Unknown         = 0 ; // 
+    Bicycle         = 1 ; // 电动单车
+    Car             = 2 ; // 电动小汽车
+    BicycleAndCar   = 3 ; // 两者都有
+}
+
+enum EvseType {
+    EvseTypeUnknown     = 0 ; //未知
+    EvseTypeDC          = 1 ; //汽车交流
+    EvseTypeAC          = 2 ; //汽车直流
+}
+
+message Model {
+    string  id                        = 1; // id
+	string  name                      = 2; // 名称
+    string  vendor                    = 3; // 供应商
+    string  product                   = 4; // 产品版本
+	string  type                      = 5; // 设备类型
+	double  rated_power               = 6; // 额定功率
+	double  rated_current             = 7; // 额定电流
+    double  rated_voltage             = 8; // 额定电压
+    VehicleType vehicle_type          = 9; // 使用车辆类型
+//     bool is_timeout_stop_remote_start = 10; // 启动超时停止
+}
+
+// Evse 设备信息
+message Evse  {
+    uint64      ID                       = 1; //ID
+    uint64      operatorID               = 2; //运营商ID
+    uint64      stationID                = 3; //所属站点ID
+    // string      model                    = 4; //型号
+    // string      vendor                   = 5; //运营商
+    Model       model                    = 4; //型号信息 
+    string      SN                       = 6; //序列号
+    string      registerationCode        = 7; //注册码
+    int32       connectorNumber          = 8; //枪头数量
+    int32       state                    = 9; //状态值
+    string      firmwareVersion          = 10; //固件版本号
+    string      protocolVersion          = 11; //通信版本号
+    string      lastLostConnReason       = 12; //上次链接断开原因
+    int64       lastLostConnTime         = 13; //上次链接断开时间
+    uint64      jobDiagnosticsID         = 14; //诊断任务ID
+    string      jobDiagnosticsState      = 15; //诊断任务状态
+    int32       upgrade_state            = 16; //固件升级状态
+//    uint64      jobUpgradeID             = 16; //升级任务ID
+//    string      jobUpgradeState          = 17; //升级任务状态
+//    uint64      tariffID                 = 18; //计费策略ID
+    map<int32, string>      tariffInfo   = 19; //计费描述
+    int64       createdAt                = 20; //创建时间
+    uint64      managerID                = 21; //所属管理员ID，与站点ID对应，冗余字段
+    uint32      alarmNums                = 22; //设备告警总数
+    string      topic_prefix             = 23; //topic的前缀
+    string      uuid                     = 24; //uuid
+    int32       connectorAvailableNumber = 25; // 枪头空闲数量
+    int32       RSSI                     = 26; // 信号值
+    string      ICCID                    = 27; // ICC卡号
+    uint32      keepalive                = 28; // keepalive时间
+    bool        debug_mode               = 29; // 调式模式
+    int64       expired_at               = 30; //证书过期时间
+    uint64      license_id               = 31; // 证书ID
+    int32       connectorOccupyNumber    = 32; // 占用中的枪头数量
+    int32       connectorFaultNumber     = 33; // 故障中的枪头数量
+    int32       connectorChargingNumber  = 34; // 充电中的枪头数量
+    uint64      ComponentBits            = 35; // 功能开关, 以比特位的形式进行传输，0表示基本功能（功能支持，见goiot协议）
+    bool        blocked                  = 36; //是否屏蔽
+    EvseType    type                     = 37; // 设备类型
+    double      rated_power              = 38; // 额定功率
+    double      rated_current            = 39; // 额定电流
+    double      rated_voltage            = 40; // 额定电压
+    VehicleType vehicle_type             = 41; // 使用车辆类型
+    string      bt_mac_addr              = 42; // BT Mac地址
+    string      bt_pwd                   = 43; // BT 配对密码
+    int64       evse_time                = 44; // 桩端时间
+}
+
+enum EvseComponentPOS {
+    ECP_ScheduleTimeCharging = 0;  // 定时充电
+    ECP_FeeDetail            = 32; //支持分段计费明细
+}
+
+// 分时收费
+message Bill {
+    uint64  orderID = 1;         // 订单id
+    int32   timeStart = 2;       // 开始时间
+    string  timeStartDesc = 3;   // 开始时间描述
+    string  tag = 4;             // 尖峰平谷
+    double   electricity = 5;     // 电量
+    double  electricityCost = 6; // 电费
+    double  serviceCost = 7;     // 服务费
+    double  totalCost = 8;       // 合计(每一分段的费用)
+}
+
+// 枪头
+message Connector {
+	uint64         ID = 1;               // ID
+	uint64         evseID = 2;           // 设备ID
+	int32          connectorID = 3;      // 枪头ID
+	uint64         orderID = 4;          // 平台的流水号
+	string         recordID = 5;         // 硬件的充电流水号
+	int32          state = 6;            // 桩当前状态
+	int32          type = 7;             // 接口类型
+	double         inputVoltage = 8;     // 输入电压，单位V，分辨率0.1V
+	double         inputVoltageA = 9;    // 输入A相电压，单位V，分辨率0.1V
+	double         inputVoltageB = 10;   // 输入B相电压，单位V，分辨率0.1V
+	double         inputVoltageC = 11;   // 输入C相电压，单位V，分辨率0.1V
+	double         inputCurrent = 12;    // 输入电流，单位A，分辨率0.1A
+	double         inputCurrentA = 13;   // 输入A相电流，单位A，分辨率0.1A
+	double         inputCurrentB = 14;   // 输入B相电流，单位B，分辨率0.1A
+	double         inputCurrentC = 15;   // 输入C相电流，单位C，分辨率0.1A
+	double         outputVoltage = 16;   // 输出电压，单位V，分辨率0.1V
+	double         outputCurrent = 17;   // 输出电流，单位A，分辨率0.1A
+	double         voltage = 18;         // A相电压，单位V，分辨率0.1V
+	double         voltageA = 19;        // A相电压，单位V，分辨率0.1V
+	double         voltageB = 20;        // B相电压，单位V，分辨率0.1V
+	double         voltageC = 21;        // C相电压，单位V，分辨率0.1V
+	double         current = 22;         // 电流，单位A，分辨率0.1A
+	double         currentA = 23;        // A相电流，单位A，分辨率0.1A
+	double         currentB = 24;        // B相电流，单位A，分辨率0.1A
+	double         currentC = 25;        // C相电流，单位A，分辨率0.1A
+	double         powerKilowatts = 26;  // 功率，单位kW，分辨率0.01kW
+	string         qrcode = 27;          // qrcode 二维码
+	double         soc = 28;             // soc
+	double         electricity = 29;     // 电量
+  int32          temp = 30;            // 温度
+  string         no = 31;              // 枪头自定义编号
+  uint32         authorization_mode = 32;  // 支持授权的方式
+  uint32         remote_start_type = 33;  // 远程启动充电的类型，bitmap类型，具体查看 coregw.RemoteStartType
+  uint64         qrcode_id = 34;          // 二维码ID
+  Evse           evse = 35;
+  double         charged_electricity = 36; //已充电量
+  string         reserve_charge_time = 37; //定时启动充电时间
+  bool           reserve_status = 38; //是否启动预约定时充电
+  bool           reserve_is_cycle = 39; //预约是否是周期性
+  string         reserve_stop_time=40; //定时停止充电时间
+}
+
+// 获取运营商设备
+message EvsesByOperatorReq{
+    int32    offset = 1;
+	int32    limit  = 2;
+    uint64   operatorID = 3;
+    string   sn = 4;
+}
+message EvsesByOperatorResp{
+    int32 totalRows = 1;
+    repeated Evse evses = 2;
+}
+
+message EvsesByVisitedReq {
+    
+}
+
+message EvsesByVisitedResp {
+    repeated Evse evse = 1;
+}
+message SetEvsesVisitedReq {
+    repeated uint64 evseID = 1;
+}
+
+message SetEvsesVisitedResp {
+
+}
+
+// 获取设备枪头
+message ConnectorsByEvseReq{
+    uint64 evseID = 1;
+}
+message ConnectorsByEvseResp{
+    repeated Connector connectors = 1;
+}
+// 获取枪头信息
+message ConnectorReq{
+    uint64 connectorID = 1;
+}
+message ConnectorResp{
+    Evse      evse = 1;      
+	Connector connector = 2; 
+}
+
+message SetConnectorReq{
+    uint64 connector_id = 1;    // 枪头id
+    string no           = 2;    // 枪头编号
+}
+message SetConnectorResp{
+
+}
+
+// 根据QRcodeID获取枪头信息
+message ConnectorByQRCodeReq{
+    string code = 1;
+    string reg = 2;
+}
+
+// 根据站点获取枪头状态统计信息
+message ConnectorStateCalcByStationIDReq{
+    uint64 stationID = 1;
+}
+message ConnectorStateCalcByStationIDResp{
+    int32 total                    = 1; //总数量
+    int32 total_dc                 = 2; //总直流数量
+    int32 total_dc_avaliable       = 3; //可用直流数量
+    int32 total_ac                 = 4; //总交流数量
+    int32 total_ac_avaliable       = 5; //可用交流数量
+}
+
+message ConnectorsByStationIDReq {
+    int32   offset = 1;
+	int32   limit  = 2;
+    uint64  station_id = 3;
+}
+message ConnectorsByStationIDResp {
+    int32 total = 1;
+    repeated Connector connectors = 2;
+}
+
+// 获取站点设备
+message EvsesByStationReq{ 
+    int32    Offset = 1;
+	int32    Limit  = 2;
+    uint64   StationID = 3;
+}
+message EvsesByStationResp{
+    int32 TotalRows = 1;
+    repeated Evse Evses = 2;
+}
+
+// 获取设备
+message EvseByIDReq {
+    uint64   evse_id = 1;
+}
+
+message EvseByIDResp {
+    Evse evse = 1;
+    repeated Connector connectors = 2;
+}
+
+
+// 获取当下这个管理员能管理的设备
+message EvsesByManagerReq{
+    int32    offset = 1;
+    int32    limit  = 2;
+    string   sn = 3;
+    uint64   managerID = 4;
+}
+
+message EvsesByManagerResp{
+    int32 TotalRows = 1;
+    repeated Evse Evses = 2;
+}
+
+// 获取当下这个管理员设备的告警总数量
+message EvseAlarmsByManagerReq {
+    uint64   managerID = 1;
+}
+
+// 获取当下这个运营商设备的告警总数量
+message EvseAlarmsByOperatorReq {
+    uint64   operatorID = 1;
+}
+
+message EvseAlarmsResp {
+    int32 Total = 1;
+}
+
+// 支付渠道是否允许发起充电
+message SetPaymentCheckIsCanStartReq {
+    uint64              order_id        = 1; //订单ID
+    bool                can_start       = 2; //允许发起
+    string              err             = 3; //错误描述
+}
+
+message SetPaymentCheckIsCanStartResp {
+}
+
+message ChartDataResp {
+    message Metric {
+        int32 name = 1;
+        repeated Data data = 2;
+    }
+    message Data {
+        int64 time    = 1;
+        double val    = 2;
+    }
+
+    map<int32, Metric> data = 1; // 数据
+}
+
+// 用户身份鉴权信息
+message IdToken {
+    string      Id = 1;
+    int32       IdType = 2;
+    string      Password = 3;
+    string      Customer = 4;
+    int32       ExpiryDate = 5;
+    int32       Balance = 6;
+    int32       Status = 7;
+    int32       Type = 8;
+    int32       Chargecount = 9;
+}
+
+// 计费模版相关
+// 分时段按电价计费充电计费模版
+message TariffCharge {
+	int32  Timestart    = 1;
+	int32  Timeend      = 2;
+	string Tag          = 3;
+	int32  Elecprice    = 4;
+	int32  Serviceprice = 5;
+	int32  Occupyprice  = 6;
+}
+// 计费模版相关
+// 分功率段按时长充电计费模版
+message TariffTime  {
+	int32 Powerstart = 1;
+	int32 Powerend   = 2;
+	int32 Timestart  = 3;
+	int32 Timeend    = 4;
+	int32 Price      = 5;
+}
+
+// 计费模版相关
+// 分时段计时停车费
+message TariffParking  {
+	int32  Timestart = 1;
+	int32  Price     = 2;
+}
+
+
+message UpdateEvseAlarmsReq {
+    uint64   evse_id                        = 1;   // 设备ID
+    int32    nums                           = 2;   // 数量
+}
+
+message UpdateEvseAlarmsResp{
+}
+
+
+
+message BindLicenseReq {
+    uint64 evse_id  = 1;  // 设备ID
+    uint64 package_id = 2; // 证书包ID
+    int32 expired_time = 3; // 过期时间
+    bool is_dc = 4; //直流
+    bool is_car = 5; //汽车用
+}
+
+message BindLicenseResp {
+    int32 nums = 1;   // 绑定的数量，用于更新证书包的占用数
+}
+
+message UnbindLicenseReq {
+    uint64 evse_id = 1;
+}
+
+message UnbindLicenseResp {
+    int32 nums = 1; // 释放数量，用于更新证书包的占用数
+}
+
+message CleanOrderMCReq{
+    uint64 order_id = 1;
+}
+message CleanOrderMCResp{
+}
+
+
+// 设置屏蔽
+message SetBlockedReq{
+    uint64  evse_id  = 1; // 设备ID
+    bool    blocked  = 2; // 是否屏蔽
+    uint32 connector_id = 3; //枪ID
+}
+message SetBlockedResp{
+}
+
+
+message SetOrderBackPayStatusReq{
+    uint64  order_id = 1;   // 订单id
+    int32   back_pay_status = 2; // 补缴支付状态 (common/models.KindPayRetState: 0 等待支付, 1 支付成功, 2 失败, 3 支付中)
+}
+message SetOrderBackPayStatusResp{
+}
+
+// 确认订单
+message SetOrderConfirmReq {
+    uint64  order_id            = 1; // 订单ID
+    bool    state               = 2; // 成功还是失败
+    string  remark              = 3; // 备注
+    int64   time                = 4; // 确认时间
+}
+message SetOrderConfirmResp {
+}
+
+
+// message SetBackPayedTimeReq {
+//     uint64 order_id = 1;
+//     int64 back_pay_time = 2;
+// }
+// message SetBackPayedTimeResp {
+// }
+
+message SetEvseConfigReq {
+    uint64 id = 1;
+    double rated_power = 2;
+    double rated_current = 3;
+    double rated_voltage = 4;
+    EvseType type = 5;
+    VehicleType vehicle_type = 6;
+}
+
+message SetEvseConfigResp {
+
+}
+
+message GetBaseReportReq {
+    uint64 id = 1; //设备ID
+    int32 request_id = 2; //请求ID
+}
+
+message GetBaseReportResp {
+}
+
+message SetVariablesReq {
+    uint64 id = 1;
+    string key = 2;
+    string val = 3;
+}
+
+message SetVariablesResp {
+}
+
+message GetLogReq {
+    int32 request_id = 1; //请求ID
+    string remote_location = 2; //地址
+}
+
+message GetLogResp {
+    int32 status = 1;
+}
+
+
+
+enum IdTokenEnumType {
+    ITE_Central = 0; // A centrally, in the CSMS (or other server) generated id (for example used for a remotely started transaction that is activated by SMS). No format defined, might be a UUID.
+    ITE_eMAID = 1; // Electro-mobility account id as defined in ISO 15118
+    ITE_ISO14443 = 2; // ISO 14443 UID of RFID card. It is represented as an array of 4 or 7 bytes in hexadecimal representation.
+    ITE_ISO15693 = 3; // ISO 15693 UID of RFID card. It is represented as an array of 8 bytes in hexadecimal representation.
+    ITE_KeyCode = 4; // User use a private key-code to authorize a charging transaction. For example: Pin-code.
+    ITE_Local = 5; // A locally generated id (e.g. internal id created by the Charging Station). No format defined, might be a UUID
+    ITE_MacAddress = 6;
+    ITE_NoAuthorization = 7; // Transaction is started and no authorization possible. Charging Station only has a start button or mechanical key etc. IdToken field SHALL be left empty.
+}
+
+
+/**
+ * AuthorizationStatusEnumType 鉴权状态
+**/
+enum AuthorizationStatusEnumType
+{
+    AS_Accepted = 0;        //鉴权通过，允许用户充电
+    AS_Blocked = 1;         //鉴权被挡住，不允许充电
+    AS_Expired = 2;         //账户过期，不允许充电
+    AS_Invalid = 3;         //账户无法识别，无效，不允许充电
+    AS_ConcurrentTx	= 4;    //账户有未结算的订单，不能同时开启多个订单，不允许充电
+    AS_Insufficient	= 5;    //账户余额不足，不允许充电
+    AS_PasswordError = 6;   //用户密码错误
+    AS_SystemError = 7;    //系统错误
+    AS_NoCredit = 8; // 信用额度不足
+    AS_NotAllowedTypeEVSE = 9; // 不可在此设备充电，Identifier is valid, but not allowed to charge at this type of EVSE.
+    AS_NotAtThisLocation = 10; // 不可在此站充电
+    AS_NotAtThisTime = 11; // 不可在此时充电
+    AS_Unknown = 99; // 未知
+}
+
+
+
+message IdTokenInfoType {
+    AuthorizationStatusEnumType status = 1;
+}
+
+//IdTokenType 身份信息，OCPP以及新版本用
+message IdTokenType {
+    string id_token = 1;
+    IdTokenEnumType type = 2;
+}
+
+//AuthorizationData 授权信息
+message AuthorizationData {
+    IdTokenInfoType idTokenInfo = 1;
+    IdTokenType idToken = 2;
+}
+
+message SyncLocalAuthorizationListReq {
+    repeated AuthorizationData authorization_data = 1;
+}
+
+message SyncLocalAuthorizationListResp {
+
+}
+
+message ReserveNowReq {
+    int32 id = 1; //预约ID
+//    int32 expiry_date_time = 2; //过期时间
+    bool is_cycle = 2; //是否周期性
+    uint64 connector_id = 3; //枪ID
+    IdTokenType idToken = 4; //客户信息
+    uint32 charge_time = 5; //启动充电的时间
+    uint32 stop_time = 6; // 停止充电的时间
+}
+
+message ReserveNowResp {
+    enum Status
+    {
+        Accepted = 0; //接受
+        Faulted = 1; //未预约成功，枪故障
+        Occupied = 2; //未预约成功，枪被占用
+        Rejected = 3; //未预约成功，设备不支持预约功能
+        Unavailable = 4; //未预约成功，枪不可用
+    }
+    Status status = 1; //状态
+}
+
+
+/**
+ * CancelReservationReq
+ * 取消预约充电.请求
+ */
+message CancelReservationReq
+{
+    uint64 connector_id = 1; //枪ID
+}
+
+
+/**
+ * CancelReservationResp
+ * 取消预约充电.响应
+ */
+message CancelReservationResp
+{
+    enum Status
+    {
+        Accepted = 0; //接受
+        Rejected = 1; //未取消预约成功
+    }
+    Status status = 1; //状态
+}
+
+
+// 枚举先用int32类型
+// // 身份类型
+// enum IdType {
+//     ID_DEFAULT     = 0;
+// 	ID_CHONGDIANKA = 1;
+// 	ID_APP         = 4;
+// 	ID_WECHAT      = 5;
+// 	ID_BLUETOOTH   = 6;
+// 	ID_WALLET_CARD = 20;
+// 	ID_ALI         = 21;
+// }
+
+// // “鉴权应答”消息鉴权结果
+// enum AuthorizationStatus {
+// 	AS_Accepted      = 0;
+// 	AS_Blocked       = 1;
+// 	AS_Expired       = 2;
+// 	AS_Invalid       = 3;
+// 	AS_ConcurrentTx  = 4;
+// 	AS_Insufficient  = 5;
+// 	AS_PasswordError = 6;
+// }
+
+// // 鉴权卡细分卡类型定义
+// enum CardType {
+//     CARD_DEFAULT = 0;
+// 	CARD_BALANCE = 1;
+// 	CARD_TIME    = 2;
+// 	CARD_COUNT   = 3;
+// }
+
+// // 充电桩服务模式
+// enum ServiceMode   {
+//     SM_AutoCharge      = 0;
+// 	SM_ChargeByElec    = 1;
+// 	SM_ChargeByTime    = 2;
+// 	SM_ChargeByMoney   = 3;
+// 	SM_DischargeByElec = 4;
+// 	SM_AutoDischarge   = 5;
+// }
+
+// // 授权启动充电方式
+// enum AuthorizationMode {
+// 	AM_LocalPlug          = 0;
+// 	AM_LocalAdmin         = 1;
+// 	AM_LocalIdentityCard  = 2;
+// 	AM_OnlineIdentityCard = 3;
+// 	AM_LocalWalletCard    = 4;
+// 	AM_LocalVIN           = 5;
+// 	AM_OnlineVIN          = 6;
+// 	AM_Bluetooth          = 7;
+// 	AM_MAC                = 8;
+// 	AM_RemoteAdmin        = 9;
+// 	AM_RemoteUser         = 10; 
+// }
+
+// //  StopReason “充电结束通知”请求消息充电停止原因定义
+// enum StopReason {
+// 	SR_Normal         = 0;
+// 	SR_LocalCard      = 1;
+// 	SR_LocalPIN       = 2;
+// 	SR_RemoteUser     = 3;
+// 	SR_RemoteAdmin    = 4;
+// 	SR_EmergencyStop  = 5;
+// 	SR_EVDisconnected = 6;
+// 	SR_Reboot         = 7;
+// 	SR_OffLine        = 8;
+// 	SR_PowerLoss      = 9;
+// 	SR_SystemFault    = 10;
+// 	SR_BMSFault       = 11;
+// 	SR_Other          = 12;
+// 	SR_MeterFault     = 13;
+// 	SR_SocFull        = 16;
+// 	SR_NotEnoughMoney = 17;
+// 	SR_OverLoad       = 18;
+// 	SR_OverVoltage    = 19;
+// 	SR_UnderVoltage   = 20;
+// }
+
+message RemoteDiagnosisReq {
+    string diagType = 1; // 22-read_data_by_identifier 2E-write_data_by_identifier 31-routine_control 14-clear_diagnostic_information 4-vehicle_passthrough
+    string sendCanID = 2; // send canID
+    string sendLength = 3;  // send data byte length
+    string sendData = 4; // send data
+    string recvCanID = 5; // receive canID
+    string manager = 6; // manager like SVW
+}
+
+message RemoteDiagnosisResp {
+    string canID = 1;
+    string canLength = 2;
+    string canData = 3;
+}
+message ReserveStopTransactionReq {
+    int32 id = 1; //预约ID
+    //    int32 expiry_date_time = 2; //过期时间
+    bool is_cycle = 2; //是否周期性
+    uint64 connector_id = 3; //枪ID
+    IdTokenType idToken = 4; //客户信息
+    uint32 start_time = 5; //启动充电的时间
+    uint32 stop_time = 6; //停止充电的时间
+}
+
+message ReserveStopTransactionResp {
+}
+
+message CancelReserveStopTransactionReq {
+   uint64 connector_id = 1;
+}
+
+message CancelReserveStopTransactionResp {
+
+}

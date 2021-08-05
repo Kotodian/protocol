@@ -1,0 +1,85 @@
+/**
+  充电站与后台通信协议 protocol buffer源文件，适用于protoc 3
+  遥测类型定义
+
+  版本记录
+  V1.0.0 2018-3-2 mooney_yuan@qq.com
+*/
+
+syntax = "proto3";
+package Goiot.Protocol.Charger.Measure;
+option go_package = "github.com/Kotodian/protocol/golang/hardware/charger/measure";
+option optimize_for = LITE_RUNTIME;
+
+enum Measurand
+{
+    MUnknown = 0;
+    WorkingStatus = 1;      ///组件工作状态，0-正常，1-故障，2-通信故障
+    ConnectorAvailable = 2; ///空闲可用充电接口数量
+    Temperature = 100;      ///温度，单位摄氏度，分辨率1度
+    Voltage = 101;          ///电压，单位V，分辨率0.1V
+    MilliVol = 102;         ///毫伏电压，单位mV，分辨率1mV
+    Current = 103;          ///电流，单位A，分辨率0.1A
+    PowerWatts = 104;       ///功率，单位W，分辨率0.01W
+    RPM = 105;              ///风扇转速，单位转／分钟，分辨率1
+    SOC = 106;              ///电池剩余容量，单位％，分辨率1
+    GeneralInput = 107;     ///通用输入状态，0-低电平，1-高电平
+    GeneralAdc = 108;       ///通用adc检测，单位mV，分辨率1mV
+    GuidanceVoltage = 109;  ///充电接口导引电压，单位V，分辨率0.01V
+    ContactorStatus = 110;  ///接触器状态，0-断开，1-吸合，2-状态不可信
+    LockStatus = 111;       ///充电接口电子锁状态，0-打开，1-锁上，2-状态不可信
+    CPStatus = 112;         ///CP检测状态，0-12V状态，1-9V状态，2-6V状态，3-错误状态
+    CCStatus = 113;         ///CC检测状态，0-断开，1-连接，2-不可信
+    CC1Status = 114;        ///CC1检测状态，0-断开，1-连接，2-不可信
+    GunPosition = 115;      ///充电枪位置状态，0-归位，1-未归位，2-不可信
+    DoorStatus = 116;       ///门禁状态，0-门关闭，1-门打开，2-不可信
+    InputVoltage = 117;     ///输入电压，单位V，分辨率0.1V
+    InputVoltageA = 118;    ///输入A相电压，单位V，分辨率0.1V
+    InputVoltageB = 119;    ///输入B相电压，单位V，分辨率0.1V
+    InputVoltageC = 120;    ///输入C相电压，单位V，分辨率0.1V
+    InputCurrent = 121;     ///输入电流，单位A，分辨率0.1A
+    InputCurrentA = 122;    ///输入A相电流，单位A，分辨率0.1A
+    InputCurrentB = 123;    ///输入B相电流，单位B，分辨率0.1A
+    InputCurrentC = 124;    ///输入C相电流，单位C，分辨率0.1A
+    OutputVoltage = 125;    ///输出电压，单位V，分辨率0.1V
+    OutputCurrent = 126;    ///输出电流，单位A，分辨率0.1A
+    RSSI = 127;             ///移动网络信号强度
+    WirelessSignal = 128;   ///无线局域网信号强度
+    CPUUsage = 129;         ///处理器使用率，单位％，分辨率1
+    MemoryFree = 130;       ///剩余内存，单位％，分辨率1
+    StorageFree = 131;      ///剩余存储容量，单位％，分辨率1
+    ParkingStatus = 132;    ///车位检测状态，0-空闲，1-占用中
+    ParkLockStatus = 133;   ///车位锁状态，0-解锁状态，1-解锁／上锁中，2-锁住状态
+    Electricity = 134;      ///电量，单位kWh，分辨率0.01kWh
+    PieceElectricity = 135; ///分段费率电量，单位kWh，分辨率0.01kWh
+    VoltageA = 136;         ///A相电压，单位V，分辨率0.1V
+    VoltageB = 137;         ///B相电压，单位V，分辨率0.1V
+    VoltageC = 138;         ///C相电压，单位V，分辨率0.1V
+    CurrentA = 139;         ///A相电流，单位A，分辨率0.1A
+    CurrentB = 140;         ///B相电流，单位A，分辨率0.1A
+    CurrentC = 141;         ///C相电流，单位A，分辨率0.1A
+    PowerKilowatts        = 142;  ///功率，单位kW，分辨率0.01kW
+    MilliCurrent          = 143;  ///豪安电流，单位mA，分辨率1mA
+    ConnectorStatus       = 144;  ///充电枪头状态,  0:不可用；1:空闲；2:已连接；3:充电中；4:充电已启动，充电桩未输出；5:充电已启动，电动车未充电；6:充电已完成；7:预约中；8:故障；9:等待中 
+    ConsumedElectric      = 145;  ///已充电量	某一充电订单的已充电量，单位kwh，分辨率0.01kwh
+    ConsumedTime          = 146;	///已充时间	单位秒
+    TotalCost             = 147;	///消费总金额	分辨率1分
+    ElectricityCost       = 148;  ///电费 分辨率1分 
+    ServiceCost           = 149;  ///服务费  分辨率1分 
+    SharpElectricity      = 150;  ///尖电量  分辨率0.01kwh
+    SharpElectricityCost  = 151;  ///尖电费  分辨率1分 
+    SharpServicesCost     = 152;  ///尖服务费  分辨率1分 
+    PeakElectricity       = 153;  ///峰电量  分辨率0.01kwh
+    PeakElectricityCost   = 154;  ///峰电费  分辨率1分 
+    PeakServicesCost      = 155;  ///峰服务费  分辨率1分 
+    FlatElectricity       = 156;  ///平电量  分辨率0.01kwh
+    FlatElectricityCost   = 157;  ///平电费  分辨率1分 
+    FlatServicesCost      = 158;  ///平服务费  分辨率1分 
+    ValleyElectricity     = 159;  ///谷电量  分辨率0.01kwh
+    ValleyElectricityCost = 160;  ///谷电费  分辨率1分 
+    ValleyServicesCost    = 161;  ///谷服务费  分辨率1分
+    RemainingChargingTime = 162; ///剩余充电时长，单位秒
+    DemandCurrent         = 163; //需求电流 单位A，分辨率0.1A
+    DemandVoltage         = 164; //需求电压 单位V，分辨率0.1V
+}
+

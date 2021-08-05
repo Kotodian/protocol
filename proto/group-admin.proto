@@ -1,0 +1,240 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/group-admin";
+import "common.proto";
+
+package groupadmin;
+
+
+
+
+
+service GroupAdminServices {
+    //获取客户列表
+    rpc ListGroups(ListGroupsReq) returns (ListGroupsResp);
+
+    //添加集团
+    rpc AddGroup(AddGroupReq) returns (AddGroupResp);
+
+    //更改集团密码
+    rpc UpdateGroup(UpdateGroupReq) returns (UpdateGroupResp);
+
+    //设置集团状态
+    rpc SetGroupState(SetGroupStateReq) returns (SetGroupStateResp);
+
+    // 设置分润状态
+    rpc SetGroupRoyaltyState(SetGroupRoyaltyStateReq) returns (SetGroupRoyaltyStateResp);
+
+    //获取集团信息
+    rpc GetGroupInfo(GroupIDReq) returns (GetGroupInfoResp);
+
+    // 根据名称获取集团信息
+    rpc GetGroupInfoByName(GetGroupInfoByNameReq) returns (GetGroupInfoResp);
+
+    // 根据用户获取集团成员信息
+    rpc GetMemberInfoByCustomer(GetMemberInfoByCustomerReq) returns (GetMemberInfoByCustomerResp);
+
+    //充值
+    rpc Charge(ChargeReq) returns (ChargeResp);
+
+    // 支付和退款走队列处理
+    rpc Pay(PayReq) returns (PayResp);
+    rpc Refund(RefundReq) returns (RefundResp);
+
+    // 获取集团所有充值记录
+    rpc GetTransactionsByGroup(GetTransactionsByGroupReq) returns (GetTransactionsByGroupResp);
+
+    // 根据id获取一条充值记录
+    rpc GetTransactionByID(GetTransactionByIDReq) returns (Transaction);
+
+    // 变更流水信息
+    rpc ChangeTransactionChargeMode(ChangeTransactionChargeModeReq) returns (Transaction);
+}
+
+
+message GroupMember {
+    uint64 id = 1;          // 成员id
+	uint64 customer_id = 2; //客户ID
+	uint64 group_id = 3;    //集团ID
+	uint64 operator_id = 4; //运营商ID
+	bool   IsBlock = 5;     // 是否屏蔽
+}
+
+message GetMemberInfoByCustomerReq{
+    uint64 customer_id = 1; //客户ID
+	uint64 operator_id = 2; //运营商ID
+}
+message GetMemberInfoByCustomerResp{
+    GroupMember member_info = 1;
+}
+
+message UpdateGroupReq {
+    uint64          operator_id     = 1;    //运营商ID
+    uint64          group_id        = 2;    //集团ID
+    string          pwd             = 3;    //密码
+    string          email           = 4;    //邮箱
+}
+
+message UpdateGroupResp {
+}
+
+message ListGroupsReq {
+    uint64          operator_id      = 1;    //运营商ID
+    common.PageReq  pagereq          = 2;    //翻页
+}
+
+message ListGroupsResp{
+    common.PageResp pageresp        = 1;    //
+    repeated Group  groups          = 2;    //集团列表
+}
+
+enum GroupState {
+    Normal                          = 0;    //正常
+    Block                           = 1;    //屏蔽
+}
+
+message GetGroupInfoByNameReq {
+    string  group_name              = 1;    // 集团名称
+    uint64  operator_id             = 2;    // 运营商id
+}
+
+message GroupIDReq {
+    repeated uint64  ids                      = 1;    //ID
+}
+
+message GetGroupInfoResp {
+    repeated Group groups                     = 1;    //集团信息
+}
+
+message Group {
+    uint64  id                      = 1;    //ID
+    string  name                    = 2;    //名称
+    double  balance                 = 3;    //余额
+    uint32  created_at              = 4;    //创建时间
+    bool    is_block                = 5;    //是否屏蔽
+    uint64  operator_id             = 6;    //运营商ID
+    string  email                   = 7;    //邮箱
+//    bool    is_royalty              = 8;    //是否分润
+}
+
+message AddGroupReq {
+    string name                     = 1;    //名称
+    string password                 = 2;    //密码
+    uint64 operator_id              = 3;    //运营商ID
+    string email                    = 4;    //邮箱
+}
+message AddGroupResp {
+    uint64 id                       = 1;    //集团ID
+}
+
+message SetGroupStateReq {
+    uint64  id                       = 1;    //集团ID
+    bool    block                    = 2;    //屏蔽
+    uint64  operator_id              = 3;    //运营商ID
+}
+
+message SetGroupStateResp {
+}
+
+message SetGroupRoyaltyStateReq {
+    uint64 id                        = 1; // 集团ID
+    bool   state                     = 2; // 是否屏蔽
+    uint64 operator_id               = 3;    //运营商ID
+}
+
+message SetGroupRoyaltyStateResp {
+}
+
+message BindCustomerReq {
+    uint64 group_id                 = 1;    //集团ID
+    uint64 customer_id              = 2;    //客户ID
+}
+
+message BindCustomerResp {
+}
+
+// 充值方式
+enum ChargeMode {
+    ChargeMode_Unknown = 0;
+    ChargeMode_Bank   = 1; // 银行转账
+    ChargeMode_System = 2; // 系统发放
+}
+message ChargeReq {
+    uint64  group_id                 = 1;   // 集团ID
+    double  amount                   = 2;   // 金额 单位 元
+    ChargeMode charge_mode           = 3;   // 充值方式
+    string  transaction_bank         = 4;   // 交易银行(银行转账时 填写)
+    string  transaction_no           = 5;   // 交易号(银行转账时 填写)
+    string  admin_name               = 6;   // 管理员名称
+    string  remark                   = 7;   // 备注等
+}
+
+message ChargeResp {
+    Group group_info = 1;   // 充值后集团信息
+}
+
+
+message PayReq {
+    uint64  group_id                 = 1;   //集团ID
+    double  amount                   = 2;   //金额
+    uint64  order_id                 = 3;   //订单号
+    uint64  customer_id              = 4;   //客户ID
+    int32   source                   = 5;   //来源
+}
+
+message PayResp {
+}
+
+message RefundReq {
+    uint64  group_id                = 1;    //集团ID
+    uint64  order_id                = 2;    //订单ID
+    double  amount                  = 3;    //退款金额
+}
+
+message RefundResp {
+}
+
+// 流水
+message Transaction{
+    uint64 transaction_id   = 1;  // 流水ID
+    uint64 group_id         = 2;  // 集团id
+    string group_name       = 3;  // 集团名
+	double amount           = 4;  // 交易额
+    double balance          = 5;  // 余额(交易后)
+    ChargeMode charge_mode     = 6;   // 充值方式
+    string  transaction_bank   = 7;   // 交易银行(银行转账时 填写)
+    string  transaction_no     = 8;   // 交易号(银行转账时 填写)
+    string  admin_name         = 9; // 操作管理员
+	// string out_order_id     = 6;  // 外部订单ID（gw订单id等）
+    // string out_trade_id     = 7;  // 外部订单交易ID
+    // int32  op               = 8;  // 操作(充值支付等)
+    // string op_desc          = 9;  // 操作标识描述
+    // int32  source           = 10;  // 来源
+    // string source_desc      = 11; // 来源描述
+
+    string remark           = 12; // 备注
+    int32  created_at       = 13; // 创建时间
+}
+
+message GetTransactionsByGroupReq{
+    uint64  group_id                 = 1;    //集团ID 
+    common.PageReq  pagereq          = 2;    //翻页
+}
+
+message GetTransactionsByGroupResp{
+    common.PageResp pageresp          = 1;    //
+    repeated Transaction transactions = 2; // 流水列表
+}
+
+message GetTransactionByIDReq {
+    uint64 id = 1;
+}
+
+message ChangeTransactionChargeModeReq{
+    uint64 transaction_id   = 1;  // 流水ID
+    ChargeMode charge_mode     = 2;   // 充值方式
+    string  transaction_bank   = 3;   // 交易银行
+    string  transaction_no     = 4;   // 交易号
+    string  admin_name         = 5; // 操作管理员
+    string  remark           = 6; // 备注
+}

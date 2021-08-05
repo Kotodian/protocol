@@ -1,0 +1,265 @@
+/**
+  充电站与后台通信协议 protocol buffer源文件，适用于protoc 3
+  遥测类型定义
+
+  版本记录
+  V1.0.0 2018-3-2 mooney_yuan@qq.com
+*/
+
+syntax = "proto3";
+package Goiot.Protocol.Charger.Warning;
+option go_package = "github.com/Kotodian/protocol/golang/hardware/charger/warning";
+option optimize_for = LITE_RUNTIME;
+
+/**
+Components
+告警和遥测信息，设备组件定义
+*/
+
+
+/**
+每个组件预留100个故障代码。
+未分类故障： 1～99
+系统故障：100～199
+计费控制单元故障：200～299
+充电控制单元故障：300～399
+电动汽车BMS故障：400～499
+智能车位锁故障：500～599
+智能车位探测故障：600～699
+电表故障：700～799
+触摸显示屏故障：800～899
+读卡器故障：900～999
+风扇：（含在充电控制故障里面）
+充电接口故障：1100～1199
+电源模块故障：1200～1299
+*/
+
+enum Warnings
+{
+    /**系统故障*/
+    Other = 0;  // 其他
+    SYS_StorageFull = 100; // 存储器已满
+    SYS_4GFault = 101; // 通信模块故障
+    SYS_SimFault = 102; // SIM卡异常
+    SYS_DialFault = 103; // 拨号异常
+    SYS_ConnectError = 104; // 连接服务器失败
+    SYS_Disconnect = 105; // 与服务器通讯中断
+    SYS_PowerFailure = 106; // 系统掉电
+    SYS_MeterError = 107; // 电表通信故障
+    SYS_CardReaderError = 108; // 读卡器通信故障
+    SYS_LCDError = 109; // 触摸屏故障
+    SYS_MeterMeasureException = 110;  // 电表计量故障
+    SYS_MeterCollectsException = 111;  // 电表采集异常/电能数据更新异常
+    SYS_SoftFault = 112;  // 软启失败
+    SYS_AirInletOverTemp = 113;  // 进气口过温
+    SYS_AirInletUnderTemp = 114;  // 进气口低温
+    SYS_AirOutletOverTemp = 115;  // 出风口过温
+    SYS_SlaveFault = 116;  // 从机故障导致停机
+    SYS_StorageFailure = 117; // 存储失败
+    SYS_PersistenceMemoryInconsistency = 118; //持久性内存不一致
+    SYS_ADCInit = 119; // ADC初始化错误
+    SYS_ConnectCPO = 120; // CPO无法连接
+    SYS_Register = 121; // 未注册到平台
+    SYS_ComBoardOffline = 122; // COM板离线(存在检测)
+    SYS_GPSAntenna = 123; // GPS天线故障
+    SYS_4GAntenna = 124; // 4G天线故障
+    SYS_SNUnset = 125; // 序列号未配置
+    SYS_ParameterUnset = 126; // 参数未标定
+    SYS_ComGeneral = 127; // COM板一般故障
+
+
+    /**充电控制单元故障*/
+    CCM_EmergencyFault = 300; // 紧急停机（急停按下）
+    CCM_LockFault = 301; // 电子锁故障
+    CCM_ACBreakerFault = 302; // 交流断路器故障
+    CCM_SPDFault = 303; // 避雷器故障
+    CCM_SmogFault = 304; // 烟雾告警
+    CCM_DoorFault = 305; // 门磁告警
+    CCM_WaterLogging = 306; // 水浸告警
+    CCM_DCContactorFault = 307; // 直流母线接触器故障
+    CCM_DCFuseFault = 308; // 直流母线输出熔断器故障
+    CCM_InsulationFault = 309; // 绝缘模块故障
+    CCM_InsulationWarning = 310; // 绝缘检测告警
+    CCM_FanFault = 311; // 系统风扇故障
+    CCM_CC1Fault = 312; // 充电中车辆控制引导异常（CC1连接异常）
+    CCM_OverTemp = 313; // 充电桩过温告警
+    CCM_ConnectorOverTemp = 314; // 充电接口过温
+    CCM_GunHolderFault = 315; // 充电枪未归位
+    CCM_InputUnderVol = 316; // 输入电压欠压 电网电压高
+    CCM_InputOverVol = 317; // 输入电压过压 电网电压低
+    CCM_AssisPowerFault = 318; // 辅助电源异常
+    CCM_BleedOffOverTime = 319; // 泄放超时
+    CCM_SwitchFault = 320; // 投切开关异常
+    CCM_DCOuputUnderVol = 321; // 直流母线输出欠压
+    CCM_DCOutputOverVol = 322; // 直流母线输出过压
+    CCM_DCOutputOverCur = 323; // 直流母线输出过流
+    CCM_OverCurrent = 324;  // 输出过流告警
+    CCM_ChargingPlugOut = 325;  // 充电插头拔出
+    CCM_ChargingFull = 326;  // 充电已充满
+    CCM_CommunicationFault = 327; // 充电控制板通讯故障
+    CCM_PEFault = 328;  // 未接地故障
+    CCM_TempSensorException = 329;  // 温度传感器异常
+    CCM_PDCircuitException = 330;  // 放电回路异常
+    CCM_InputCircuitException = 331;  // 输入回路状态异常
+    CCM_MainOutputCircuitException = 332;  // 主输出回路状态异常
+    CCM_AuxiliaryCircuitException = 333; // 辅助回路状态异常
+    CCM_OutputContactAdhesion = 334; // 输出接触器粘连故障
+    CCM_OutputContactMisoperation = 335; // 输出接触器拒动/误动故障
+    CCM_InputContactAdhesion = 336; // 输入接触器粘连故障
+    CCM_InputContactMisoperation = 337; // 输入接触器拒动/误动故障
+    CCM_ParallelContactAdhesion = 338; // 并联接触器粘连故障
+    CCM_ParallelContactMisoperation = 339; // 并联接触器拒动/误动故障
+    CCM_CANCommunicationFault = 341;// CAN 通信故障 
+    CCM_CAN1BusError = 342; // CAN1 总线错误
+    CCM_CAN3CommunicationFault = 343; //CAN3 通信错误
+    CCM_SYSAuxiliaryPowerFailure = 344; // 系统辅源掉电
+    CCM_AuxiliaryPowerFault = 345; // 辅源电源故障
+
+    CCM_ChargerFault = 346; // 充电机故障
+    CCM_TCUCommunicationFault =347; // TCU与充电控制器通讯故障
+    CCM_PowerControllerCommunicationFault =348;// 充电控制器和功率控制器通信告警故障
+    CCM_ACFuseFault = 349; // 交流输出熔断器故障
+    CCM_CPFault = 350; // CP故障
+    CCM_RCDSelfTest = 352; // RCD漏电自检失败
+    CCM_HighTemperature = 353; // 高温降速充电
+    CCM_LowTemperature = 354; // 低温故障
+    CCM_CPBroken = 355; // CP断开（或车辆PE断线）
+    CCM_Pwm = 356; // PWM占空比超限或频率超限
+    CCM_OneLevelCurrentOverload = 357; // 一级过流错误
+    CCM_TwoLevelCurrentOverload = 358; // 二级过流错误
+    CCM_RelaySelfTest = 359;// 继电器自检失败
+    CCM_RelayStatus = 360;// 继电器状态错误（可能无法结束充电）
+    CCM_RelayControl = 361; // 继电器控制错误
+    CCM_WatchDocMCUDeadlock = 362; // Watchdog检查MCU死锁
+    CCM_SupervisorKeyModuleDeadlock = 363; // Supervisor监测到关键模块死锁
+    CCM_SupervisorUnKeyModuleDeadlock = 364; // Supervisor监测到非关键模块死锁
+    CCM_DipValue = 365; // DIP设置电流值错误
+    CCM_PmicWatchDogMessage = 366; // PMIC电源芯片通信故障
+    CCM_RFIDModule = 367; // RFID刷卡模块故障
+    CCM_BLEModule = 368; // BLE蓝牙模块故障
+    CCM_ShortCircuit = 369; // 充电前短路检查错误
+    CCM_CP12VMonitor = 373; // CP电源电压超限
+    CCM_ShortCircuitCharging = 374; // 充电中短路检测错误
+    CCM_TemperatureSensorOpenCircuit = 375; // 温度传感器开路故障
+    CCM_TemperatureSensorDriftCircuit = 376; // 温度传感器漂移
+    CCM_MultipleTemperatureOverload = 377; // 多次过温停止充电故障
+    CCM_OneLevelCurrentOverloadTwice = 378; // 一级过流故障二次
+    CCM_RelayPreDriverHighTemperature = 379; // 继电器预驱动器过热
+    CCM_RelayPreDriverOverload = 380; // 继电器预驱动过载
+    CCM_L2OneLevelVoltageOverload = 381; // L2: 一级过压故障（次级过压故障）
+    CCM_L2TwoLevelVoltageOverload = 382; // L2: 二级过压故障（严重过压故障）
+    CCM_L2LongTimeVoltageOverload = 383; // L2: 长时间过压错误
+    CCM_L2VoltageOwe = 384; // L2: 欠压故障
+    CCM_L2VoltageOweReduceFrequency = 385; // L2: 欠压降频
+    CCM_L2LongTimeVoltageOwe = 386; // L2: 长时间欠压错误
+    CCM_L2OneLevelCurrentOverload = 387; // L2: 一级过流故障（次级过流故障）
+    CCM_L2OneLevelCurrentOverloadTwice = 388; // L2: 一级过流故障二次
+    CCM_L2TwoLevelCurrentOverload = 389; // L2: 二级过流故障（验证过流故障）
+    CCM_L3OneLevelVoltageOverload = 390; // L3: 一级过压故障（次级过压故障）
+    CCM_L3TwoLevelVoltageOverload = 391; // L3: 二级过压故障（严重过压故障）
+    CCM_L3LongTimeVoltageOverload = 392; // L3: 长时间过压错误
+    CCM_L3VoltageOwe = 393; // L3: 欠压故障
+    CCM_L3VoltageOweReduceFrequency = 394; // L3：欠压降频
+    CCM_L3LongTimeVoltageOwe = 395; // L3: 长时间欠压错误
+    CCM_L3OneLevelCurrentOverload = 396; // L3:  一级过流故障（次级过流故障）
+    CCM_L3OneLevelCurrentOverloadTwice = 397; // L3: 一级过流故障二次
+    CCM_L3TwoLevelCurrentOverload = 398; // L3: 二级过流故障（严重过流故障）
+
+    /**电动汽车BMS故障*/
+    BMS_CellOverVol = 400; // 单体电池电压过高
+    BMS_CellOverTemp = 401; // 单体电池温度过高
+    BMS_CommunicationFault = 402; // BMS通信故障，充电桩无法与BMS通信
+    BMS_CommunicationOverTime = 403; // BMS通信超时，充电桩与BMS通信超时
+    BMS_BatteryInversed = 404; // 电池反接
+    BMS_BatteryMissed = 405; // 电池未接
+    BMS_BatteryOverVol = 406; // 电池总电压过高
+    BMS_OverSOC = 407; // 电池SOC过高
+    BMS_InsulationFault = 408; // 电池组绝缘故障
+    BMS_ContactorFault = 409; // 电池组输出连接器故障
+    BMS_OverExternalVoltage = 410;   // 外部电压大于 10V
+    BMS_BatteryUnderVol = 411; // 电池总电压低
+    BMS_BatteryVoltageException = 412; // 电池电压检测异常
+    BMS_CellVoltageDiffFault = 413; // 单体电池压差超限
+    BMS_BusError = 416;  // bms总线错误
+
+    BMS_CellSamplingPointOverTemp = 417;  // 蓄电池模块采样点过温告警
+
+
+
+    /**电源模块故障*/
+    PSM_Fault = 1200; // 充电模块故障
+    PSM_ACInputFault = 1201; // 充电模块交流输入故障
+    PSM_InputOverVol = 1202; // 充电模块交流输入过压
+    PSM_InputUnderVol = 1203; // 充电模块交流输入欠压
+    PSM_InputLackingPhase = 1204; // 充电模块输入缺相
+    PSM_OutputShort = 1205; // 充电模块直流输出短路
+    PSM_OutputOverCur = 1206; // 充电模块直流输出过流
+    PSM_OutputOverVol = 1207; // 充电模块直流输出过压
+    PSM_OutputUnderVol = 1208; // 充电模块直流输出欠压
+    PSM_OutputFault = 1209; // 充电模块输出异常
+    PSM_OverTemp = 1210; // 充电模块过温
+    PSM_CommunicationFault = 1211; // 充电模块通信告警
+    PSM_FanFault = 1212; // 充电模块风扇告警
+    PSM_CloseException = 1213; // 充电模块关闭异常
+    PSM_RectifierNO0CommunicationFault = 1214;  // 整流器 0#通讯故障
+    PSM_RectifierNO1CommunicationFault = 1215;  // 整流器 1#通讯故障
+    PSM_RectifierNO2CommunicationFault = 1216;  // 整流器 2#通讯故障
+    PSM_RectifierNO3CommunicationFault = 1217;  // 整流器 3#通讯故障
+    PSM_RectifierNO4CommunicationFault = 1218;  // 整流器 4#通讯故障
+    PSM_RectifierNO5CommunicationFault = 1219;  // 整流器 5#通讯故障
+    PSM_RectifierNO6CommunicationFault = 1220;  // 整流器 6#通讯故障
+    PSM_RectifierNO7CommunicationFault = 1221;  // 整流器 7#通讯故障
+    PSM_RectifierNO8CommunicationFault = 1222;  // 整流器 8#通讯故障
+    PSM_RectifierNO9CommunicationFault = 1223;  // 整流器 9#通讯故障
+    PSM_RectifierNO10CommunicationFault = 1224;  // 整流器 10#通讯故障
+    PSM_RectifierNO11CommunicationFault = 1225;  // 整流器 11#通讯故障
+    PSM_RectifierNO12CommunicationFault = 1226;  // 整流器 12#通讯故障
+    PSM_RectifierNO0Fault = 1227;  // 整流器 0#故障
+    PSM_RectifierNO1Fault = 1228;  // 整流器 1#故障
+    PSM_RectifierNO2Fault = 1229;  // 整流器 2#故障
+    PSM_RectifierNO3Fault = 1230;  // 整流器 3#故障
+    PSM_RectifierNO4Fault = 1231;  // 整流器 4#故障
+    PSM_RectifierNO5Fault = 1232;  // 整流器 5#故障
+    PSM_RectifierNO6Fault = 1233;  // 整流器 6#故障
+    PSM_RectifierNO7Fault = 1234;  // 整流器 7#故障
+    PSM_RectifierNO8Fault = 1235;  // 整流器 8#故障
+    PSM_RectifierNO9Fault = 1236;  // 整流器 9#故障
+    PSM_RectifierNO10Fault = 1237;  // 整流器 10#故障
+    PSM_RectifierNO11Fault = 1238;  // 整流器 11#故障
+    PSM_RectifierNO12Fault = 1239;  // 整流器 12#故障
+    PSM_InsulationCommunicationFault = 1240;  // 绝缘仪通讯故障
+    PSM_PowerScreenCommunicationFault = 1241; // 功率屏通讯故障
+    PSM_PowerIOFault = 1242; // 功率IO控制板故障
+    PSM_ACInputOverFrequency = 1243;  // 交流输入过频率
+    PSM_ACInputUnderFrequency = 1244;  // 交流输入欠频率
+    PSM_TypeDisaccord  = 1245;  // 模块类型不一致
+    PSM_GroupChargingModuleOverTemp = 1246; // 群充模块过温
+    PSM_GroupChargingModuleCommunicationFault = 1247;  // 群充模块通信故障
+    PSM_Initialization = 1248;   // 模块未准备就绪
+
+    PSM_OutageFault = 1250;  // 电源异常断电故障
+    PSM_Inversed = 1251;  // 模块反接故障告警
+    PSM_InputPhaseImbalance = 1252;  // 充电模块交流输入相不平衡
+    PSM_ProtectionWarning = 1253;  // 充电模块保护告警
+    PSM_ProtectionFault = 1254;  // 充电模块保护故障
+    PSM_PowerLimit = 1255;   // 充电模块限功率告警
+    PSM_UnevenFlow = 1256;  // 充电模块严重不均流
+    PSM_CurrentLimitWarning = 1257;   // 充电模块限流告警
+    PSM_CurrentLimitFault = 1258;   // 充电模块限流故障
+    PSM_OneLevelVoltageOverload = 1259; // 一级过压错误
+    PSM_OneLevelOweVoltage = 1260;  // 电网电压低，降速充电
+    PSM_TwoLevelOweVoltage = 1261;  // 电网电压严重过低停止充电
+    PSM_LongTimeVoltageOverload = 1262; // 长时间过压错误
+    PSM_LongTimeVoltageOwe = 1263;  // 长时间欠压错误
+    PSM_ElectricFrequency = 1264;  // 电网频率错误
+    PSM_TwoLevelVoltageOverload = 1265; // 二级过压错误（严重过压错误）
+    PSM_VoltageOweReduceFrequency = 1266; // 欠压降频
+    PSM_VoltageOwe = 1277; // 欠压错误
+    PSM_PMICWatchdogMessage = 1278; // PMIC电源芯片通信故障
+    PSM_MultipleVoltageException = 1279; // 多次过、欠压错误
+    PSM_RCD_AC_LEAK = 1280; // RCD AC漏电错误
+    PSM_RCD_DC_LEAK = 1281; // RCD DC漏电错误
+
+}
+
+

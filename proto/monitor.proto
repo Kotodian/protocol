@@ -1,0 +1,35 @@
+syntax = "proto3";
+package monitor;
+option go_package = "github.com/Kotodian/protocol/golang/monitor";
+option optimize_for = LITE_RUNTIME;
+
+
+
+message XAReq {
+    enum ACT{
+        PREPARE = 0;
+        ROLLBACK = 1;
+        COMMIT = 2;
+    }
+    uint64 ID = 1;
+    ACT    act = 2;
+}
+
+message XAResp {
+}
+
+//服务
+service RPCServices {
+    //初始化设备告警配置
+    rpc XA(XAReq) returns (XAResp);
+}
+
+
+
+// message MQTTMsgReq {
+//     string      topic = 1;
+//     int32       qos = 2;
+//     bool        retained = 3;
+//     string      evseid = 4;
+//     bytes       payload  = 5;
+// }

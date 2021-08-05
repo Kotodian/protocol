@@ -1,0 +1,94 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/sn";
+
+import "common.proto";
+
+package sn;
+
+
+
+service SNService {
+  // 申请sn
+  rpc Apply(ApplyReq) returns (ApplyResp);
+
+  // 申请列表
+  rpc ListByApplyID(ListByApplyIDReq) returns (SNInfoList);
+  rpc ListByOperatorID(ListByOperatorIDReq) returns (SNInfoList);
+
+  // 获取信息
+  rpc Info(InfoReq) returns (SNInfo);
+
+  // 激活SN
+  rpc Activate(ActivateReq) returns (SNInfo);
+
+  // 同步并激活sn信息，
+  rpc SyncAndActivate(SyncAndActivateReq) returns (SNInfo);
+}
+
+message SyncAndActivateReq {
+  string    sn = 1; // sn
+  uint64    operator_id   = 2;  // 运营商ID
+  uint64    evse_id = 3; // 激活SN的设备ID
+}
+
+message ApplyReq {
+  uint64    apply_id      = 1;  // 申请ID
+  uint64    operator_id   = 2;  // 运营商ID
+  ApplyMode apply_mode    = 3;  // 申请模式
+  int32     apply_number  = 4;  // 申请编号数量
+  int32     sn_length     = 5;  // 编号长度(自动生成时使用)
+  repeated string    ud_sns         = 6;  // 自定义SN(用户自定义SN时使用)
+}
+
+message ApplyResp {
+}
+
+message ListByApplyIDReq {
+  common.PageReq pagereq = 1;
+  repeated common.SearchFilter  search_filters = 2;
+  uint64    apply_id      = 3;  // 申请ID
+}
+message ListByOperatorIDReq {
+  common.PageReq pagereq = 1;
+  repeated common.SearchFilter  search_filters = 2;
+  uint64    operator_id      = 3;  // 申请ID
+}
+message SNInfoList {
+  common.PageResp pageresp = 1;
+  repeated SNInfo  sn_infos = 2;
+}
+
+message InfoReq {
+  string    sn = 1; // sn
+  uint64    operator_id   = 2;  // 运营商ID
+
+}
+message ActivateReq {
+  uint64    id = 1;
+  uint64    evse_id = 3; // 激活SN的设备ID
+}
+message SNInfo {
+  uint64    id = 1;
+  string    sn = 2;             // sn
+  SNState   state = 3;          // 状态
+  uint64    apply_id      = 4;  // 申请ID
+  uint64    operator_id   = 5;  // 运营商ID
+  ApplyMode apply_mode    = 6;  // 申请模式
+  uint64    created_at    = 7;  // 申请时间
+  uint64    expired_at    = 8;  // 过期回收时间
+  uint64    activated_at  = 9;  // 激活时间
+  uint64    activated_evse_id = 10; // 激活SN的设备ID
+}
+
+enum SNState {
+  SNS_UNKNOWN = 0;
+  SNS_WAIT_ACTIVATION = 1; // 等待激活
+  SNS_ACTIVATED = 2;  // 已激活
+  SNS_EXPIRED = 3; // 回收
+}
+enum ApplyMode {
+  AM_UNKNOWN = 0;
+  AM_AUTOGEN = 1; // 平台生成SN
+  AM_UD = 2;      // 用户自定义SN
+}

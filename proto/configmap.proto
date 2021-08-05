@@ -1,0 +1,66 @@
+syntax = "proto3";
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/Kotodian/protocol/golang/configmap";
+
+package configmap;
+
+
+// conf服务
+service ConfigServices {
+    rpc Query(QueryReq) returns (QueryResp);
+    rpc Add(AddReq) returns (AddResp);
+    rpc Del(DelReq) returns (DelResp);
+    rpc Update(UpdateReq) returns (UpdateResp);
+}
+
+
+// Node 节点信息
+message Node  {
+	string   id               = 1; // id
+    map<string, string> data  = 2; // 节点数据（添加后可以修改）
+    map<string, Node>   child = 3; // 子节点信息
+}
+
+// 查询
+message QueryReq {
+    string tos    = 1; // 业务类型
+    string id     = 2; // id
+    int32  depth  = 3; // 查询深度(默认查询当前节点, -1 查询所有深度子节点，0 查询当前节点，大于0查询子节点)
+    int32  limit  = 4; // 每页显示条数(默认不分页 查询深度为1级，大于1的深度还待商订。)
+    int32  offset = 5; // 第几页(0 开始)
+}
+message QueryResp {
+    Node    node =1;    // 节点信息
+    int32   total=2;    // 符合查询条件的节点总数 
+}
+
+// 添加
+message AddReq {
+    string tos   = 1; // 业务类型
+    string pid   = 2; // 父id 
+    Node   node  = 3; // 添加节点
+}
+message AddResp {
+    string id    = 1; // id
+    bool is_new  = 2; // 是否新的item
+}
+
+// 删除
+message DelReq {
+    string tos   = 1; // 业务类型
+    string id    = 2; // id
+}
+message DelResp {
+    string id    = 1; // 删除的id
+}
+
+// 更新
+message UpdateReq {
+    string tos               = 1; // 业务类型
+    string id                = 2; // id
+    map<string, string> data = 3; // 节点数据
+}
+message UpdateResp {
+    string id    = 1; // id
+}
+
