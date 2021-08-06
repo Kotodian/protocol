@@ -31,9 +31,13 @@ const (
 	KindConnectorChargingStateSuspendedUnknown KindConnectorChargingState = 99 // 未知
 )
 
+var _ Connector = &connector{}
+
 type Connector interface {
 	// 枪的id
-	ID() uint64
+	CoreID() uint64
+	// 设置平台ID
+	SetCoreID(coreID uint64)
 	// 枪属于哪个桩
 	SN() string
 	// 序号
@@ -46,6 +50,61 @@ type Connector interface {
 	ChargingState() KindConnectorChargingState
 	// 设置枪的充电状态
 	SetChargingState(KindConnectorChargingState)
+}
+
+type connector struct {
+	id            uint64
+	num           uint32
+	sn            string
+	state         KindConnectorState
+	chargingState KindConnectorChargingState
+}
+
+func NewDefaultConnector(sn string, num uint32) Connector {
+	return &connector{
+		sn: sn,
+		num: num,
+	}
+}
+
+// 枪的id
+func (c *connector) CoreID() uint64 {
+	return c.id
+}
+
+// 设置枪的ID
+func (c *connector) SetCoreID(coreID uint64) {
+	c.id = coreID
+}
+
+// 枪属于哪个桩
+func (c *connector) SN() string {
+	return c.sn
+}
+
+// 序号
+func (c *connector) Num() uint32 {
+	return c.num
+}
+
+// 枪的状态
+func (c *connector) State() KindConnectorState {
+	return c.state
+}
+
+// 设置枪的状态
+func (c *connector) SetState(state KindConnectorState) {
+	c.state = state
+}
+
+// 枪的充电状态
+func (c *connector) ChargingState() KindConnectorChargingState {
+	return c.chargingState
+}
+
+// 设置枪的充电状态
+func (c *connector) SetChargingState(chargingState KindConnectorChargingState) {
+	c.chargingState = chargingState
 }
 
 type ConnectorFSM struct {
