@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/chanxuehong/rand v0.0.0-20201110082127-2f19a1bdd973 // indirect
+	github.com/edwardhey/fsm v1.0.10
 	github.com/golang/protobuf v1.5.2
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/samhuangszu/wechat v0.0.0-20191123082417-1ba66420b803
