@@ -371,7 +371,7 @@ message DeviceRegistrationReq
     bool needToEncodeEvseID = 5;//是否需要转码设备ID
     string topic_prefix = 6;    //topic的前缀
     string productID = 7;       //产品型号
-    int32 connectorNumber = 8;  //充电接口数量
+    repeated int32 connectorNumber = 8;  //充电接口数量
     repeated int32 connectorType = 9;  //充电接口类型列表，列表第1项为接口1类型，第2项为接口2类型，依次类推
                                     //类型定义如下：1-交流充电插座，2-交流充电枪，3-直流充电枪，4-三角插座
 

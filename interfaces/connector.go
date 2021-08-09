@@ -33,6 +33,16 @@ const (
 
 var _ Connector = &connector{}
 
+type Connectors []Connector
+
+func ConnectorNumbers(conns Connectors) []int32 {
+	data := make([]int32, 0)
+	for _, conn := range conns {
+		data = append(data, int32(conn.Num()))
+	}
+	return data
+}
+
 type Connector interface {
 	// 枪的id
 	CoreID() uint64
@@ -62,7 +72,7 @@ type connector struct {
 
 func NewDefaultConnector(sn string, num uint32) Connector {
 	return &connector{
-		sn: sn,
+		sn:  sn,
 		num: num,
 	}
 }
