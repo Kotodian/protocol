@@ -149,6 +149,9 @@ message BootNotificationReq
     string productID = 11;      //产品代码
     uint32 keepalive = 12;      //保活时间
     uint64 ComponentBits = 13; // 功能开关, 以比特位的形式进行传输，0表示基本功能（功能支持，见goiot协议）
+    string protocol = 14;       //使用的协议
+    string controllee =15;      // 目前连接在哪个pod上
+    string remote_address = 16; // 远程ip地址
 }
 
 /**
