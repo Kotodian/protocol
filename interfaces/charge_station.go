@@ -31,6 +31,14 @@ type chargeStation struct {
 
 var _ ChargeStation = &chargeStation{}
 
+func NewDefaultChargeStation(sn string) ChargeStation {
+	return &chargeStation{
+		sn:    sn,
+		state: KindChargeStationStateOffline,
+		evses: make([]Evse, 0),
+	}
+}
+
 // 序列号
 func (c *chargeStation) SN() string {
 	return c.sn
