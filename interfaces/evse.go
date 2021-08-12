@@ -1,34 +1,18 @@
 package interfaces
 
-type KindEvseState int
-
-const (
-	KindEvseStateOnline  KindEvseState = 1
-	KindEvseStateOffline KindEvseState = 2
-	KindEvseStateBan     KindEvseState = 3
-)
-
 type Evse interface {
-	// 序列号
-	SN() string
+	Core
 	// 所有的枪
 	Connectors() []Connector
 	// 设置枪
 	AddConnectors(...Connector)
-	// 状态
-	State() KindEvseState
-	// 设置状态
-	SetState(KindEvseState)
-	// 在平台的ID
-	CoreID() uint64
-	// 设置平台ID
-	SetCoreID(uint64)
+	// 设备序号
+	Num() uint32
 }
 
-func NewDefaultEvse(sn string) Evse {
+func NewDefaultEvse(num uint32) Evse {
 	return &evse{
-		sn:         sn,
-		state:      KindEvseStateOffline,
+		num:        num,
 		register:   false,
 		id:         0,
 		connectors: make([]Connector, 0),
@@ -39,30 +23,14 @@ var _ Evse = &evse{}
 
 type evse struct {
 	id         uint64
-	sn         string
+	num        uint32
 	connectors []Connector
-	state      KindEvseState
 	register   bool
-}
-
-// 序列号
-func (e *evse) SN() string {
-	return e.sn
 }
 
 // 所有的枪
 func (e *evse) Connectors() []Connector {
 	return e.connectors
-}
-
-// 状态
-func (e *evse) State() KindEvseState {
-	return e.state
-}
-
-// 设置状态
-func (e *evse) SetState(state KindEvseState) {
-	e.state = state
 }
 
 // 在平台的ID
@@ -88,4 +56,9 @@ func (e *evse) Register() {
 // 设置枪
 func (e *evse) AddConnectors(connectors ...Connector) {
 	e.connectors = append(e.connectors, connectors...)
+}
+
+// 序号
+func (e *evse) Num() uint32 {
+	return e.num
 }

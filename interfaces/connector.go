@@ -44,10 +44,7 @@ func ConnectorNumbers(conns Connectors) []int32 {
 }
 
 type Connector interface {
-	// 枪的id
-	CoreID() uint64
-	// 设置平台ID
-	SetCoreID(coreID uint64)
+	Core
 	// 枪属于哪个桩
 	SN() string
 	// 序号
