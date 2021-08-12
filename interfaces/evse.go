@@ -23,10 +23,6 @@ type Evse interface {
 	CoreID() uint64
 	// 设置平台ID
 	SetCoreID(uint64)
-	// 是否需要注册
-	NeedRegister() bool
-	// 注册
-	Register()
 }
 
 func NewDefaultEvse(sn string) Evse {
