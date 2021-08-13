@@ -10,8 +10,9 @@ type Evse interface {
 	Num() uint32
 }
 
-func NewDefaultEvse(num uint32) Evse {
+func NewDefaultEvse(sn string, num uint32) Evse {
 	return &evse{
+		sn:         sn,
 		num:        num,
 		register:   false,
 		id:         0,
@@ -23,6 +24,7 @@ var _ Evse = &evse{}
 
 type evse struct {
 	id         uint64
+	sn         string
 	num        uint32
 	connectors []Connector
 	register   bool
@@ -61,4 +63,8 @@ func (e *evse) AddConnectors(connectors ...Connector) {
 // 序号
 func (e *evse) Num() uint32 {
 	return e.num
+}
+
+func (e *evse) SN() string {
+	return e.sn
 }

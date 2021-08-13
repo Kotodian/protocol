@@ -45,8 +45,6 @@ func ConnectorNumbers(conns Connectors) []int32 {
 
 type Connector interface {
 	Core
-	// 枪属于哪个桩
-	SN() string
 	// 序号
 	Num() uint32
 	// 枪的状态

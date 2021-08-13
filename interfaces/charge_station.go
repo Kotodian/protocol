@@ -10,8 +10,6 @@ const (
 
 type ChargeStation interface {
 	Core
-	// 序列号
-	SN() string
 	// 状态
 	State() KindChargeStationState
 	// 设置状态
