@@ -20,6 +20,8 @@ type ChargeStation interface {
 	Evses() []Evse
 	// 添加设备
 	AddEvses(evses ...Evse)
+	// 所有的枪
+	Connectors() []Connector
 }
 
 type chargeStation struct {
@@ -72,4 +74,16 @@ func (c *chargeStation) CoreID() uint64 {
 // 设置平台id
 func (c *chargeStation) SetCoreID(coreID uint64) {
 	c.id = coreID
+}
+
+// 所有的枪(记住是无法修改的)
+func (c *chargeStation) Connectors() []Connector {
+	if len(c.evses) == 0 {
+		return nil
+	}
+	connectors := make([]Connector, 0)
+	for _, evse := range c.evses {
+		connectors = append(connectors, evse.Connectors()...)
+	}
+	return connectors
 }
