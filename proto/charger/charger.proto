@@ -1079,6 +1079,7 @@ message TelemetryReq
 {
     Components component = 1;  //组件
     int32 connectorId = 2;     //充电接口，若测量组件属于某个充电接口，如某个接口的电表，填对应的充电接口号
+    int32 evseId = 3;          // 设备
     repeated SampledValue values = 5;   //遥测值集合
     uint64 warningBitmap = 6;  //故障告警位表，此组件当前所有告警位标志
     string recordId = 7;        //跟订单相关的遥测信息，才有recordId相关联充电订单号
