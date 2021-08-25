@@ -1505,9 +1505,9 @@ message CancelReserveStopTransactionReq {
 
 message StatusNotificationReq {
     // 设备id 记住跟杨总的不一样
-    int32 evseId = 1;
+    string evseId = 1;
     // 枪id
-    int32 connectorId = 2;
+    string connectorId = 2;
     // 枪状态
     int32 connectorState = 3;
 }
