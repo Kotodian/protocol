@@ -44,6 +44,7 @@ enum MessageID
     ID_ReserveNowReq = 0x15;                     //预约充电.请求
     ID_CancelReservationReq = 0x16;              //取消预约.请求
     ID_UpdateIdCardCacheReq = 0x1A;              //更新用户卡桩端缓存.请求
+    ID_StatusNotificationReq = 0x1B;               //枪状态.请求
     ID_TelemetryReq = 0x21;                      //遥测.请求
     ID_ChargingInfoReq = 0x23;                   //充电过程信息.请求
     ID_TriggerMessageReq = 0x24;                 //触发消息重发.请求
@@ -78,6 +79,7 @@ enum MessageID
     ID_ReserveNowConf = 0x95;                     //预约充电.应答
     ID_CancelReservationConf = 0x96;              //取消预约.应答
     ID_UpdateIdCardCacheConf = 0x9A;              //更新用户卡桩端缓存.应答
+//    ID_StatusNotificationConf = 0x9B;             //枪状态.应答
     ID_GetTransactionsConf = 0xB0;                //获取离线订单 .应答
     ID_TransactionConf = 0xB1;                    //上报离线订单 .应答
     ID_GetWarningConf = 0xB2;                     //获取告警记录.应答
@@ -1499,4 +1501,13 @@ message DataTransferConf {
 
 message CancelReserveStopTransactionReq {
    int32 reservationId = 1;
+}
+
+message StatusNotificationReq {
+    // 设备id 记住跟杨总的不一样
+    int32 evseId = 1;
+    // 枪id
+    int32 connectorId = 2;
+    // 枪状态
+    int32 connectorState = 3;
 }
