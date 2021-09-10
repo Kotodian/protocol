@@ -1539,6 +1539,7 @@ message GetVariablesData {
     string variable = 2;
 }
 
-message GetVariablesConf {
 
+message GetVariablesConf {
+    repeated Component components = 1;
 }
