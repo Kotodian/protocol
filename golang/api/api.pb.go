@@ -46,6 +46,7 @@ const MessageID_ID_FirmwareStatusNotificationReq = charger.MessageID_ID_Firmware
 const MessageID_ID_GetDiagnosticsReq = charger.MessageID_ID_GetDiagnosticsReq
 const MessageID_ID_DiagnosticsStatusNotificationReq = charger.MessageID_ID_DiagnosticsStatusNotificationReq
 const MessageID_ID_DeviceRegistrationReq = charger.MessageID_ID_DeviceRegistrationReq
+const MessageID_ID_GetReportReq = charger.MessageID_ID_GetReportReq
 const MessageID_ID_RemoteStartTransactionReq = charger.MessageID_ID_RemoteStartTransactionReq
 const MessageID_ID_RemoteStopTransactionReq = charger.MessageID_ID_RemoteStopTransactionReq
 const MessageID_ID_StartTransactionReq = charger.MessageID_ID_StartTransactionReq
@@ -54,6 +55,7 @@ const MessageID_ID_AuthorizeReq = charger.MessageID_ID_AuthorizeReq
 const MessageID_ID_ReserveNowReq = charger.MessageID_ID_ReserveNowReq
 const MessageID_ID_CancelReservationReq = charger.MessageID_ID_CancelReservationReq
 const MessageID_ID_UpdateIdCardCacheReq = charger.MessageID_ID_UpdateIdCardCacheReq
+const MessageID_ID_StatusNotificationReq = charger.MessageID_ID_StatusNotificationReq
 const MessageID_ID_TelemetryReq = charger.MessageID_ID_TelemetryReq
 const MessageID_ID_ChargingInfoReq = charger.MessageID_ID_ChargingInfoReq
 const MessageID_ID_TriggerMessageReq = charger.MessageID_ID_TriggerMessageReq
@@ -78,6 +80,7 @@ const MessageID_ID_UpdateFirmwareConf = charger.MessageID_ID_UpdateFirmwareConf
 const MessageID_ID_FirmwareStatusNotificationConf = charger.MessageID_ID_FirmwareStatusNotificationConf
 const MessageID_ID_GetDiagnosticsConf = charger.MessageID_ID_GetDiagnosticsConf
 const MessageID_ID_DeviceRegistrationConf = charger.MessageID_ID_DeviceRegistrationConf
+const MessageID_ID_GetReportConf = charger.MessageID_ID_GetReportConf
 const MessageID_ID_RemoteStartTransactionConf = charger.MessageID_ID_RemoteStartTransactionConf
 const MessageID_ID_RemoteStopTransactionConf = charger.MessageID_ID_RemoteStopTransactionConf
 const MessageID_ID_StartTransactionConf = charger.MessageID_ID_StartTransactionConf
@@ -538,6 +541,10 @@ type ReserveStopTransactionReq = charger.ReserveStopTransactionReq
 type Token = charger.Token
 type DataTransferConf = charger.DataTransferConf
 type CancelReserveStopTransactionReq = charger.CancelReserveStopTransactionReq
+type StatusNotificationReq = charger.StatusNotificationReq
+type GetReportReq = charger.GetReportReq
+type Component = charger.Component
+type GetReportConf = charger.GetReportConf
 type SetVariablesReq_SetVariableData = charger.SetVariablesReq_SetVariableData
 type GetLogReq_LogParametersType = charger.GetLogReq_LogParametersType
 
@@ -7181,11 +7188,10 @@ var file_api_proto_rawDesc = []byte{
 	0x6f, 0x6e, 0x42, 0x79, 0x49, 0x44, 0x12, 0x16, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x47, 0x65, 0x74,
 	0x53, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x79, 0x49, 0x44, 0x52, 0x65, 0x71, 0x1a, 0x14,
 	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x6e, 0x66, 0x6f,
-	0x52, 0x65, 0x73, 0x70, 0x42, 0x33, 0x48, 0x03, 0x5a, 0x2f, 0x67, 0x69, 0x74, 0x63, 0x73, 0x6d,
-	0x73, 0x2e, 0x6a, 0x6f, 0x79, 0x73, 0x6f, 0x6e, 0x71, 0x75, 0x69, 0x6e, 0x2e, 0x63, 0x6f, 0x6d,
-	0x2f, 0x63, 0x73, 0x6d, 0x73, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2f, 0x67,
-	0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2f, 0x61, 0x70, 0x69, 0x50, 0x03, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x52, 0x65, 0x73, 0x70, 0x42, 0x2b, 0x48, 0x03, 0x5a, 0x27, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x4b, 0x6f, 0x74, 0x6f, 0x64, 0x69, 0x61, 0x6e, 0x2f, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2f, 0x67, 0x6f, 0x6c, 0x61, 0x6e, 0x67, 0x2f, 0x61, 0x70,
+	0x69, 0x50, 0x03, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
