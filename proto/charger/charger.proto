@@ -1515,7 +1515,7 @@ message StatusNotificationReq {
 }
 
 message GetReportReq {
-    Component component = 1;
+    repeated Component component = 1;
 }
 
 message Component {
