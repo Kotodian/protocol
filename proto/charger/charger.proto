@@ -1543,4 +1543,5 @@ message GetVariablesConf {
 message GetVariablesResult {
     ComponentType component = 1;
     VariableType variable = 2;
+    string  attributeValue = 3;
 }
