@@ -36,6 +36,7 @@ enum MessageID
     ID_DiagnosticsStatusNotificationReq = 0x09;  //诊断日志状态通知.请求
     ID_DeviceRegistrationReq = 0x0A;			 //注册请求
     ID_GetReportReq = 0x0B;
+    ID_GetVariablesReq = 0x0C;
 
     ID_RemoteStartTransactionReq = 0x10;         //远程启动充电.请求
     ID_RemoteStopTransactionReq = 0x11;          //远程停止充电.请求
@@ -72,6 +73,7 @@ enum MessageID
     ID_GetDiagnosticsConf = 0x88;                //获取设备诊断日志.应答
     ID_DeviceRegistrationConf = 0x8A;			       //注册请求.应答
     ID_GetReportConf = 0x8B; //
+    ID_GetVariablesConf = 0x8C;
 
     ID_RemoteStartTransactionConf = 0x90;         //远程启动充电.应答
     ID_RemoteStopTransactionConf = 0x91;          //远程停止充电.应答
@@ -1525,5 +1527,18 @@ message Component {
 
 
 message GetReportConf {
+
+}
+
+message GetVariablesReq {
+    repeated GetVariablesData getVariablesData = 1;
+}
+
+message GetVariablesData {
+    Component component = 1;
+    string variable = 2;
+}
+
+message GetVariablesConf {
 
 }
