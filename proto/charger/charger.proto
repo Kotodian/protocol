@@ -1537,9 +1537,10 @@ message GetVariablesData {
 
 
 message GetVariablesConf {
-    message GetVariablesResult {
-        ComponentType component = 1;
-        VariableType variable = 2;
-    }
     repeated GetVariablesResult getVariablesResult = 1;
+}
+
+message GetVariablesResult {
+    ComponentType component = 1;
+    VariableType variable = 2;
 }
