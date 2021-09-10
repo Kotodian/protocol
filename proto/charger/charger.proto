@@ -1229,7 +1229,7 @@ message ReportDataType
 message ComponentType{
     string name = 1; //名称，比如风扇
     string instance = 2; //可选，实例名称，比如风扇1、风扇2等
-    int32 connector_id = 3; //可选，默认为0，0代表是设备
+    string evse_id = 3; //可选，默认为0，0代表是设备
 }
 
 message VariableType{
@@ -1517,13 +1517,9 @@ message StatusNotificationReq {
 }
 
 message GetReportReq {
-    repeated Component component = 1;
+    repeated ComponentType component = 1;
 }
 
-message Component {
-    string name = 1;
-    string instance = 2;
-}
 
 
 message GetReportConf {
@@ -1535,11 +1531,11 @@ message GetVariablesReq {
 }
 
 message GetVariablesData {
-    Component component = 1;
+    ComponentType component = 1;
     string variable = 2;
 }
 
 
 message GetVariablesConf {
-    repeated Component components = 1;
+    repeated ComponentType components = 1;
 }
