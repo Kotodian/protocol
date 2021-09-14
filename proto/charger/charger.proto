@@ -647,10 +647,11 @@ RemoteStartTransactionReq
 */
 message RemoteStartTransactionReq
 {
-    int32 connectorId = 1;      //充电接口号，必须大于0。若充电桩只有一个接口，可以不填
+    string connectorId = 1;      //充电接口号，必须大于0。若充电桩只有一个接口，可以不填
     IdToken IdData = 2;         //用户身份识别号
     string transactionId = 3;   //中心平台生成的订单号
     string pin = 4;             //充电桩pin码
+    string evseId = 5;
     ServiceMode serviceMode = 6;//充电／放电服务模式。按电量充电，按金额充电，按时间充电，自动充满 ，按电量放电，自动放电
     int32 timingStart = 7;      //定时启动时间。充电将在设定的时间启动。如果为0或者未填，立即启动充电
     int32 allowedMinute = 8;    //按时间充电时，最大允许充电时间，单位秒
