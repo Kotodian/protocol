@@ -659,6 +659,7 @@ message RemoteStartTransactionReq
     int32 allowedRMB = 10;      //按金额充电时，最大允许充电金额，单位分
     SetTariffReq priceScheme = 11;    //价格模版。对于某些针对特定用户启用特定计费模版
     int32 schedule_time = 12;          // 定时充电时间戳(秒), 0表示即时充电
+    string remoteStartId = 13;
 }
 
 /**
