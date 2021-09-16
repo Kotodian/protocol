@@ -1232,6 +1232,7 @@ message ComponentType{
     string name = 1; //名称，比如风扇
     string instance = 2; //可选，实例名称，比如风扇1、风扇2等
     string evse_id = 3; //可选，默认为0，0代表是设备
+    string connector_id = 4;
 }
 
 message VariableType{
