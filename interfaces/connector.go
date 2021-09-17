@@ -1,34 +1,21 @@
 package interfaces
 
-import (
-	"context"
-
-	"github.com/edwardhey/fsm"
-)
-
 type KindConnectorChargingState int
 type KindConnectorState int
 
 const (
-	KindConnectorStateFaulted       KindConnectorState = -1  //故障
-	KindConnectorStateUnavailable   KindConnectorState = 0   //不可用
-	KindConnectorStateAvailable     KindConnectorState = 1   //空闲可用
-	KindConnectorStateOccupied      KindConnectorState = 5   //占用
-	KindConnectorStateReserved      KindConnectorState = 6   //预约
-	KindConnectorStateEVConnected   KindConnectorState = 7   //插枪
-	KindConnectorStateCharging      KindConnectorState = 8   //充电中
-	KindConnectorStateSuspendedEV   KindConnectorState = 9   //车端挂起，不输入电能
-	KindConnectorStateSuspendedEVSE KindConnectorState = 10  //桩端挂起，不输入电能
-	KindConnectorStateWaiting       KindConnectorState = 11  //充电等待
-	KindConnectorStateFinished      KindConnectorState = 100 //充电完成
+	KindConnectorStateFaulted     KindConnectorState = -1 //故障
+	KindConnectorStateUnavailable KindConnectorState = 0  //不可用
+	KindConnectorStateAvailable   KindConnectorState = 1  //空闲可用
+	KindConnectorStateOccupied    KindConnectorState = 2  //占用
+	KindConnectorStateReserved    KindConnectorState = 3  //预约
 )
 const (
-	KindConnectorChargingStateIdle             KindConnectorChargingState = 0  //空闲
-	KindConnectorChargingStateEVConnected      KindConnectorChargingState = 1  //插枪
-	KindConnectorChargingStateCharging         KindConnectorChargingState = 2  //充电中
-	KindConnectorChargingStateSuspendedEV      KindConnectorChargingState = 3  //车端挂起，不输入电能
-	KindConnectorChargingStateSuspendedEVSE    KindConnectorChargingState = 4  //桩端挂起，不输出电能
-	KindConnectorChargingStateSuspendedUnknown KindConnectorChargingState = 99 // 未知
+	KindConnectorChargingStateIdle          KindConnectorChargingState = 0 //空闲
+	KindConnectorChargingStateEVConnected   KindConnectorChargingState = 1 //插枪
+	KindConnectorChargingStateCharging      KindConnectorChargingState = 2 //充电中
+	KindConnectorChargingStateSuspendedEV   KindConnectorChargingState = 3 //车端挂起，不输入电能
+	KindConnectorChargingStateSuspendedEVSE KindConnectorChargingState = 4 //桩端挂起，不输出电能
 )
 
 var _ Connector = &connector{}
@@ -112,181 +99,182 @@ func (c *connector) SetChargingState(chargingState KindConnectorChargingState) {
 	c.chargingState = chargingState
 }
 
-type ConnectorFSM struct {
-	c Connector
-	fsm.MachineAbs
-}
-
-func NewConnectorFSM(c Connector) fsm.IMachine {
-	return &ConnectorFSM{
-		c: c,
-	}
-}
-
-func (c *ConnectorFSM) SetState(ctx context.Context, s fsm.State) error {
-	c.c.SetState(s.(KindConnectorState))
-	return nil
-}
-
-func (c *ConnectorFSM) GetState() fsm.State {
-	return c.c.State()
-}
-
-func (c *ConnectorFSM) OnInitWithMachine(f *fsm.FSM) {
-
-}
-
-type ConnectorChargeFSM struct {
-	c Connector
-	fsm.MachineAbs
-}
-
-func NewConnectorChargeFSM(c Connector) fsm.IMachine {
-	return &ConnectorChargeFSM{
-		c: c,
-	}
-}
-
-func (c *ConnectorChargeFSM) SetState(ctx context.Context, s fsm.State) error {
-	c.c.SetChargingState(s.(KindConnectorChargingState))
-	return nil
-}
-
-func (c *ConnectorChargeFSM) GetState() fsm.State {
-	return c.c.ChargingState()
-}
-
-func (c *ConnectorChargeFSM) OnInitWithMachine(f *fsm.FSM) {
-}
-
-var ConnectorChargingStateFSM *fsm.FSM
-var ConnectorStateFSM *fsm.FSM
-
-func init() {
-	{
-		ConnectorStateFSM = fsm.NewFSM()
-		//Special 设置特殊状态
-		ConnectorStateFSM.Special(KindConnectorStateFaulted)
-		ConnectorStateFSM.Special(KindConnectorStateUnavailable)
-
-		ConnectorStateFSM.Special(KindConnectorStateAvailable)
-		ConnectorStateFSM.SetStateFuncs(KindConnectorStateAvailable,
-			nil,
-			//onEnterFunc
-			func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-				obj := object.(*ConnectorFSM)
-				obj.c.SetChargingState(KindConnectorChargingStateIdle)
-				return nil
-			})
-
-		ConnectorStateFSM.Special(KindConnectorStateReserved)
-
-		//从充电完成跳转到占用，就不更新状态了
-		ConnectorStateFSM.From(KindConnectorStateAvailable).To(KindConnectorStateOccupied).
-			Then(func(object fsm.IMachine, ctx context.Context, state fsm.State, state2 fsm.State, i ...interface{}) error {
-				obj := object.(*ConnectorFSM)
-				if obj.c.ChargingState() == KindConnectorChargingStateIdle {
-					obj.c.SetState(KindConnectorStateReserved)
-					obj.SetSkip(true)
-				}
-				return nil
-			})
-
-		ConnectorStateFSM.Special(KindConnectorStateOccupied)
-		ConnectorStateFSM.SetStateFuncs(KindConnectorStateOccupied,
-			nil,
-			func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-				obj := object.(*ConnectorFSM)
-				if obj.GetIgnore() == true || obj.GetSkip() {
-					return nil
-				}
-				//obj.connector.State = models.KindConnectorStateEVConnected
-				switch obj.c.ChargingState() {
-				case KindConnectorChargingStateCharging:
-					obj.c.SetState(KindConnectorStateCharging)
-					obj.SetSkip(true)
-				case KindConnectorChargingStateEVConnected, KindConnectorChargingStateIdle:
-					if obj.c.State() != KindConnectorStateReserved {
-						obj.c.SetState(KindConnectorStateEVConnected)
-						obj.SetSkip(true)
-					} else {
-						obj.SetIgnore(true)
-					}
-				case KindConnectorChargingStateSuspendedEVSE, KindConnectorChargingStateSuspendedEV:
-					//obj.connector.State = models.KindConnectorStateCharging
-					obj.SetIgnore(true)
-				}
-				return nil
-			})
-		//从充电完成跳转到占用，就不更新状态了
-		ConnectorStateFSM.From(KindConnectorStateFinished).To(KindConnectorStateOccupied).
-			Then(func(object fsm.IMachine, ctx context.Context, state fsm.State, state2 fsm.State, i ...interface{}) error {
-				obj := object.(*ConnectorFSM)
-				obj.SetSkip(true)
-				obj.c.SetState(KindConnectorStateFinished)
-				return nil
-			})
-	}
-	{
-		ConnectorChargingStateFSM = fsm.NewFSM()
-		{
-			ConnectorChargingStateFSM.Special(KindConnectorChargingStateIdle)
-			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateIdle,
-				nil,
-				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-					obj := object.(*ConnectorChargeFSM)
-					if obj.GetIgnore() {
-						return
-					} else if obj.c.State() == KindConnectorStateOccupied ||
-						obj.c.State() == KindConnectorStateCharging ||
-						obj.c.State() == KindConnectorStateSuspendedEV ||
-						obj.c.State() == KindConnectorStateSuspendedEVSE {
-						obj.c.SetState(KindConnectorStateEVConnected)
-						obj.c.SetChargingState(KindConnectorChargingStateEVConnected)
-					}
-					return
-				})
-			ConnectorChargingStateFSM.Special(KindConnectorChargingStateEVConnected)
-			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateEVConnected,
-				nil,
-				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-					obj := object.(*ConnectorChargeFSM)
-					if obj.GetIgnore() {
-						return
-					}
-					if obj.c.State() == KindConnectorStateAvailable ||
-						(obj.c.State() != KindConnectorStateReserved && obj.c.ChargingState() == KindConnectorChargingStateIdle) {
-						obj.c.SetState(KindConnectorStateEVConnected)
-					}
-					return
-				})
-
-			ConnectorChargingStateFSM.Special(KindConnectorChargingStateSuspendedEV)
-			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateSuspendedEV,
-				nil,
-				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-					obj := object.(*ConnectorChargeFSM)
-					obj.c.SetState(KindConnectorStateSuspendedEV)
-					return nil
-				})
-
-			ConnectorChargingStateFSM.Special(KindConnectorChargingStateSuspendedEVSE)
-			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateSuspendedEVSE,
-				nil,
-				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-					obj := object.(*ConnectorChargeFSM)
-					obj.c.SetState(KindConnectorStateSuspendedEVSE)
-					return nil
-				})
-
-			ConnectorChargingStateFSM.Special(KindConnectorChargingStateCharging)
-			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateCharging,
-				nil,
-				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
-					obj := object.(*ConnectorChargeFSM)
-					obj.c.SetState(KindConnectorStateCharging)
-					return nil
-				})
-		}
-	}
-}
+//
+//type ConnectorFSM struct {
+//	c Connector
+//	fsm.MachineAbs
+//}
+//
+//func NewConnectorFSM(c Connector) fsm.IMachine {
+//	return &ConnectorFSM{
+//		c: c,
+//	}
+//}
+//
+//func (c *ConnectorFSM) SetState(ctx context.Context, s fsm.State) error {
+//	c.c.SetState(s.(KindConnectorState))
+//	return nil
+//}
+//
+//func (c *ConnectorFSM) GetState() fsm.State {
+//	return c.c.State()
+//}
+//
+//func (c *ConnectorFSM) OnInitWithMachine(f *fsm.FSM) {
+//
+//}
+//
+//type ConnectorChargeFSM struct {
+//	c Connector
+//	fsm.MachineAbs
+//}
+//
+//func NewConnectorChargeFSM(c Connector) fsm.IMachine {
+//	return &ConnectorChargeFSM{
+//		c: c,
+//	}
+//}
+//
+//func (c *ConnectorChargeFSM) SetState(ctx context.Context, s fsm.State) error {
+//	c.c.SetChargingState(s.(KindConnectorChargingState))
+//	return nil
+//}
+//
+//func (c *ConnectorChargeFSM) GetState() fsm.State {
+//	return c.c.ChargingState()
+//}
+//
+//func (c *ConnectorChargeFSM) OnInitWithMachine(f *fsm.FSM) {
+//}
+//
+//var ConnectorChargingStateFSM *fsm.FSM
+//var ConnectorStateFSM *fsm.FSM
+//
+//func init() {
+//	{
+//		ConnectorStateFSM = fsm.NewFSM()
+//		//Special 设置特殊状态
+//		ConnectorStateFSM.Special(KindConnectorStateFaulted)
+//		ConnectorStateFSM.Special(KindConnectorStateUnavailable)
+//
+//		ConnectorStateFSM.Special(KindConnectorStateAvailable)
+//		ConnectorStateFSM.SetStateFuncs(KindConnectorStateAvailable,
+//			nil,
+//			//onEnterFunc
+//			func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//				obj := object.(*ConnectorFSM)
+//				obj.c.SetChargingState(KindConnectorChargingStateIdle)
+//				return nil
+//			})
+//
+//		ConnectorStateFSM.Special(KindConnectorStateReserved)
+//
+//		//从充电完成跳转到占用，就不更新状态了
+//		ConnectorStateFSM.From(KindConnectorStateAvailable).To(KindConnectorStateOccupied).
+//			Then(func(object fsm.IMachine, ctx context.Context, state fsm.State, state2 fsm.State, i ...interface{}) error {
+//				obj := object.(*ConnectorFSM)
+//				if obj.c.ChargingState() == KindConnectorChargingStateIdle {
+//					obj.c.SetState(KindConnectorStateReserved)
+//					obj.SetSkip(true)
+//				}
+//				return nil
+//			})
+//
+//		ConnectorStateFSM.Special(KindConnectorStateOccupied)
+//		ConnectorStateFSM.SetStateFuncs(KindConnectorStateOccupied,
+//			nil,
+//			func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//				obj := object.(*ConnectorFSM)
+//				if obj.GetIgnore() == true || obj.GetSkip() {
+//					return nil
+//				}
+//				//obj.connector.State = models.KindConnectorStateEVConnected
+//				switch obj.c.ChargingState() {
+//				case KindConnectorChargingStateCharging:
+//					obj.c.SetState(KindConnectorStateCharging)
+//					obj.SetSkip(true)
+//				case KindConnectorChargingStateEVConnected, KindConnectorChargingStateIdle:
+//					if obj.c.State() != KindConnectorStateReserved {
+//						obj.c.SetState(KindConnectorStateEVConnected)
+//						obj.SetSkip(true)
+//					} else {
+//						obj.SetIgnore(true)
+//					}
+//				case KindConnectorChargingStateSuspendedEVSE, KindConnectorChargingStateSuspendedEV:
+//					//obj.connector.State = models.KindConnectorStateCharging
+//					obj.SetIgnore(true)
+//				}
+//				return nil
+//			})
+//		//从充电完成跳转到占用，就不更新状态了
+//		ConnectorStateFSM.From(KindConnectorStateFinished).To(KindConnectorStateOccupied).
+//			Then(func(object fsm.IMachine, ctx context.Context, state fsm.State, state2 fsm.State, i ...interface{}) error {
+//				obj := object.(*ConnectorFSM)
+//				obj.SetSkip(true)
+//				obj.c.SetState(KindConnectorStateFinished)
+//				return nil
+//			})
+//	}
+//	{
+//		ConnectorChargingStateFSM = fsm.NewFSM()
+//		{
+//			ConnectorChargingStateFSM.Special(KindConnectorChargingStateIdle)
+//			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateIdle,
+//				nil,
+//				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//					obj := object.(*ConnectorChargeFSM)
+//					if obj.GetIgnore() {
+//						return
+//					} else if obj.c.State() == KindConnectorStateOccupied ||
+//						obj.c.State() == KindConnectorStateCharging ||
+//						obj.c.State() == KindConnectorStateSuspendedEV ||
+//						obj.c.State() == KindConnectorStateSuspendedEVSE {
+//						obj.c.SetState(KindConnectorStateEVConnected)
+//						obj.c.SetChargingState(KindConnectorChargingStateEVConnected)
+//					}
+//					return
+//				})
+//			ConnectorChargingStateFSM.Special(KindConnectorChargingStateEVConnected)
+//			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateEVConnected,
+//				nil,
+//				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//					obj := object.(*ConnectorChargeFSM)
+//					if obj.GetIgnore() {
+//						return
+//					}
+//					if obj.c.State() == KindConnectorStateAvailable ||
+//						(obj.c.State() != KindConnectorStateReserved && obj.c.ChargingState() == KindConnectorChargingStateIdle) {
+//						obj.c.SetState(KindConnectorStateEVConnected)
+//					}
+//					return
+//				})
+//
+//			ConnectorChargingStateFSM.Special(KindConnectorChargingStateSuspendedEV)
+//			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateSuspendedEV,
+//				nil,
+//				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//					obj := object.(*ConnectorChargeFSM)
+//					obj.c.SetState(KindConnectorStateSuspendedEV)
+//					return nil
+//				})
+//
+//			ConnectorChargingStateFSM.Special(KindConnectorChargingStateSuspendedEVSE)
+//			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateSuspendedEVSE,
+//				nil,
+//				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//					obj := object.(*ConnectorChargeFSM)
+//					obj.c.SetState(KindConnectorStateSuspendedEVSE)
+//					return nil
+//				})
+//
+//			ConnectorChargingStateFSM.Special(KindConnectorChargingStateCharging)
+//			ConnectorChargingStateFSM.SetStateFuncs(KindConnectorChargingStateCharging,
+//				nil,
+//				func(object fsm.IMachine, ctx context.Context, args ...interface{}) (err error) {
+//					obj := object.(*ConnectorChargeFSM)
+//					obj.c.SetState(KindConnectorStateCharging)
+//					return nil
+//				})
+//		}
+//	}
+//}
