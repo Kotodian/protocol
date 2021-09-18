@@ -716,6 +716,7 @@ message StartTransactionReq
     string transparent = 13;           //透传字段，会在 confi报文里传回来 transparent
     uint32 soc = 14;                   //启动电量的SOC
     bool is_reserved = 15;             //是否预约中
+    int32 remoteStartId = 18;
     int32 created_at = 16;             //订单创建时间，用于解决部分协议在充电中不上报启动充电时间的bug（启动充电时间会用于协助寻找是否已存在的订单）
 }
 
