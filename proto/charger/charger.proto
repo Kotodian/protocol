@@ -701,7 +701,8 @@ StartTransactionReq
 message StartTransactionReq
 {
     string recordId = 1;               //充电桩充电记录号
-    int32 connectorId = 2;             //充电接口号，必须大于0。若充电桩只有一个接口，可以不填
+    string evseId = 17;
+    string connectorId = 2;             //充电接口号，必须大于0。若充电桩只有一个接口，可以不填
     IdToken IdData = 3;                //用户身份识别号
     AuthorizationMode mode = 4;        //授权启动充电方式，用户远程启动，本地刷卡启动，本地蓝牙启动等
     ServiceMode serviceMode = 5;       //充电服务模式。按电量充电，按金额充电，按时间充电，自动充满等
