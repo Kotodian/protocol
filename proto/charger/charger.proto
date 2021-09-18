@@ -990,10 +990,8 @@ ChargingInfoReq
 message ChargingInfoReq
 {
     string recordId = 1;                //充电桩充电记录号
-    int32 connectorId = 2;             //指定充电接口
-    //BMSHandshakeInfo BMShandshake = 4; //充电握手阶段信息
-    //BMSConfigInfo BMSConfig = 5;       //充电参数配置阶段信息
-    // BMSChargedInfo BMSCharged = 7;     //充电结束信息
+    string connectorId = 2;             //指定充电接口
+    string evseId = 3;
     BMSChargingInfo BMSCharging = 6;   //充电中信息
     int32 consumedTime = 8;            //已充充电时间
     int32 consumedElectric = 9;        //已充电电量
@@ -1011,7 +1009,7 @@ message TransactionReq
 {
     string recordId = 1;         //充电桩充电记录号，每多增一条充电记录，recordId增1。
     string transactionId = 2;   //中心平台生成的充电交易号
-    int32 connectorId = 3;      //充电接口号
+    string connectorId = 3;      //充电接口号
     IdToken IdData	= 4;        //用户身份识别号
     AuthorizationMode mode = 5; //授权启动充电方式
     ServiceMode service = 6;    //充电服务模式
@@ -1035,6 +1033,8 @@ message TransactionReq
     uint32 stop_soc = 27; //结束soc
     bool calc_cost_by_backend = 28;     // 后台计费
     int32 reservationId = 29;          //预约ID
+    int32 remoteStartId = 30;
+    string evseId = 31;
 }
 
 /**
