@@ -1,5 +1,18 @@
 package interfaces
 
+type KindOrderState int
+
+const (
+	KindOrderStateTimeout         KindOrderState = iota - 1 // 订单启动超时
+	KindOrderStateEnded                                     // 订单正常结束
+	KindOrderStateUnexpectedEnded                           // 订单意外结束
+	KindOrderStateStarted                                   // 订单启动了 桩还没上报
+	KindOrderStateCharging                                  // 订单正在充电中
+	KindOrderStateChargingSuspend                           // 订单在充电 但是枪未输出
+	KindOrderStateFaultedSuspend                            // 订单在充电中 但是枪上报NotifyEvent
+	KindOrderStateOfflineSuspend                            // 订单在充电中 但是桩突然离线
+)
+
 type Transaction interface {
 	// 订单的充电事件ID
 	TransactionID() string
