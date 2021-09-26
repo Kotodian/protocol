@@ -970,17 +970,11 @@ ChargerStatus
 */
 enum ChargerStatus
 {
-    CHS_Unavailable = 0;     //不可用
-    CHS_Available = 1;      //空闲
-    CHS_Preparing = 2;      //已连接，未开启充电会话
-    CHS_Charging = 3;       //充电中
+    CHS_Idle = 0;      //已连接，未开启充电会话
+    CHS_EVConnected = 1;
+    CHS_Charging = 2;       //充电中
+    CHS_SuspendedEV = 3;    //充电已开启，电动汽车还未充电
     CHS_SuspendedEVSE = 4;  //充电已开启，但充电桩还未输出
-    CHS_SuspendedEV = 5;    //充电已开启，电动汽车还未充电
-    CHS_Finishing = 6;      //充电完成，还处于占用状态
-    CHS_Reserved = 7;       //预约
-    CHS_Faulted = 8;        //故障
-    CHS_Waiting = 9;        //定时充电等待、轮充等待等
-    CHS_Occupied = 10;      //设备占用中，不知道是什么状态
 }
 
 /**

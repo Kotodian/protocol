@@ -6486,7 +6486,7 @@ func (x *SampledValue) GetRate() int32 {
 
 //*
 //TelemetryReq
-//遥测.请求
+//数据收集
 type TelemetryReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
