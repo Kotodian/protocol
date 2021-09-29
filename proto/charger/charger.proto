@@ -719,6 +719,7 @@ message StartTransactionReq
     int32 remoteStartId = 18;
     int32 created_at = 16;             //订单创建时间，用于解决部分协议在充电中不上报启动充电时间的bug（启动充电时间会用于协助寻找是否已存在的订单）
     ChargerStatus connectorChargingState = 19;
+    bool offline = 20; // 是否是离线订单
 }
 
 /**
@@ -799,6 +800,7 @@ message StopTransactionReq
     uint32 soc = 14;                    // 停止的SOC
     bool calc_cost_by_backend = 15;     // 后台计费
     int32 reservationId = 16;          //预约ID
+    bool offline = 17; // 是否是离线订单
 }
 
 /**
