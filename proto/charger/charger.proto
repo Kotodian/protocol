@@ -792,6 +792,7 @@ message StopTransactionReq
     int32 meterStop = 5;                // 充电结束时电表度数，分辨率0.01kwh
     int32 timestamp = 6;                // 充电结束时间,时间戳，精度：秒
     Cost cost = 7;                      // 充电订单计费信息
+    string evseId = 8;
     int32 deduction = 9;                // 本地扣款金额。单位分
     string TAC = 10;                    // 本地卡片扣款校验数据
     bytes elecData = 11;                // 充电过程电量信息, 每5分钟间隔电量，每个点的电量一个字节表示
@@ -800,7 +801,7 @@ message StopTransactionReq
     uint32 soc = 14;                    // 停止的SOC
     bool calc_cost_by_backend = 15;     // 后台计费
     int32 reservationId = 16;          //预约ID
-    bool offline = 17; // 是否是离线订单
+    string connectorId = 17;
 }
 
 /**
