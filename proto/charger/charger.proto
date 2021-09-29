@@ -813,6 +813,7 @@ message StopTransactionConf
     int32 balance = 1;          //用户账户余额
     int32 totalCost = 2;        //中心平台返回的总费用
     bool  charged = 3;          //是否已扣费
+    string transactionId = 4;
 }
 
 /**
