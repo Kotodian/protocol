@@ -1076,7 +1076,7 @@ message SampledValue
 {
     int32 measurand = 1;           // 遥测变量代码
     string vendorEx = 2;           // 供应商扩展遥测变量名
-    int32 value = 3;               // 遥测值
+    float value = 3;               // 遥测值
     int32 rate = 4;                // 倍率(默认值是1)
 }
 
