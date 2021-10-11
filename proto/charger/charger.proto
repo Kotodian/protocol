@@ -64,6 +64,8 @@ enum MessageID
     ID_DataTransferReq = 0x41;                   //数据传输.请求
     ID_SetChargingProfileReq = 0x42;
     ID_ClearChargingProfileReq = 0x43;
+    ID_GetChargingProfileReq = 0x44;
+    ID_ReportChargingProfileReq = 0x45;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -100,6 +102,8 @@ enum MessageID
     ID_DataTransferConf = 0xBB;                   //数据传输.应答
     ID_SetChargingProfileConf = 0xBC;            //
     ID_ClearChargingProfileConf = 0xBD;
+    ID_GetChargingProfileConf = 0xBE;
+    ID_ReportChargingProfileConf = 0xBF;
 
     ID_MessageError = 0xFF;                       //错误
 }
@@ -1657,4 +1661,17 @@ message ClearChargingProfile {
 
 message ClearChargingProfileConf {
     ClearChargingProfile.Status status = 1;
+}
+
+message GetChargingProfilesReq {
+    uint64 requestId = 1;
+}
+
+message ChargingProfileCriterion {
+    repeated uint64 id = 1;
+}
+
+message ReportChargingProfile {
+    bool tbc = 1;
+    repeated ChargingProfile chargingProfile = 2;
 }
