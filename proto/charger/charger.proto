@@ -1590,7 +1590,7 @@ message ChargingProfile {
 message ChargingSchedule {
     message PeriodType {
         int32 startPeriod = 1;
-        float limit = 2;
+        double limit = 2;
         int32 numberPhases = 3;
         int32 phaseToUse = 4;
     }
@@ -1598,7 +1598,7 @@ message ChargingSchedule {
     string startSchedule = 2;
     int32 duration = 3;
     ChargingRateUnit chargingRateUnit = 4;
-    float minChargingRate = 5;
+    double minChargingRate = 5;
     repeated PeriodType chargingSchedulePeriod = 6;
     SalesTariff salesTariff = 7;
 }
@@ -1608,7 +1608,7 @@ message SalesTariff {
         uint32 ePriceLevel = 1;
         int32 start = 2; // 现在的时间 精确到秒
         int32 duration = 3;
-        float startValue = 4;
+        double startValue = 4;
         Cost.Kind costKind = 5;
         int32 amount = 6;
         int32 amountMultiplier = 7;
