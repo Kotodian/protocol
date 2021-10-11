@@ -1608,17 +1608,21 @@ message SalesTariff {
         uint32 ePriceLevel = 1;
         int32 start = 2; // 现在的时间 精确到秒
         int32 duration = 3;
-        double startValue = 4;
-        Cost.Kind costKind = 5;
-        int32 amount = 6;
-        int32 amountMultiplier = 7;
+        repeated ConsumptionCost consumptionCost = 4;
     }
-    message Cost {
-       enum Kind {
-           CarbonDioxideEmission = 0;
-           RelativePricePercentage = 1;
-           RenewableGenerationPercentage = 2;
+    message ConsumptionCost {
+       double startValue = 1;
+       message Cost {
+           enum Kind {
+               CarbonDioxideEmission = 0;
+               RelativePricePercentage = 1;
+               RenewableGenerationPercentage = 2;
+           }
+           Kind kind = 1;
+           int32 amount = 2;
+           int32 amountMultiplier = 3;
        }
+       repeated Cost cost = 2;
     }
     uint64 id = 1;
     string salesTariffDescription = 2;
