@@ -1665,14 +1665,28 @@ message ClearChargingProfileConf {
 
 message GetChargingProfilesReq {
     uint64 requestId = 1;
-    ChargingProfileCriterion criterion = 2;
+    ChargingProfilesCriterion criterion = 2;
 }
 
-message ChargingProfileCriterion {
+message GetChargingProfilesConf {
+    GetChargingProfilesStatus status = 1;
+}
+
+enum GetChargingProfilesStatus {
+    Accepted = 0;
+    Unknown = 1;
+}
+
+message ChargingProfilesCriterion {
     repeated uint64 id = 1;
 }
 
-message ReportChargingProfile {
+
+message ReportChargingProfilesReq {
     bool tbc = 1;
     repeated ChargingProfile chargingProfile = 2;
+}
+
+message ReportChargingProfilesConf {
+
 }
