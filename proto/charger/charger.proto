@@ -1665,6 +1665,7 @@ message ClearChargingProfileConf {
 
 message GetChargingProfilesReq {
     uint64 requestId = 1;
+    ChargingProfileCriterion criterion = 2;
 }
 
 message ChargingProfileCriterion {
