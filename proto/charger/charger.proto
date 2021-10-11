@@ -778,7 +778,7 @@ enum StopReason
     SR_CC1NoConnect = 106;            // 充电枪未连接(充电中车辆控制引导异常/CC1连接异常)(原27)
     SR_Deauthorized = 107;            // 取消授权
     SR_EVConnectTimeout = 108;        // 连接超时
-    SR_Server_Error = 99999999;       // 平台错误
+    SR_Server_Error = 999;       // 平台错误
 }
 
 /**
