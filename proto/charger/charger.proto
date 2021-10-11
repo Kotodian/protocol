@@ -62,6 +62,7 @@ enum MessageID
     ID_LogStatusNotificationReq = 0x39;          //日志上报状态.请求
     ID_SendLocalAuthorizationListReq = 0x40;     //设置本地授权列表.请求
     ID_DataTransferReq = 0x41;                   //数据传输.请求
+    ID_SetChargingProfileReq = 0x42;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -96,6 +97,7 @@ enum MessageID
     ID_LogStatusNotificationConf = 0xB9;          //日志上报状态.应答
     ID_SendLocalAuthorizationListConf = 0xBA;     //设置本地鉴权列表.应答
     ID_DataTransferConf = 0xBB;                   //数据传输.应答
+    ID_SetChargingProfileConf = 0xBC;            //
 
     ID_MessageError = 0xFF;                       //错误
 }
@@ -1548,4 +1550,87 @@ message GetVariablesResult {
     ComponentType component = 1;
     VariableType variable = 2;
     string  attributeValue = 3;
+}
+
+message SetChargingProfileReq {
+    ChargingProfile chargingProfile = 1;
+}
+
+message ChargingProfile {
+    enum Purpose {
+        ChargingStationExternalConstraints = 0;
+        ChargingStationMaxProfile = 1;
+        TxDefaultProfile = 2;
+        TxProfile = 3;
+    }
+    enum Kind {
+        Absolute = 0;
+        Recurring = 1;
+        Relative = 2;
+    }
+    enum RecurrencyKind {
+        daily = 0;
+        weekly = 1;
+    }
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    uint64 id = 1;
+    int32 stackLevel = 2;
+    string validFrom = 3;
+    string validTo = 4;
+    string transactionID = 5;
+    repeated ChargingSchedule chargingSchedule = 6;
+    Purpose purpose = 7;
+    Kind kind = 8;
+    RecurrencyKind recurrencyKind = 9;
+}
+
+message ChargingSchedule {
+    message PeriodType {
+        int32 startPeriod = 1;
+        float limit = 2;
+        int32 numberPhases = 3;
+        int32 phaseToUse = 4;
+    }
+    uint64 id = 1;
+    string startSchedule = 2;
+    int32 duration = 3;
+    ChargingRateUnit chargingRateUnit = 4;
+    float minChargingRate = 5;
+    repeated PeriodType chargingSchedulePeriod = 6;
+    SalesTariff salesTariff = 7;
+}
+
+message SalesTariff {
+    message Entry {
+        uint32 ePriceLevel = 1;
+        int32 start = 2; // 现在的时间 精确到秒
+        int32 duration = 3;
+        float startValue = 4;
+        Cost.Kind costKind = 5;
+        int32 amount = 6;
+        int32 amountMultiplier = 7;
+    }
+    message Cost {
+       enum Kind {
+           CarbonDioxideEmission = 0;
+           RelativePricePercentage = 1;
+           RenewableGenerationPercentage = 2;
+       }
+    }
+    uint64 id = 1;
+    string salesTariffDescription = 2;
+    int32 numEPriceLevels = 3;
+    repeated Entry entry = 4;
+}
+
+enum ChargingRateUnit {
+    W = 0;
+    A = 1;
+}
+
+message SetChargingProfileConf {
+    ChargingProfile.Status status = 1;
 }
