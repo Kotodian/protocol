@@ -119,6 +119,7 @@ message APDU
     MessageID messageId = 3;    //消息代码,参考 MessageID 定义
     bytes payload = 4;          //消息经protocol buffer序列化后的数据，实际的消息内容
     bool no_need_reply = 5;     //不需要回复
+    bool sync = 6;
 }
 
 /**
