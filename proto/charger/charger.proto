@@ -1007,6 +1007,7 @@ message ChargingInfoReq
     int32 power = 11;                  //充电功率
     int32 remainingTime = 12;          //剩余充电时间，精度：秒
     ChargerStatus status = 13;          // 充电状态
+    bool offline = 14;
 }
 
 /**
