@@ -1630,6 +1630,7 @@ message SalesTariff {
 enum ChargingRateUnit {
     W = 0;
     A = 1;
+    KW = 2;
 }
 
 message SetChargingProfileConf {
