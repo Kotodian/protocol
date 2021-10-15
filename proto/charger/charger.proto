@@ -1593,11 +1593,8 @@ message ChargingSchedule {
         int32 startPeriod = 1;
         double limit = 2;
     }
-    uint64 id = 1;
-    string startSchedule = 2;
-    int32 duration = 3;
-    ChargingRateUnit chargingRateUnit = 4;
-    repeated PeriodType chargingSchedulePeriod = 5;
+    ChargingRateUnit chargingRateUnit = 1;
+    repeated PeriodType chargingSchedulePeriod = 2;
 }
 
 message SalesTariff {
