@@ -751,7 +751,7 @@ StopReason
 */
 enum StopReason
 {
-    SR_Normal = 0;                   // 按照服务类型（按电量充电，按时长充电，按金额充电, BMS正常结束等）正常停止充电。
+    SR_Normal = 0;                   // 按照服务类型（按电量充电，按时长充电，按金额充电,
     SR_LocalCard = 1;                // 用户本地刷卡停止充电
     SR_LocalPIN = 2;                 // 用户本地输入校验码停止充电
     SR_RemoteUser = 3;               // 用户远程结束
@@ -1001,14 +1001,19 @@ message ChargingInfoReq
     string recordId = 1;                //充电桩充电记录号
     string connectorId = 2;             //指定充电接口
     string evseId = 3;
-    BMSChargingInfo BMSCharging = 6;   //充电中信息
-    int32 consumedTime = 8;            //已充充电时间
-    int32 consumedElectric = 9;        //已充电电量
-    Cost cost = 10;                    //消费金额
-    int32 power = 11;                  //充电功率
-    int32 remainingTime = 12;          //剩余充电时间，精度：秒
-    ChargerStatus status = 13;          // 充电状态
-    bool offline = 14;
+    int32 currentA = 4;
+    int32 currentB = 5;
+    int32 currentC = 6;
+    int32 voltageA = 7;
+    int32 voltageB = 8;
+    int32 voltageC = 9;
+    int32 consumedTime = 10;            //已充充电时间
+    int32 consumedElectric = 11;        //已充电电量
+    Cost cost = 12;                    //消费金额
+    int32 power = 13;                  //充电功率
+    int32 remainingTime = 14;          //剩余充电时间，精度：秒
+    ChargerStatus status = 15;          // 充电状态
+    bool offline = 16;
 }
 
 /**
