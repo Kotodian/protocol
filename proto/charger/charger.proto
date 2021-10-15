@@ -1577,44 +1577,27 @@ message ChargingProfile {
         TxDefaultProfile = 2;
         TxProfile = 3;
     }
-    enum Kind {
-        Absolute = 0;
-        Recurring = 1;
-        Relative = 2;
-    }
-    enum RecurrencyKind {
-        daily = 0;
-        weekly = 1;
-    }
     enum Status {
         Accepted = 0;
         Rejected = 1;
     }
     uint64 id = 1;
-    int32 stackLevel = 2;
     string validFrom = 3;
     string validTo = 4;
     string transactionID = 5;
     repeated ChargingSchedule chargingSchedule = 6;
-    Purpose purpose = 7;
-    Kind kind = 8;
-    RecurrencyKind recurrencyKind = 9;
 }
 
 message ChargingSchedule {
     message PeriodType {
         int32 startPeriod = 1;
         double limit = 2;
-        int32 numberPhases = 3;
-        int32 phaseToUse = 4;
     }
     uint64 id = 1;
     string startSchedule = 2;
     int32 duration = 3;
     ChargingRateUnit chargingRateUnit = 4;
-    double minChargingRate = 5;
-    repeated PeriodType chargingSchedulePeriod = 6;
-    SalesTariff salesTariff = 7;
+    repeated PeriodType chargingSchedulePeriod = 5;
 }
 
 message SalesTariff {
