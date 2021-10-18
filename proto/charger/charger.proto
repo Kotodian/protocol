@@ -1014,6 +1014,8 @@ message ChargingInfoReq
     int32 remainingTime = 14;          //剩余充电时间，精度：秒
     ChargerStatus status = 15;          // 充电状态
     bool offline = 16;
+    uint64 chargingProfileID = 17;
+    int32 limit = 18;
 }
 
 /**
