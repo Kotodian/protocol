@@ -1016,6 +1016,7 @@ message ChargingInfoReq
     bool offline = 16;
     uint64 chargingProfileID = 17;
     int32 limit = 18;
+    ChargingRateUnit unit = 19;
 }
 
 /**
