@@ -88,6 +88,7 @@ enum MessageID
     ID_CancelReservationConf = 0x96;              //取消预约.应答
     ID_UpdateIdCardCacheConf = 0x9A;              //更新用户卡桩端缓存.应答
 //    ID_StatusNotificationConf = 0x9B;             //枪状态.应答
+    ID_TriggerMessageConf = 0x9B;
     ID_GetTransactionsConf = 0xB0;                //获取离线订单 .应答
     ID_TransactionConf = 0xB1;                    //上报离线订单 .应答
     ID_GetWarningConf = 0xB2;                     //获取告警记录.应答
@@ -416,6 +417,15 @@ message TriggerMessageReq
 {
     MessageID request = 1;      //请求重发的消息代码
     int32 connectorId = 2;      //指定充电接口
+}
+
+message TriggerMessageConf
+{
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    Status status = 1;
 }
 
 /*
