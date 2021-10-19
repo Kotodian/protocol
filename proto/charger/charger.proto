@@ -1018,6 +1018,7 @@ message ChargingInfoReq
     int32 limit = 18;
     ChargingRateUnit unit = 19;
     int32 timestamp = 20;
+    int32 electricity = 21;
 }
 
 /**
