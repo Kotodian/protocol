@@ -730,6 +730,13 @@ message StartTransactionReq
     int32 created_at = 16;             //订单创建时间，用于解决部分协议在充电中不上报启动充电时间的bug（启动充电时间会用于协助寻找是否已存在的订单）
     ChargerStatus connectorChargingState = 19;
     bool offline = 20; // 是否是离线订单
+    int32 voltageA = 21;
+    int32 voltageB = 22;
+    int32 voltageC = 23;
+    int32 currentA = 24;
+    int32 currentB = 25;
+    int32 currentC = 26;
+    int32 power = 27;
 }
 
 /**
