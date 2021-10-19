@@ -1017,6 +1017,7 @@ message ChargingInfoReq
     uint64 chargingProfileID = 17;
     int32 limit = 18;
     ChargingRateUnit unit = 19;
+    int32 timestamp = 20;
 }
 
 /**
