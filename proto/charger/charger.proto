@@ -1709,4 +1709,5 @@ message MeterValuesReq {
     string connectorId = 2;
     int32 electricity = 3;
     string transactionId = 4;
+    int64 timestamp = 5;
 }
