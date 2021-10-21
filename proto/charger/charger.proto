@@ -48,6 +48,7 @@ enum MessageID
     ID_UpdateIdCardCacheReq = 0x1A;              //更新用户卡桩端缓存.请求
     ID_StatusNotificationReq = 0x1B;               //枪状态.请求
     ID_TelemetryReq = 0x21;                      //遥测.请求
+    ID_MeterValuesReq = 0x22;
     ID_ChargingInfoReq = 0x23;                   //充电过程信息.请求
     ID_TriggerMessageReq = 0x24;                 //触发消息重发.请求
     ID_GetTransactionsReq = 0x30;                //获取离线订单 .请求
@@ -1701,4 +1702,11 @@ message ReportChargingProfilesReq {
 
 message ReportChargingProfilesConf {
 
+}
+
+message MeterValuesReq {
+    string evseId = 1;
+    string connectorId = 2;
+    int32 electricity = 3;
+    string transactionId = 4;
 }
