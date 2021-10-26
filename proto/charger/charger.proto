@@ -1575,7 +1575,7 @@ message GetVariablesReq {
 
 message GetVariablesData {
     ComponentType component = 1;
-    string variable = 2;
+    VariableType variable = 2;
 }
 
 
