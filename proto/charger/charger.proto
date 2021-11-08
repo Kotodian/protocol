@@ -67,6 +67,7 @@ enum MessageID
     ID_ClearChargingProfileReq = 0x43;
     ID_GetChargingProfileReq = 0x44;
     ID_ReportChargingProfileReq = 0x45;
+    ID_ReservationStatusUpdateReq = 0x46;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -106,6 +107,7 @@ enum MessageID
     ID_ClearChargingProfileConf = 0xBD;
     ID_GetChargingProfileConf = 0xBE;
     ID_ReportChargingProfileConf = 0xBF;
+    ID_ReservationStatusUpdateConf = 0xC1;
 
     ID_MessageError = 0xFF;                       //错误
 }
@@ -1456,7 +1458,7 @@ message ReserveNowReq
     int32 expiry_date_time = 2; //过期时间
     int32 connector_id = 3; //枪ID
     IdTokenType idToken = 4; //客户信息
-    int32 charge_time = 5; //启动充电的时间
+    int32 evse_id = 5;
 }
 
 /**
@@ -1710,4 +1712,18 @@ message MeterValuesReq {
     int32 electricity = 3;
     string transactionId = 4;
     int64 timestamp = 5;
+}
+
+message ReservationStatusUpdateReq {
+   uint64 id = 1;
+   ReservationStatusUpdate status = 2;
+}
+
+enum ReservationStatusUpdate {
+    Expired = 0;
+    Removed = 1;
+}
+
+message ReservationStatusUpdateConf {
+
 }
