@@ -20,22 +20,29 @@ type ChargeStation interface {
 	AddEvses(evses ...Evse)
 	// 所有的枪
 	Connectors() []Connector
+
+	Registered() bool
+
+	Register()
 }
 
 type chargeStation struct {
-	id    uint64
-	sn    string
-	state KindChargeStationState
-	evses []Evse
+	id       uint64
+	sn       string
+	state    KindChargeStationState
+	evses    []Evse
+	register bool
 }
 
 var _ ChargeStation = &chargeStation{}
 
-func NewDefaultChargeStation(sn string) ChargeStation {
+func NewDefaultChargeStation(sn string, register bool, coreID uint64) ChargeStation {
 	return &chargeStation{
-		sn:    sn,
-		state: KindChargeStationStateOffline,
-		evses: make([]Evse, 0),
+		id:       coreID,
+		sn:       sn,
+		state:    KindChargeStationStateOffline,
+		evses:    make([]Evse, 0),
+		register: register,
 	}
 }
 
@@ -84,4 +91,12 @@ func (c *chargeStation) Connectors() []Connector {
 		connectors = append(connectors, evse.Connectors()...)
 	}
 	return connectors
+}
+
+func (c *chargeStation) Registered() bool {
+	return c.register
+}
+
+func (c *chargeStation) Register() {
+	c.register = true
 }
