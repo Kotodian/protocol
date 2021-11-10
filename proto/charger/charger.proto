@@ -1484,7 +1484,7 @@ message ReserveNowConf
  */
 message CancelReservationReq
 {
-    int32 id = 1; //预约ID
+    int64 id = 1; //预约ID
 }
 
 
