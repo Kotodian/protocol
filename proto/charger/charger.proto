@@ -107,7 +107,7 @@ enum MessageID
     ID_ClearChargingProfileConf = 0xBD;
     ID_GetChargingProfileConf = 0xBE;
     ID_ReportChargingProfileConf = 0xBF;
-    ID_ReservationStatusUpdateConf = 0xC1;
+    ID_ReservationStatusUpdateConf = 0xC6;
 
     ID_MessageError = 0xFF;                       //错误
 }
