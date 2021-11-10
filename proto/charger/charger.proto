@@ -1454,8 +1454,8 @@ message SendLocalAuthorizationListConf
  */
 message ReserveNowReq
 {
-    int32 id = 1; //预约ID
-    int32 expiry_date_time = 2; //过期时间
+    uint64 id = 1; //预约ID
+    int64 expiry_date_time = 2; //过期时间
     string connector_id = 3; //枪ID
     IdTokenType idToken = 4; //客户信息
     string evse_id = 5;
