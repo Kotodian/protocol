@@ -1456,9 +1456,9 @@ message ReserveNowReq
 {
     int32 id = 1; //预约ID
     int32 expiry_date_time = 2; //过期时间
-    int32 connector_id = 3; //枪ID
+    string connector_id = 3; //枪ID
     IdTokenType idToken = 4; //客户信息
-    int32 evse_id = 5;
+    string evse_id = 5;
 }
 
 /**
