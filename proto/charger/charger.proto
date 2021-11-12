@@ -419,7 +419,7 @@ TriggerMessageReq
 message TriggerMessageReq
 {
     MessageID request = 1;      //请求重发的消息代码
-    int32 connectorId = 2;      //指定充电接口
+    string connectorId = 2;      //指定充电接口
 }
 
 message TriggerMessageConf
@@ -1163,7 +1163,7 @@ message WarningReq
     Components component = 4;  //告警所属的组件，组件包括系统，计费控制单元，充电控制单元，电源模块，BMS等
     string recordId = 5;        //告警所关联的充电会话记录号
     string info = 6;           //告警信息。对于供应商自定义的告警，可以在此填充告警相关信息。
-    int32 connectorId = 8;     //充电接口号
+    string connectorId = 8;     //充电接口号
     int32 componentId = 9;     //组件号
     int32 ttl = 10;            // -1 永远存储; 0  删除告警; >0 存储告警时长(秒),超过自动解除告警
     uint64 event_id = 11;      //事件ID
@@ -1184,7 +1184,7 @@ GetTransactionsReq
 */
 message GetTransactionsReq
 {
-    int32 connectorId = 1; //指定充电接口
+    string connectorId = 1; //指定充电接口
     // 0-所有接口（此字段未指定时默认）
     // 非0-指定接口
     int32 level = 2;       //指定已结算或未结算离线订单记录
