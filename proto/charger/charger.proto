@@ -37,6 +37,9 @@ enum MessageID
     ID_DeviceRegistrationReq = 0x0A;			 //注册请求
     ID_GetReportReq = 0x0B;
     ID_GetVariablesReq = 0x0C;
+    ID_SignCertificateReq = 0x0D; // 签发证书
+    ID_ChangeAvailabilityReq = 0x0E;
+    ID_CustomerInformationReq = 0x0F;
 
     ID_RemoteStartTransactionReq = 0x10;         //远程启动充电.请求
     ID_RemoteStopTransactionReq = 0x11;          //远程停止充电.请求
@@ -68,6 +71,7 @@ enum MessageID
     ID_GetChargingProfileReq = 0x44;
     ID_ReportChargingProfileReq = 0x45;
     ID_ReservationStatusUpdateReq = 0x46;
+    ID_InstallCertificateReq = 0x47;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -80,6 +84,9 @@ enum MessageID
     ID_DeviceRegistrationConf = 0x8A;			       //注册请求.应答
     ID_GetReportConf = 0x8B; //
     ID_GetVariablesConf = 0x8C;
+    ID_SignCertificateConf= 0x8D;
+    ID_ChangeAvailabilityConf = 0x8E;
+    ID_CustomerInformationConf = 0x8F;
 
     ID_RemoteStartTransactionConf = 0x90;         //远程启动充电.应答
     ID_RemoteStopTransactionConf = 0x91;          //远程停止充电.应答
@@ -108,6 +115,7 @@ enum MessageID
     ID_GetChargingProfileConf = 0xBE;
     ID_ReportChargingProfileConf = 0xBF;
     ID_ReservationStatusUpdateConf = 0xC6;
+    ID_InstallCertificateConf = 0xC7;
 
     ID_MessageError = 0xFF;                       //错误
 }
@@ -602,7 +610,7 @@ AuthorizeConf
 */
 message AuthorizeConf
 {
-    IdToken idinfo = 1;             //中心平台返回鉴权结果
+    IdToken idInfo = 1;             //中心平台返回鉴权结果
     SetTariffReq priceScheme = 2;   //价格模版
     string transactionId = 3;       //中心平台返回订单号
 }
@@ -1727,3 +1735,58 @@ enum ReservationStatusUpdate {
 message ReservationStatusUpdateConf {
 
 }
+
+message SignCertificateReq {
+   string csr = 1;
+}
+
+message SignCertificateConf {
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    Status status = 1;
+}
+
+message ChangeAvailabilityReq {
+    bool enabled = 1;
+    string evseId = 2;
+    string connectorId = 3;
+}
+
+message ChangeAvailabilityConf {
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    Status status = 1;
+}
+
+//message CustomerInformationReq {
+//    uint64 requestId = 1;
+//    uint64 customerId = 2;
+//    IdToken idToken = 3;
+//}
+//
+//message CustomerInformationConf {
+//    enum Status {
+//        Accepted = 0;
+//        Rejected = 1;
+//        Invalid = 2;
+//    }
+//    Status status = 1;
+//}
+
+message InstallCertificateReq {
+    string certificate = 1;
+}
+
+message InstallCertificateConf {
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+        Failed = 2;
+    }
+    Status status = 1;
+}
+
