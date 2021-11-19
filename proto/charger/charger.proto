@@ -737,7 +737,7 @@ message StartTransactionReq
     IdToken IdData = 3;                //用户身份识别号
     AuthorizationMode mode = 4;        //授权启动充电方式，用户远程启动，本地刷卡启动，本地蓝牙启动等
     ServiceMode serviceMode = 5;       //充电服务模式。按电量充电，按金额充电，按时间充电，自动充满等
-    int32 meterStart = 6;              //充电开始时电表度数，分辨率0.01kwh
+    float meterStart = 6;              //充电开始时电表度数，分辨率0.01kwh
     int32 timestamp = 7;               //充电开始时间,时间戳
     int32 reservationId = 8;          //预约ID
     string transactionId = 9;          //平台中心生成的订单号。此订单号是从“远程启动充电”请求消息获取的
@@ -751,13 +751,13 @@ message StartTransactionReq
     int32 created_at = 16;             //订单创建时间，用于解决部分协议在充电中不上报启动充电时间的bug（启动充电时间会用于协助寻找是否已存在的订单）
     ChargerStatus connectorChargingState = 19;
     bool offline = 20; // 是否是离线订单
-    int32 voltageA = 21;
-    int32 voltageB = 22;
-    int32 voltageC = 23;
-    int32 currentA = 24;
-    int32 currentB = 25;
-    int32 currentC = 26;
-    int32 power = 27;
+    float voltageA = 21;
+    float voltageB = 22;
+    float voltageC = 23;
+    float currentA = 24;
+    float currentB = 25;
+    float currentC = 26;
+    float power = 27;
 }
 
 /**
@@ -827,7 +827,7 @@ message StopTransactionReq
     string transactionId = 2;           // 平台中心生成的订单号。此订单号是从“远程启动充电”请求消息获取的
     IdToken IdData = 3;                 // 用户身份识别号
     StopReason reason = 4;              // 充电结束原因。用户远程结束，本地结束，异常结束等
-    int32 meterStop = 5;                // 充电结束时电表度数，分辨率0.01kwh
+    float meterStop = 5;                // 充电结束时电表度数，分辨率0.01kwh
     int32 timestamp = 6;                // 充电结束时间,时间戳，精度：秒
     Cost cost = 7;                      // 充电订单计费信息
     string evseId = 8;
@@ -1029,16 +1029,16 @@ message ChargingInfoReq
     string recordId = 1;                //充电桩充电记录号
     string connectorId = 2;             //指定充电接口
     string evseId = 3;
-    int32 currentA = 4;
-    int32 currentB = 5;
-    int32 currentC = 6;
-    int32 voltageA = 7;
-    int32 voltageB = 8;
-    int32 voltageC = 9;
+    float currentA = 4;
+    float currentB = 5;
+    float currentC = 6;
+    float voltageA = 7;
+    float voltageB = 8;
+    float voltageC = 9;
     int32 consumedTime = 10;            //已充充电时间
     int32 consumedElectric = 11;        //已充电电量
     Cost cost = 12;                    //消费金额
-    int32 power = 13;                  //充电功率
+    float power = 13;                  //充电功率
     int32 remainingTime = 14;          //剩余充电时间，精度：秒
     ChargerStatus status = 15;          // 充电状态
     bool offline = 16;
@@ -1046,7 +1046,7 @@ message ChargingInfoReq
     int32 limit = 18;
     ChargingRateUnit unit = 19;
     int32 timestamp = 20;
-    int32 electricity = 21;
+    float electricity = 21;
 }
 
 /**
@@ -1061,8 +1061,8 @@ message TransactionReq
     IdToken IdData	= 4;        //用户身份识别号
     AuthorizationMode mode = 5; //授权启动充电方式
     ServiceMode service = 6;    //充电服务模式
-    int32 meterStart = 7;       //充电开始时电表度数，分辨率0.01kwh
-    int32 meterStop = 8;        //充电结束时电表度数，分辨率0.01kwh
+    float meterStart = 7;       //充电开始时电表度数，分辨率0.01kwh
+    float meterStop = 8;        //充电结束时电表度数，分辨率0.01kwh
     int32 timeStart = 9;        //充电订单开始时间，时间戳，精度：秒
     int32 timeStop = 10;        //充电订单结束时间，时间戳，精度：秒
     string pin = 11;            //充电校验码
@@ -1717,7 +1717,7 @@ message ReportChargingProfilesConf {
 message MeterValuesReq {
     string evseId = 1;
     string connectorId = 2;
-    int32 electricity = 3;
+    float electricity = 3;
     string transactionId = 4;
     int64 timestamp = 5;
 }
