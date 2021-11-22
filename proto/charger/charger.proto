@@ -840,6 +840,12 @@ message StopTransactionReq
     bool calc_cost_by_backend = 15;     // 后台计费
     int32 reservationId = 16;          //预约ID
     string connectorId = 17;
+    double currentA = 18;
+    double currentB = 19;
+    double currentC = 20;
+    double voltageA = 21;
+    double voltageB = 22;
+    double power = 23;
 }
 
 /**
