@@ -845,7 +845,8 @@ message StopTransactionReq
     double currentC = 20;
     double voltageA = 21;
     double voltageB = 22;
-    double power = 23;
+    double voltageC = 23;
+    double power = 24;
 }
 
 /**
