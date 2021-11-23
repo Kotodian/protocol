@@ -1524,9 +1524,7 @@ message CancelReservationConf
 message DataTransferReq {
     string vendor_id = 1; // 生产商 默认Joysonquin
     string message_id = 2; // 消息id 形如公司代号_功能名称_两位递增序列
-    RemoteDiagnosisReq remote_diagnosis_req = 3; // 具体要传输的数据, 此数据为远程诊断数据
-    ReserveStopTransactionReq reserve_stop_transaction_req = 4; // 具体要传输的数据,此数据为预约停止充电数据
-    CancelReserveStopTransactionReq cancel_reserve_stop_transaction_req = 5; // 具体要传输的数据,此数据为取消预约停止充电数据
+    string data = 3;
 }
 
 message RemoteDiagnosisReq {
@@ -1560,7 +1558,10 @@ message Token {
  * 数据传输,应答
 */
 message DataTransferConf {
-   RemoteDiagnosisResp remote_diagnosis_resp = 1; // 只返回data,状态判断直接在ac-ocpp中做
+   enum Status {
+       Accepted = 0;
+       Rejected = 1;
+   }
 }
 
 message CancelReserveStopTransactionReq {
