@@ -758,6 +758,7 @@ message StartTransactionReq
     double currentB = 25;
     double currentC = 26;
     double power = 27;
+    Tariff tariff = 28;
 }
 
 /**
@@ -847,6 +848,7 @@ message StopTransactionReq
     double voltageB = 22;
     double voltageC = 23;
     double power = 24;
+    Tariff tariff = 25;
 }
 
 /**
@@ -1054,6 +1056,7 @@ message ChargingInfoReq
     ChargingRateUnit unit = 19;
     int32 timestamp = 20;
     double electricity = 21;
+    Tariff tariff = 22;
 }
 
 /**
@@ -1799,3 +1802,11 @@ message InstallCertificateConf {
     Status status = 1;
 }
 
+
+message Tariff {
+    uint64 id = 1; // 计费模版id
+   double sharp = 2; // 尖
+   double peak = 3; //  峰
+   double flat = 4; // 平
+   double valley = 5; // 谷
+}
