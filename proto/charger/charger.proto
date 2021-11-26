@@ -1804,7 +1804,7 @@ message InstallCertificateConf {
 
 
 message Tariff {
-    uint64 id = 1; // 计费模版id
+    int64 id = 1; // 计费模版id
    double sharp = 2; // 尖
    double peak = 3; //  峰
    double flat = 4; // 平
