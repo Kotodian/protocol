@@ -15,3 +15,7 @@ func (x *APDU) Action() string {
 	}
 	return action
 }
+
+func (x *Tariff) Sum() float64 {
+	return x.GetSharp() + x.GetValley() + x.GetFlat() + x.GetPeak()
+}
