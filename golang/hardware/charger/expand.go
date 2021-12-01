@@ -36,3 +36,43 @@ func (x *StartTransactionReq) SetTariff(tariff *Tariff) {
 func (x *StartTransactionReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
 	x.Profile = chargingProfile
 }
+
+func (x *StartTransactionReq) SetConnector(id string) {
+	x.ConnectorId = id
+}
+
+func (x *StartTransactionReq) SetEvse(id string) {
+	x.EvseId = id
+}
+
+func (x *StopTransactionReq) SetTariff(tariff *Tariff) {
+	x.Tariff = tariff
+}
+
+func (x *StopTransactionReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
+	x.Profile = chargingProfile
+}
+
+func (x *StopTransactionReq) SetConnector(id string) {
+	x.ConnectorId = id
+}
+
+func (x *StopTransactionReq) SetEvse(id string) {
+	x.EvseId = id
+}
+
+func (x *ChargingInfoReq) SetTariff(tariff *Tariff) {
+	x.Tariff = tariff
+}
+
+func (x *ChargingInfoReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
+	x.Profile = chargingProfile
+}
+
+func (x *ChargingInfoReq) SetConnector(id string) {
+	x.ConnectorId = id
+}
+
+func (x *ChargingInfoReq) SetEvse(id string) {
+	x.EvseId = id
+}
