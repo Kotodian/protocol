@@ -1816,6 +1816,6 @@ message Tariff {
 
 message CurrentChargingProfile {
     int64 id = 1;
-    double limit = 2;
+    int32 limit = 2;
     ChargingRateUnit unit = 3;
 }
