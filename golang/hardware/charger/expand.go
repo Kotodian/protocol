@@ -1,6 +1,8 @@
 package charger
 
-import "strings"
+import (
+	"strings"
+)
 
 func (x *APDU) IsRequest() bool {
 	return x.MessageId>>7 == 0
@@ -18,4 +20,19 @@ func (x *APDU) Action() string {
 
 func (x *Tariff) Sum() float64 {
 	return x.GetSharp() + x.GetValley() + x.GetFlat() + x.GetPeak()
+}
+
+type ChargingExpand interface {
+	SetConnector(id string)
+	SetEvse(id string)
+	SetTariff(tariff *Tariff)
+	SetChargingProfile(chargingProfile *CurrentChargingProfile)
+}
+
+func (x *StartTransactionReq) SetTariff(tariff *Tariff) {
+	x.Tariff = tariff
+}
+
+func (x *StartTransactionReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
+	x.Profile = chargingProfile
 }
