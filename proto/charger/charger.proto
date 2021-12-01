@@ -759,6 +759,7 @@ message StartTransactionReq
     double currentC = 26;
     double power = 27;
     Tariff tariff = 28;
+    CurrentChargingProfile profile = 29;
 }
 
 /**
@@ -849,6 +850,7 @@ message StopTransactionReq
     double voltageC = 23;
     double power = 24;
     Tariff tariff = 25;
+    CurrentChargingProfile profile = 26;
 }
 
 /**
@@ -1057,6 +1059,7 @@ message ChargingInfoReq
     int32 timestamp = 20;
     double electricity = 21;
     Tariff tariff = 22;
+    CurrentChargingProfile profile = 28;
 }
 
 /**
@@ -1809,4 +1812,10 @@ message Tariff {
    double peak = 3; //  峰
    double flat = 4; // 平
    double valley = 5; // 谷
+}
+
+message CurrentChargingProfile {
+    int64 id = 1;
+    double limit = 2;
+    ChargingRateUnit unit = 3;
 }
