@@ -1638,9 +1638,9 @@ message ChargingProfile {
 
 message ChargingSchedule {
     message PeriodType {
-        string from = 1;
-        double limit = 2;
-        string to = 3;
+        int32 from = 1;
+        int32 limit = 2;
+        int32 to = 3;
     }
     ChargingRateUnit chargingRateUnit = 1;
     repeated PeriodType chargingSchedulePeriod = 2;
