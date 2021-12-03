@@ -127,7 +127,7 @@ APDU
 message APDU
 {
     int32 timestamp = 1;        //消息unix时间戳
-    int64 sequenceId = 2;       //定义消息的唯一ID，应答报文中此字段必须与请求报文中的一致，用来匹配请求和应答
+    uint64 sequenceId = 2;       //定义消息的唯一ID，应答报文中此字段必须与请求报文中的一致，用来匹配请求和应答
     MessageID messageId = 3;    //消息代码,参考 MessageID 定义
     bytes payload = 4;          //消息经protocol buffer序列化后的数据，实际的消息内容
     bool no_need_reply = 5;     //不需要回复
@@ -175,7 +175,7 @@ message BootNotificationReq
     bool is_timeout_stop_remote_start = 10; //是否支持超时停止充电
     string productID = 11;      //产品代码
     uint32 keepalive = 12;      //保活时间
-    int64 ComponentBits = 13; // 功能开关, 以比特位的形式进行传输，0表示基本功能（功能支持，见goiot协议）
+    uint64 ComponentBits = 13; // 功能开关, 以比特位的形式进行传输，0表示基本功能（功能支持，见goiot协议）
     string protocol = 14;       //使用的协议
     string controllee =15;      // 目前连接在哪个pod上
     string remote_address = 16; // 远程ip地址
@@ -491,7 +491,7 @@ message CostBill{
 message Cost
 {
     repeated CostBill bills = 1;//消费清单
-    int64 tariffid = 2;         //计费模版id
+    uint64 tariffid = 2;         //计费模版id
     int32 totalcost = 6;        //总消费
     int32 tariffpower = 7;      //计费功率
     int32 totalelec = 8;        //计费总电量
@@ -502,7 +502,7 @@ message TariffChannel
 {
     map<string, int32> elec = 1;      //电费
     map<string, int32> service = 2;   //服务费
-    int64 tariffid = 3; //计费模版id号
+    uint64 tariffid = 3; //计费模版id号
 }
 
 /**
@@ -516,7 +516,7 @@ message SetTariffReq
 //        int32 max_fee = 2;                      //最高/封顶费用，分辨率RMB 0.1分
 //        int32 unit_fee = 3;                     //每分钟的费用，分辨率RMB 0.1分
 //    }
-    int64 tariffid = 1;                        //计费模版id号
+    uint64 tariffid = 1;                        //计费模版id号
     string description = 2;                     //描述
     repeated TariffCharge chargetariffs = 3;    //按电量充电费用
     repeated TariffTime timetariffs = 4;        //按时长充电费用
@@ -742,7 +742,7 @@ message StartTransactionReq
     int32 reservationId = 8;          //预约ID
     string transactionId = 9;          //平台中心生成的订单号。此订单号是从“远程启动充电”请求消息获取的
     string pin = 10;                   //充电桩校验码。当充电桩离线时，可以通过在充电桩屏幕输入pin码结束充电
-    int64 tariffId = 11;              //计费模版ID。此订单将使用对应的计费模版计费
+    uint64 tariffId = 11;              //计费模版ID。此订单将使用对应的计费模版计费
     int32 serviceAmount =12;           //充电量/钱/时间。对应充电服务模式中的按电量充电，按金额充电，按时间充电，自动充满进行赋值
     string transparent = 13;           //透传字段，会在 confi报文里传回来 transparent
     uint32 soc = 14;                   //启动电量的SOC
@@ -1053,7 +1053,7 @@ message ChargingInfoReq
     int32 remainingTime = 14;          //剩余充电时间，精度：秒
     ChargerStatus status = 15;          // 充电状态
     bool offline = 16;
-    int64 chargingProfileID = 17;
+    uint64 chargingProfileID = 17;
     int32 limit = 18;
     ChargingRateUnit unit = 19;
     int32 timestamp = 20;
@@ -1152,7 +1152,7 @@ message TelemetryReq
     string connectorId = 2;     //充电接口，若测量组件属于某个充电接口，如某个接口的电表，填对应的充电接口号
     string evseId = 3;          // 设备
     repeated SampledValue values = 5;   //遥测值集合
-    int64 warningBitmap = 6;  //故障告警位表，此组件当前所有告警位标志
+    uint64 warningBitmap = 6;  //故障告警位表，此组件当前所有告警位标志
     string recordId = 7;        //跟订单相关的遥测信息，才有recordId相关联充电订单号
 }
 
@@ -1187,7 +1187,7 @@ message WarningReq
     string connectorId = 8;     //充电接口号
     int32 componentId = 9;     //组件号
     int32 ttl = 10;            // -1 永远存储; 0  删除告警; >0 存储告警时长(秒),超过自动解除告警
-    int64 event_id = 11;      //事件ID
+    uint64 event_id = 11;      //事件ID
     int32 time = 12;           //告警时间
 }
 
@@ -1475,7 +1475,7 @@ message SendLocalAuthorizationListConf
  */
 message ReserveNowReq
 {
-    int64 id = 1; //预约ID
+    uint64 id = 1; //预约ID
     int64 expiry_date_time = 2; //过期时间
     string connector_id = 3; //枪ID
     IdTokenType idToken = 4; //客户信息
@@ -1629,7 +1629,7 @@ message ChargingProfile {
         Accepted = 0;
         Rejected = 1;
     }
-    int64 id = 1;
+    uint64 id = 1;
     string validFrom = 3;
     string validTo = 4;
     string transactionID = 5;
@@ -1667,7 +1667,7 @@ message SalesTariff {
        }
        repeated Cost cost = 2;
     }
-    int64 id = 1;
+    uint64 id = 1;
     string salesTariffDescription = 2;
     int32 numEPriceLevels = 3;
     repeated Entry entry = 4;
@@ -1684,7 +1684,7 @@ message SetChargingProfileConf {
 }
 
 message ClearChargingProfileReq {
-    int64 id = 1;
+    uint64 id = 1;
     ClearChargingProfile clearChargingProfile = 2;
 }
 
@@ -1702,7 +1702,7 @@ message ClearChargingProfileConf {
 }
 
 message GetChargingProfilesReq {
-    int64 requestId = 1;
+    uint64 requestId = 1;
     ChargingProfilesCriterion criterion = 2;
 }
 
@@ -1716,7 +1716,7 @@ enum GetChargingProfilesStatus {
 }
 
 message ChargingProfilesCriterion {
-    repeated int64 id = 1;
+    repeated uint64 id = 1;
 }
 
 
@@ -1738,7 +1738,7 @@ message MeterValuesReq {
 }
 
 message ReservationStatusUpdateReq {
-   int64 id = 1;
+   uint64 id = 1;
    ReservationStatusUpdate status = 2;
 }
 
@@ -1778,8 +1778,8 @@ message ChangeAvailabilityConf {
 }
 
 //message CustomerInformationReq {
-//    int64 requestId = 1;
-//    int64 customerId = 2;
+//    uint64 requestId = 1;
+//    uint64 customerId = 2;
 //    IdToken idToken = 3;
 //}
 //
