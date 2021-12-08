@@ -1615,7 +1615,9 @@ message GetVariablesResult {
 }
 
 message SetChargingProfileReq {
-    ChargingProfile chargingProfile = 1;
+    string evseId = 1;
+    string connectorId= 2;
+    ChargingProfile chargingProfile = 3;
 }
 
 message ChargingProfile {
