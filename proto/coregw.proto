@@ -709,6 +709,7 @@ message Evse  {
     string      bt_mac_addr              = 42; // BT Mac地址
     string      bt_pwd                   = 43; // BT 配对密码
     int64       evse_time                = 44; // 桩端时间
+    int64       updatedAt                = 45;
 }
 
 enum EvseComponentPOS {
