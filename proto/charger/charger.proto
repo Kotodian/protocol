@@ -1635,7 +1635,8 @@ message ChargingProfile {
     string validFrom = 3;
     string validTo = 4;
     string transactionID = 5;
-    repeated ChargingSchedule chargingSchedule = 6;
+    string startTime = 6;
+    repeated ChargingSchedule chargingSchedule = 7;
 }
 
 message ChargingSchedule {
