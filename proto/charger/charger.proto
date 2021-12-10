@@ -1059,6 +1059,7 @@ message ChargingInfoReq
     int32 timestamp = 20;
     double electricity = 21;
     Tariff tariff = 22;
+    IdToken idData = 23;
     CurrentChargingProfile profile = 28;
 }
 

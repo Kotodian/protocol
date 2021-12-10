@@ -27,6 +27,7 @@ type ChargingExpand interface {
 	SetEvse(id string)
 	SetTariff(tariff *Tariff)
 	SetChargingProfile(chargingProfile *CurrentChargingProfile)
+	SetToken(token *IdToken)
 }
 
 func (x *StartTransactionReq) SetTariff(tariff *Tariff) {
@@ -45,6 +46,10 @@ func (x *StartTransactionReq) SetEvse(id string) {
 	x.EvseId = id
 }
 
+func (x *StartTransactionReq) SetToken(token *IdToken) {
+	x.IdData = token
+}
+
 func (x *StopTransactionReq) SetTariff(tariff *Tariff) {
 	x.Tariff = tariff
 }
@@ -61,6 +66,10 @@ func (x *StopTransactionReq) SetEvse(id string) {
 	x.EvseId = id
 }
 
+func (x *StopTransactionReq) SetToken(token *IdToken) {
+	x.IdData = token
+}
+
 func (x *ChargingInfoReq) SetTariff(tariff *Tariff) {
 	x.Tariff = tariff
 }
@@ -75,4 +84,7 @@ func (x *ChargingInfoReq) SetConnector(id string) {
 
 func (x *ChargingInfoReq) SetEvse(id string) {
 	x.EvseId = id
+}
+
+func (x *ChargingInfoReq) SetToken(token *IdToken) {
 }
