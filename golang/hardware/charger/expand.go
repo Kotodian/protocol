@@ -87,4 +87,5 @@ func (x *ChargingInfoReq) SetEvse(id string) {
 }
 
 func (x *ChargingInfoReq) SetToken(token *IdToken) {
+	x.IdData = token
 }
