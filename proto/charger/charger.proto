@@ -543,6 +543,7 @@ message SetTariffConf{
 enum IdType
 {
     ID_DEFAULT      = 0;        //默认
+    ID_Timing       = 1;              // 定时启动
     ID_AUTH_CARD    = 10;       //充电卡用户
     ID_WALLET_CARD  = 11;       //离线钱包卡
 }
