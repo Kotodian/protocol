@@ -852,6 +852,7 @@ message StopTransactionReq
     double power = 24;
     Tariff tariff = 25;
     CurrentChargingProfile profile = 26;
+    int32 seq = 27;
 }
 
 /**
