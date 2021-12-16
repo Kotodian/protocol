@@ -106,3 +106,35 @@ func (x *ChargingInfoReq) SetCurrentB(value float64) {
 func (x *ChargingInfoReq) SetCurrentC(value float64) {
 	x.CurrentC = value
 }
+
+func (x *MeterValuesReq) SetElectricity(value float64) {
+	x.Electricity = value
+}
+
+func (x *MeterValuesReq) SetPower(value float64) {
+	x.Power = value
+}
+
+func (x *MeterValuesReq) SetCurrentA(value float64) {
+	x.CurrentA = value
+}
+
+func (x *MeterValuesReq) SetCurrentB(value float64) {
+	x.CurrentB = value
+}
+
+func (x *MeterValuesReq) SetCurrentC(value float64) {
+	x.CurrentC = value
+}
+
+func (x *MeterValuesReq) SetVoltageA(value float64) {
+	x.VoltageA = value
+}
+
+func (x *MeterValuesReq) SetVoltageB(value float64) {
+	x.VoltageB = value
+}
+
+func (x *MeterValuesReq) SetVoltageC(value float64) {
+	x.VoltageC = value
+}

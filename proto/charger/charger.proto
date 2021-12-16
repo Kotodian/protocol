@@ -1738,9 +1738,18 @@ message ReportChargingProfilesConf {
 message MeterValuesReq {
     string evseId = 1;
     string connectorId = 2;
-    double electricity = 3;
-    string transactionId = 4;
-    int64 timestamp = 5;
+    string transactionId = 3;
+    int64 timestamp = 4;
+    double electricity = 5;
+    double currentA = 6;
+    double currentB = 7;
+    double currentC = 8;
+    double voltageA = 9;
+    double voltageB = 10;
+    double voltageC = 11;
+    double power = 12;
+    double tempEvse = 13;
+    double tempBattery = 14;
 }
 
 message ReservationStatusUpdateReq {
