@@ -1470,6 +1470,11 @@ message SendLocalAuthorizationListReq
  */
 message SendLocalAuthorizationListConf
 {
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    Status status = 1;
 }
 
 /**
