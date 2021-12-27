@@ -4,11 +4,11 @@ type KindConnectorChargingState int
 type KindConnectorState int
 
 const (
-	KindConnectorStateFaulted     KindConnectorState = -1 //故障
-	KindConnectorStateUnavailable KindConnectorState = 0  //不可用
-	KindConnectorStateAvailable   KindConnectorState = 1  //空闲可用
-	KindConnectorStateOccupied    KindConnectorState = 2  //占用
-	KindConnectorStateReserved    KindConnectorState = 3  //预约
+	KindConnectorStateUnavailable KindConnectorState = 0 //不可用
+	KindConnectorStateAvailable   KindConnectorState = 1 //空闲可用
+	KindConnectorStateOccupied    KindConnectorState = 2 //占用
+	KindConnectorStateReserved    KindConnectorState = 3 //预约
+	KindConnectorStateFaulted     KindConnectorState = 4 //故障
 )
 const (
 	KindConnectorChargingStateIdle          KindConnectorChargingState = 0 //空闲
