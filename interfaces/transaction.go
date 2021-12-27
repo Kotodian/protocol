@@ -3,14 +3,14 @@ package interfaces
 type KindOrderState int
 
 const (
-	KindOrderStateTimeout         KindOrderState = -1 // 订单启动超时
-	KindOrderStateEnded           KindOrderState = 0  // 订单正常结束
-	KindOrderStateUnexpectedEnded KindOrderState = 1  // 订单意外结束
-	KindOrderStateStarted         KindOrderState = 2  // 订单启动了 桩还没上报
-	KindOrderStateCharging        KindOrderState = 3  // 订单正在充电中
-	KindOrderStateChargingSuspend KindOrderState = 4  // 订单在充电 但是枪未输出
-	KindOrderStateFaultedSuspend  KindOrderState = 5  // 订单在充电中 但是枪上报NotifyEvent
-	KindOrderStateOfflineSuspend  KindOrderState = 6  // 订单在充电中 但是桩突然离线
+	KindOrderStateEnded           KindOrderState = 0 // 订单正常结束
+	KindOrderStateUnexpectedEnded KindOrderState = 1 // 订单意外结束
+	KindOrderStateStarted         KindOrderState = 2 // 订单启动了 桩还没上报
+	KindOrderStateCharging        KindOrderState = 3 // 订单正在充电中
+	KindOrderStateChargingSuspend KindOrderState = 4 // 订单在充电 但是枪未输出
+	KindOrderStateFaultedSuspend  KindOrderState = 5 // 订单在充电中 但是枪上报NotifyEvent
+	KindOrderStateOfflineSuspend  KindOrderState = 6 // 订单在充电中 但是桩突然离线
+	KindOrderStateTimeout         KindOrderState = 7 // 订单启动超时
 )
 
 type Transaction interface {
