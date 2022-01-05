@@ -406,6 +406,7 @@ message DeviceRegistrationReq
     string remote_address = 10; // 桩的ip
     string iccid = 11;
     string imei = 12;
+    string firmwareVersion = 13;
 }
 
 /**
