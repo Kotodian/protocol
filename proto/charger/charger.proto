@@ -408,6 +408,7 @@ message DeviceRegistrationReq
     string iccid = 11;
     string imei = 12;
     string firmwareVersion = 13;
+    string reason = 14;
 }
 
 /**
