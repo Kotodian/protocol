@@ -1197,6 +1197,7 @@ message WarningReq
     int32 ttl = 10;            // -1 永远存储; 0  删除告警; >0 存储告警时长(秒),超过自动解除告警
     uint64 event_id = 11;      //事件ID
     int32 time = 12;           //告警时间
+    bool clean = 13;
 }
 
 /**
