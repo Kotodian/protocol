@@ -1198,6 +1198,7 @@ message WarningReq
     uint64 event_id = 11;      //事件ID
     int32 time = 12;           //告警时间
     bool clean = 13;
+    string remote_address = 14;
 }
 
 /**
