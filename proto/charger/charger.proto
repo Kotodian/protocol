@@ -180,6 +180,7 @@ message BootNotificationReq
     string controllee =15;      // 目前连接在哪个pod上
     string remote_address = 16; // 远程ip地址
     string reason = 17;
+    string imei = 18;
 }
 
 /**
