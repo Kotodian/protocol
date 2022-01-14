@@ -1464,8 +1464,7 @@ message IdTokenType {
 
 //AuthorizationData 授权信息
 message AuthorizationData {
-    IdTokenInfoType idTokenInfo = 1;
-    IdTokenType idToken = 2;
+    IdToken idToken = 1;
 }
 
 

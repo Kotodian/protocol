@@ -9124,8 +9124,7 @@ type AuthorizationData struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	IdTokenInfo *IdTokenInfoType `protobuf:"bytes,1,opt,name=idTokenInfo,proto3" json:"idTokenInfo,omitempty"`
-	IdToken     *IdTokenType     `protobuf:"bytes,2,opt,name=idToken,proto3" json:"idToken,omitempty"`
+	IdToken *IdToken `protobuf:"bytes,1,opt,name=idToken,proto3" json:"idToken,omitempty"`
 }
 
 func (x *AuthorizationData) Reset() {
@@ -9160,14 +9159,7 @@ func (*AuthorizationData) Descriptor() ([]byte, []int) {
 	return file_charger_proto_rawDescGZIP(), []int{78}
 }
 
-func (x *AuthorizationData) GetIdTokenInfo() *IdTokenInfoType {
-	if x != nil {
-		return x.IdTokenInfo
-	}
-	return nil
-}
-
-func (x *AuthorizationData) GetIdToken() *IdTokenType {
+func (x *AuthorizationData) GetIdToken() *IdToken {
 	if x != nil {
 		return x.IdToken
 	}
@@ -13383,16 +13375,11 @@ var file_charger_proto_rawDesc = []byte{
 	0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x27, 0x2e, 0x47, 0x6f, 0x69, 0x6f,
 	0x74, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x43, 0x68, 0x61, 0x72, 0x67,
 	0x65, 0x72, 0x2e, 0x49, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x45, 0x6e, 0x75, 0x6d, 0x54, 0x79,
-	0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x9d, 0x01, 0x0a, 0x11, 0x41, 0x75, 0x74,
-	0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x12, 0x49,
-	0x0a, 0x0b, 0x69, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x49, 0x6e, 0x66, 0x6f, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x47, 0x6f, 0x69, 0x6f, 0x74, 0x2e, 0x50, 0x72, 0x6f, 0x74,
-	0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x43, 0x68, 0x61, 0x72, 0x67, 0x65, 0x72, 0x2e, 0x49, 0x64, 0x54,
-	0x6f, 0x6b, 0x65, 0x6e, 0x49, 0x6e, 0x66, 0x6f, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0b, 0x69, 0x64,
-	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x3d, 0x0a, 0x07, 0x69, 0x64, 0x54,
-	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x47, 0x6f, 0x69,
-	0x6f, 0x74, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e, 0x43, 0x68, 0x61, 0x72,
-	0x67, 0x65, 0x72, 0x2e, 0x49, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x52,
+	0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x4e, 0x0a, 0x11, 0x41, 0x75, 0x74, 0x68,
+	0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x12, 0x39, 0x0a,
+	0x07, 0x69, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1f,
+	0x2e, 0x47, 0x6f, 0x69, 0x6f, 0x74, 0x2e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2e,
+	0x43, 0x68, 0x61, 0x72, 0x67, 0x65, 0x72, 0x2e, 0x49, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52,
 	0x07, 0x69, 0x64, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0xc0, 0x02, 0x0a, 0x1d, 0x53, 0x65, 0x6e,
 	0x64, 0x4c, 0x6f, 0x63, 0x61, 0x6c, 0x41, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74,
 	0x69, 0x6f, 0x6e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x12, 0x25, 0x0a, 0x0e, 0x76, 0x65,
@@ -14462,53 +14449,52 @@ var file_charger_proto_depIdxs = []int32{
 	7,   // 86: Goiot.Protocol.Charger.IdTokenInfoType.status:type_name -> Goiot.Protocol.Charger.AuthorizationStatus
 	18,  // 87: Goiot.Protocol.Charger.IdTokenType.type:type_name -> Goiot.Protocol.Charger.IdTokenEnumType
 	169, // 88: Goiot.Protocol.Charger.IdTokenType.additionalIdToken:type_name -> Goiot.Protocol.Charger.IdTokenType.Additional
-	116, // 89: Goiot.Protocol.Charger.AuthorizationData.idTokenInfo:type_name -> Goiot.Protocol.Charger.IdTokenInfoType
-	117, // 90: Goiot.Protocol.Charger.AuthorizationData.idToken:type_name -> Goiot.Protocol.Charger.IdTokenType
-	28,  // 91: Goiot.Protocol.Charger.SendLocalAuthorizationListReq.update_type:type_name -> Goiot.Protocol.Charger.SendLocalAuthorizationListReq.UpdateEnumType
-	118, // 92: Goiot.Protocol.Charger.SendLocalAuthorizationListReq.local_authorization_list:type_name -> Goiot.Protocol.Charger.AuthorizationData
-	29,  // 93: Goiot.Protocol.Charger.SendLocalAuthorizationListConf.status:type_name -> Goiot.Protocol.Charger.SendLocalAuthorizationListConf.Status
-	70,  // 94: Goiot.Protocol.Charger.ReserveNowReq.idToken:type_name -> Goiot.Protocol.Charger.IdToken
-	30,  // 95: Goiot.Protocol.Charger.ReserveNowConf.status:type_name -> Goiot.Protocol.Charger.ReserveNowConf.Status
-	31,  // 96: Goiot.Protocol.Charger.CancelReservationConf.status:type_name -> Goiot.Protocol.Charger.CancelReservationConf.Status
-	129, // 97: Goiot.Protocol.Charger.ReserveStopTransactionReq.idToken:type_name -> Goiot.Protocol.Charger.Token
-	32,  // 98: Goiot.Protocol.Charger.DataTransferConf.status:type_name -> Goiot.Protocol.Charger.DataTransferConf.Status
-	104, // 99: Goiot.Protocol.Charger.GetReportReq.component:type_name -> Goiot.Protocol.Charger.ComponentType
-	136, // 100: Goiot.Protocol.Charger.GetVariablesReq.getVariablesData:type_name -> Goiot.Protocol.Charger.GetVariablesData
-	104, // 101: Goiot.Protocol.Charger.GetVariablesData.component:type_name -> Goiot.Protocol.Charger.ComponentType
-	105, // 102: Goiot.Protocol.Charger.GetVariablesData.variable:type_name -> Goiot.Protocol.Charger.VariableType
-	138, // 103: Goiot.Protocol.Charger.GetVariablesConf.getVariablesResult:type_name -> Goiot.Protocol.Charger.GetVariablesResult
-	104, // 104: Goiot.Protocol.Charger.GetVariablesResult.component:type_name -> Goiot.Protocol.Charger.ComponentType
-	105, // 105: Goiot.Protocol.Charger.GetVariablesResult.variable:type_name -> Goiot.Protocol.Charger.VariableType
-	140, // 106: Goiot.Protocol.Charger.SetChargingProfileReq.chargingProfile:type_name -> Goiot.Protocol.Charger.ChargingProfile
-	141, // 107: Goiot.Protocol.Charger.ChargingProfile.chargingSchedule:type_name -> Goiot.Protocol.Charger.ChargingSchedule
-	19,  // 108: Goiot.Protocol.Charger.ChargingSchedule.chargingRateUnit:type_name -> Goiot.Protocol.Charger.ChargingRateUnit
-	170, // 109: Goiot.Protocol.Charger.ChargingSchedule.chargingSchedulePeriod:type_name -> Goiot.Protocol.Charger.ChargingSchedule.PeriodType
-	171, // 110: Goiot.Protocol.Charger.SalesTariff.entry:type_name -> Goiot.Protocol.Charger.SalesTariff.Entry
-	34,  // 111: Goiot.Protocol.Charger.SetChargingProfileConf.status:type_name -> Goiot.Protocol.Charger.ChargingProfile.Status
-	145, // 112: Goiot.Protocol.Charger.ClearChargingProfileReq.clearChargingProfile:type_name -> Goiot.Protocol.Charger.ClearChargingProfile
-	33,  // 113: Goiot.Protocol.Charger.ClearChargingProfile.purpose:type_name -> Goiot.Protocol.Charger.ChargingProfile.Purpose
-	36,  // 114: Goiot.Protocol.Charger.ClearChargingProfileConf.status:type_name -> Goiot.Protocol.Charger.ClearChargingProfile.Status
-	149, // 115: Goiot.Protocol.Charger.GetChargingProfilesReq.criterion:type_name -> Goiot.Protocol.Charger.ChargingProfilesCriterion
-	20,  // 116: Goiot.Protocol.Charger.GetChargingProfilesConf.status:type_name -> Goiot.Protocol.Charger.GetChargingProfilesStatus
-	140, // 117: Goiot.Protocol.Charger.ReportChargingProfilesReq.chargingProfile:type_name -> Goiot.Protocol.Charger.ChargingProfile
-	21,  // 118: Goiot.Protocol.Charger.ReservationStatusUpdateReq.status:type_name -> Goiot.Protocol.Charger.ReservationStatusUpdate
-	37,  // 119: Goiot.Protocol.Charger.SignCertificateConf.status:type_name -> Goiot.Protocol.Charger.SignCertificateConf.Status
-	38,  // 120: Goiot.Protocol.Charger.ChangeAvailabilityConf.status:type_name -> Goiot.Protocol.Charger.ChangeAvailabilityConf.Status
-	39,  // 121: Goiot.Protocol.Charger.InstallCertificateConf.status:type_name -> Goiot.Protocol.Charger.InstallCertificateConf.Status
-	19,  // 122: Goiot.Protocol.Charger.CurrentChargingProfile.unit:type_name -> Goiot.Protocol.Charger.ChargingRateUnit
-	67,  // 123: Goiot.Protocol.Charger.SetTariffReq.ChannelsEntry.value:type_name -> Goiot.Protocol.Charger.TariffChannel
-	8,   // 124: Goiot.Protocol.Charger.IdToken.Additional.mode:type_name -> Goiot.Protocol.Charger.AuthorizationMode
-	104, // 125: Goiot.Protocol.Charger.SetVariablesReq.SetVariableData.component:type_name -> Goiot.Protocol.Charger.ComponentType
-	105, // 126: Goiot.Protocol.Charger.SetVariablesReq.SetVariableData.variable:type_name -> Goiot.Protocol.Charger.VariableType
-	18,  // 127: Goiot.Protocol.Charger.IdTokenType.Additional.type:type_name -> Goiot.Protocol.Charger.IdTokenEnumType
-	172, // 128: Goiot.Protocol.Charger.SalesTariff.Entry.consumptionCost:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost
-	173, // 129: Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.cost:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost
-	35,  // 130: Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost.kind:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost.Kind
-	131, // [131:131] is the sub-list for method output_type
-	131, // [131:131] is the sub-list for method input_type
-	131, // [131:131] is the sub-list for extension type_name
-	131, // [131:131] is the sub-list for extension extendee
-	0,   // [0:131] is the sub-list for field type_name
+	70,  // 89: Goiot.Protocol.Charger.AuthorizationData.idToken:type_name -> Goiot.Protocol.Charger.IdToken
+	28,  // 90: Goiot.Protocol.Charger.SendLocalAuthorizationListReq.update_type:type_name -> Goiot.Protocol.Charger.SendLocalAuthorizationListReq.UpdateEnumType
+	118, // 91: Goiot.Protocol.Charger.SendLocalAuthorizationListReq.local_authorization_list:type_name -> Goiot.Protocol.Charger.AuthorizationData
+	29,  // 92: Goiot.Protocol.Charger.SendLocalAuthorizationListConf.status:type_name -> Goiot.Protocol.Charger.SendLocalAuthorizationListConf.Status
+	70,  // 93: Goiot.Protocol.Charger.ReserveNowReq.idToken:type_name -> Goiot.Protocol.Charger.IdToken
+	30,  // 94: Goiot.Protocol.Charger.ReserveNowConf.status:type_name -> Goiot.Protocol.Charger.ReserveNowConf.Status
+	31,  // 95: Goiot.Protocol.Charger.CancelReservationConf.status:type_name -> Goiot.Protocol.Charger.CancelReservationConf.Status
+	129, // 96: Goiot.Protocol.Charger.ReserveStopTransactionReq.idToken:type_name -> Goiot.Protocol.Charger.Token
+	32,  // 97: Goiot.Protocol.Charger.DataTransferConf.status:type_name -> Goiot.Protocol.Charger.DataTransferConf.Status
+	104, // 98: Goiot.Protocol.Charger.GetReportReq.component:type_name -> Goiot.Protocol.Charger.ComponentType
+	136, // 99: Goiot.Protocol.Charger.GetVariablesReq.getVariablesData:type_name -> Goiot.Protocol.Charger.GetVariablesData
+	104, // 100: Goiot.Protocol.Charger.GetVariablesData.component:type_name -> Goiot.Protocol.Charger.ComponentType
+	105, // 101: Goiot.Protocol.Charger.GetVariablesData.variable:type_name -> Goiot.Protocol.Charger.VariableType
+	138, // 102: Goiot.Protocol.Charger.GetVariablesConf.getVariablesResult:type_name -> Goiot.Protocol.Charger.GetVariablesResult
+	104, // 103: Goiot.Protocol.Charger.GetVariablesResult.component:type_name -> Goiot.Protocol.Charger.ComponentType
+	105, // 104: Goiot.Protocol.Charger.GetVariablesResult.variable:type_name -> Goiot.Protocol.Charger.VariableType
+	140, // 105: Goiot.Protocol.Charger.SetChargingProfileReq.chargingProfile:type_name -> Goiot.Protocol.Charger.ChargingProfile
+	141, // 106: Goiot.Protocol.Charger.ChargingProfile.chargingSchedule:type_name -> Goiot.Protocol.Charger.ChargingSchedule
+	19,  // 107: Goiot.Protocol.Charger.ChargingSchedule.chargingRateUnit:type_name -> Goiot.Protocol.Charger.ChargingRateUnit
+	170, // 108: Goiot.Protocol.Charger.ChargingSchedule.chargingSchedulePeriod:type_name -> Goiot.Protocol.Charger.ChargingSchedule.PeriodType
+	171, // 109: Goiot.Protocol.Charger.SalesTariff.entry:type_name -> Goiot.Protocol.Charger.SalesTariff.Entry
+	34,  // 110: Goiot.Protocol.Charger.SetChargingProfileConf.status:type_name -> Goiot.Protocol.Charger.ChargingProfile.Status
+	145, // 111: Goiot.Protocol.Charger.ClearChargingProfileReq.clearChargingProfile:type_name -> Goiot.Protocol.Charger.ClearChargingProfile
+	33,  // 112: Goiot.Protocol.Charger.ClearChargingProfile.purpose:type_name -> Goiot.Protocol.Charger.ChargingProfile.Purpose
+	36,  // 113: Goiot.Protocol.Charger.ClearChargingProfileConf.status:type_name -> Goiot.Protocol.Charger.ClearChargingProfile.Status
+	149, // 114: Goiot.Protocol.Charger.GetChargingProfilesReq.criterion:type_name -> Goiot.Protocol.Charger.ChargingProfilesCriterion
+	20,  // 115: Goiot.Protocol.Charger.GetChargingProfilesConf.status:type_name -> Goiot.Protocol.Charger.GetChargingProfilesStatus
+	140, // 116: Goiot.Protocol.Charger.ReportChargingProfilesReq.chargingProfile:type_name -> Goiot.Protocol.Charger.ChargingProfile
+	21,  // 117: Goiot.Protocol.Charger.ReservationStatusUpdateReq.status:type_name -> Goiot.Protocol.Charger.ReservationStatusUpdate
+	37,  // 118: Goiot.Protocol.Charger.SignCertificateConf.status:type_name -> Goiot.Protocol.Charger.SignCertificateConf.Status
+	38,  // 119: Goiot.Protocol.Charger.ChangeAvailabilityConf.status:type_name -> Goiot.Protocol.Charger.ChangeAvailabilityConf.Status
+	39,  // 120: Goiot.Protocol.Charger.InstallCertificateConf.status:type_name -> Goiot.Protocol.Charger.InstallCertificateConf.Status
+	19,  // 121: Goiot.Protocol.Charger.CurrentChargingProfile.unit:type_name -> Goiot.Protocol.Charger.ChargingRateUnit
+	67,  // 122: Goiot.Protocol.Charger.SetTariffReq.ChannelsEntry.value:type_name -> Goiot.Protocol.Charger.TariffChannel
+	8,   // 123: Goiot.Protocol.Charger.IdToken.Additional.mode:type_name -> Goiot.Protocol.Charger.AuthorizationMode
+	104, // 124: Goiot.Protocol.Charger.SetVariablesReq.SetVariableData.component:type_name -> Goiot.Protocol.Charger.ComponentType
+	105, // 125: Goiot.Protocol.Charger.SetVariablesReq.SetVariableData.variable:type_name -> Goiot.Protocol.Charger.VariableType
+	18,  // 126: Goiot.Protocol.Charger.IdTokenType.Additional.type:type_name -> Goiot.Protocol.Charger.IdTokenEnumType
+	172, // 127: Goiot.Protocol.Charger.SalesTariff.Entry.consumptionCost:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost
+	173, // 128: Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.cost:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost
+	35,  // 129: Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost.kind:type_name -> Goiot.Protocol.Charger.SalesTariff.ConsumptionCost.Cost.Kind
+	130, // [130:130] is the sub-list for method output_type
+	130, // [130:130] is the sub-list for method input_type
+	130, // [130:130] is the sub-list for extension type_name
+	130, // [130:130] is the sub-list for extension extendee
+	0,   // [0:130] is the sub-list for field type_name
 }
 
 func init() { file_charger_proto_init() }
