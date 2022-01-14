@@ -1429,14 +1429,14 @@ message GetLocalListVersionConf
 }
 
 enum IdTokenEnumType {
-    ITE_Central = 0; // A centrally, in the CSMS (or other server) generated id (for example used for a remotely started transaction that is activated by SMS). No format defined, might be a UUID.
-    ITE_eMAID = 1; // Electro-mobility account id as defined in ISO 15118
-    ITE_ISO14443 = 2; // ISO 14443 UID of RFID card. It is represented as an array of 4 or 7 bytes in hexadecimal representation.
-    ITE_ISO15693 = 3; // ISO 15693 UID of RFID card. It is represented as an array of 8 bytes in hexadecimal representation.
-    ITE_KeyCode = 4; // User use a private key-code to authorize a charging transaction. For example: Pin-code.
-    ITE_Local = 5; // A locally generated id (e.g. internal id created by the Charging Station). No format defined, might be a UUID
-    ITE_MacAddress = 6;
-    ITE_NoAuthorization = 7; // Transaction is started and no authorization possible. Charging Station only has a start button or mechanical key etc. IdToken field SHALL be left empty.
+    Central = 0; // A centrally, in the CSMS (or other server) generated id (for example used for a remotely started transaction that is activated by SMS). No format defined, might be a UUID.
+    eMAID = 1; // Electro-mobility account id as defined in ISO 15118
+    ISO14443 = 2; // ISO 14443 UID of RFID card. It is represented as an array of 4 or 7 bytes in hexadecimal representation.
+    ISO15693 = 3; // ISO 15693 UID of RFID card. It is represented as an array of 8 bytes in hexadecimal representation.
+    KeyCode = 4; // User use a private key-code to authorize a charging transaction. For example: Pin-code.
+    Local = 5; // A locally generated id (e.g. internal id created by the Charging Station). No format defined, might be a UUID
+    MacAddress = 6;
+    NoAuthorization = 7; // Transaction is started and no authorization possible. Charging Station only has a start button or mechanical key etc. IdToken field SHALL be left empty.
 }
 
 
@@ -1448,6 +1448,11 @@ message IdTokenInfoType {
 message IdTokenType {
     string id_token = 1;
     IdTokenEnumType type = 2;
+    message Additional {
+        string id_token = 1;
+        IdTokenEnumType type = 2;
+    }
+   repeated Additional additionalIdToken = 3;
 }
 
 //AuthorizationData 授权信息
