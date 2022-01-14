@@ -597,6 +597,13 @@ message IdToken
     AuthorizationStatus status = 8;//中心平台鉴权结果。用户账户是否通过中心平台鉴权。
     CardType type = 9;      //用户卡类型
     int32 chargecount = 10; //剩余充电次数
+    AuthorizationMode mode = 11;
+    message Additional {
+        string idToken = 1;
+        AuthorizationMode mode = 2;
+    }
+    repeated Additional additionalIdToken = 12;
+
 }
 
 /**
@@ -1499,7 +1506,7 @@ message ReserveNowReq
     uint64 id = 1; //预约ID
     int64 expiry_date_time = 2; //过期时间
     string connector_id = 3; //枪ID
-    IdTokenType idToken = 4; //客户信息
+    IdToken idToken = 4; //客户信息
     string evse_id = 5;
 }
 
