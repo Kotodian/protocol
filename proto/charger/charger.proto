@@ -1075,7 +1075,8 @@ message ChargingInfoReq
     double electricity = 21;
     Tariff tariff = 22;
     IdToken idData = 23;
-    CurrentChargingProfile profile = 28;
+    CurrentChargingProfile profile = 24;
+    int64 reservationId = 25;
 }
 
 /**
