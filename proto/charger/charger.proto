@@ -775,6 +775,7 @@ message StartTransactionReq
     double power = 27;
     Tariff tariff = 28;
     CurrentChargingProfile profile = 29;
+    int32 intellectId = 30; // 智能充电id
 }
 
 /**
