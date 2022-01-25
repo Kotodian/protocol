@@ -706,6 +706,7 @@ message RemoteStartTransactionReq
     string schedule_time = 12;          // 定时充电时间戳(秒), 0表示即时充电
     string remoteStartId = 13;
     ChargingProfile chargingProfile = 14;
+    int32 allowedSOC = 15;
 }
 
 /**
