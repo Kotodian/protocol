@@ -323,6 +323,7 @@ message UpdateFirmwareReq
     int32 retryDate = 4;        //执行升级的时间,时间戳类型类型
     int32 retryInterval = 5;    //重试间隔时间，单位秒
     int32 request_id = 6;       //升级ID
+
 }
 
 /**
@@ -1376,6 +1377,8 @@ message GetLogReq {
     int32 retry_interval = 4; //重试间隔
     message LogParametersType {
         string remote_location = 1; //地址
+        int64 start = 7;            // 起始时间
+        int64 end = 8;              //  结束时间
     }
     LogParametersType log = 5; //日志请求参数
 }
