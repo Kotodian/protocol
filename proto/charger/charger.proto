@@ -1395,6 +1395,7 @@ message GetLogConf {
         AcceptedCanceled= 2; // 接受此日志上传，但这样做将取消正在进行的日志文件上传。
     }
     LogStatusEnumType status = 1;
+    string fileName = 2;
 }
 
 /**
