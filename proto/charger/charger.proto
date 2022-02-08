@@ -1404,14 +1404,10 @@ message GetLogConf {
  */
 message LogStatusNotificationReq {
     enum UploadLogStatusEnumType {
-        BadMessage = 0;
-        Idle = 1;
-        NotSupportedOperation = 2;
-        PermissionDenied = 3;
-        Uploaded = 4;
-        UploadFailure = 5;
-        Uploading = 6;
-        AcceptedCanceled = 7;
+        Idle = 0;
+        Uploading = 1;
+        Uploaded = 2;
+        UploadFailure = 3;
     }
     UploadLogStatusEnumType status = 1; //状态
     int32 request_id = 2;//请求id
