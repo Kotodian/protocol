@@ -293,22 +293,17 @@ FirmwareStatus
 */
 enum FirmwareStatus
 {
-    FW_Idle                      = 0;   //未激活
-    FW_Pending                   = 1;   //准备中
-    FW_DownloadScheduled         = 2;   //固件下载计划中
-    FW_Downloading               = 3;   //固件下载中
-    FW_DownloadPaused            = 9;  //固件暂停下载
-    FW_Downloaded                = 10;  //固件已下载
-    FW_SignatureVerified         = 11;  //固件通过签名验证
-    FW_InstallScheduled          = 12;  //固件安装计划中
-    FW_Installing                = 13;  //固件安装中
-    FW_Installed                 = 14;  //固件安装成功
-    FW_InstallRebooting          = 15;  //固件重启中
+    FW_Pending                   = 0;   //准备中
+    FW_Downloading               = 1;   //固件下载中
+    FW_DownloadPaused            = 2;  //固件暂停下载
+    FW_Downloaded                = 3;  //固件已下载
+    FW_InstallScheduled          = 4;  //固件安装计划中
+    FW_Installing                = 5;  //固件安装中
+    FW_Installed                 = 6;  //固件安装成功
     //失败的情况
-    FW_InstallationFailed        = 16; //固件安装失败
-    FW_InstallVerificationFailed = 17; //固件验证失败
-    FW_InvalidSignature          = 18; //固件验证签名失败
-    FW_DownloadFailed            = 19; //固件下载失败
+    FW_DownloadFailed            = 7; //固件下载失败
+    FW_InstallVerificationFailed = 8; //固件验证失败
+    FW_InstallationFailed        = 9; //固件安装失败
 }
 
 /**
