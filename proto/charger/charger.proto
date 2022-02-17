@@ -1611,6 +1611,10 @@ message StatusNotificationReq {
     int32 connectorState = 3;
 }
 
+message StatusNotificationConf {
+
+}
+
 message GetReportReq {
     repeated ComponentType component = 1;
 }
