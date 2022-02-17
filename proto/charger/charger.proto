@@ -96,8 +96,8 @@ enum MessageID
     ID_ReserveNowConf = 0x95;                     //预约充电.应答
     ID_CancelReservationConf = 0x96;              //取消预约.应答
     ID_UpdateIdCardCacheConf = 0x9A;              //更新用户卡桩端缓存.应答
-//    ID_StatusNotificationConf = 0x9B;             //枪状态.应答
-    ID_TriggerMessageConf = 0x9B;
+    ID_StatusNotificationConf = 0x9B;             //枪状态.应答
+    ID_TriggerMessageConf = 0xA4;
     ID_GetTransactionsConf = 0xB0;                //获取离线订单 .应答
     ID_TransactionConf = 0xB1;                    //上报离线订单 .应答
     ID_GetWarningConf = 0xB2;                     //获取告警记录.应答
