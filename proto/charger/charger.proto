@@ -72,6 +72,7 @@ enum MessageID
     ID_ReportChargingProfileReq = 0x45;
     ID_ReservationStatusUpdateReq = 0x46;
     ID_InstallCertificateReq = 0x47;
+    ID_ClearCacheReq = 0x48;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -116,6 +117,7 @@ enum MessageID
     ID_ReportChargingProfileConf = 0xBF;
     ID_ReservationStatusUpdateConf = 0xC6;
     ID_InstallCertificateConf = 0xC7;
+    ID_ClearCacheConf = 0xC8;
 
     ID_MessageError = 0xFF;                       //错误
 }
@@ -1861,4 +1863,16 @@ message CurrentChargingProfile {
     int64 id = 1;
     int32 limit = 2;
     ChargingRateUnit unit = 3;
+}
+
+message ClearCacheReq {
+
+}
+
+message ClearCacheConf {
+    enum Status {
+        Accepted = 0;
+        Rejected = 1;
+    }
+    Status status = 1;
 }
