@@ -10,6 +10,8 @@ const (
 
 type ChargeStation interface {
 	Core
+	// 设置序列号
+	SetSN(sn string)
 	// 状态
 	State() KindChargeStationState
 	// 设置状态
@@ -49,6 +51,10 @@ func NewDefaultChargeStation(sn string, register bool, coreID uint64) ChargeStat
 // 序列号
 func (c *chargeStation) SN() string {
 	return c.sn
+}
+
+func (c *chargeStation) SetSN(sn string) {
+	c.sn = sn
 }
 
 // 状态
