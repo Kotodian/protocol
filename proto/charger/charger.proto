@@ -670,7 +670,7 @@ enum ServiceMode
 }
 
 /**
- * HeartbeatResp
+ * HeartbeatReq
  * 心跳回复
  */
 message HeartbeatReq {
@@ -683,6 +683,7 @@ message HeartbeatReq {
  * 心跳回复
  */
 message HeartbeatResp {
+    string connectorId = 1; // 枪号
 }
 
 /**
