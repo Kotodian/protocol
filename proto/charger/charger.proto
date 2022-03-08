@@ -675,6 +675,7 @@ enum ServiceMode
  */
 message HeartbeatReq {
     int64 currentTime = 1; // 桩的时间
+    int32 connectorId = 2; // 枪号
 }
 
 /**
