@@ -1156,10 +1156,16 @@ SampledValue
 */
 message SampledValue
 {
+    enum Phase {
+       L1 = 0;
+       L2 = 1;
+       L3 = 2;
+    }
     int32 measurand = 1;           // 遥测变量代码
     string vendorEx = 2;           // 供应商扩展遥测变量名
     double value = 3;               // 遥测值
     int32 rate = 4;                // 倍率(默认值是1)
+    Phase phase = 5;  // 相位
 }
 
 /**
