@@ -1080,6 +1080,7 @@ message ChargingInfoReq
     IdToken idData = 23;
     CurrentChargingProfile profile = 24;
     int64 reservationId = 25;
+    uint32 soc = 26;
 }
 
 /**
@@ -1788,6 +1789,7 @@ message MeterValuesReq {
     double power = 12;
     double tempEvse = 13;
     double tempBattery = 14;
+    uint32 soc = 15;
 }
 
 message ReservationStatusUpdateReq {

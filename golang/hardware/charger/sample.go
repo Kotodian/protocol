@@ -9,6 +9,7 @@ type Sample interface {
 	SetCurrentA(value float64)
 	SetCurrentB(value float64)
 	SetCurrentC(value float64)
+	SetSOC(value uint32)
 }
 
 func (x *StartTransactionReq) SetElectricity(value float64) {
@@ -43,6 +44,10 @@ func (x *StartTransactionReq) SetCurrentC(value float64) {
 	x.CurrentC = value
 }
 
+func (x *StartTransactionReq) SetSOC(soc uint32) {
+	x.Soc = soc
+}
+
 func (x *StopTransactionReq) SetElectricity(value float64) {
 	x.MeterStop = value
 }
@@ -73,6 +78,10 @@ func (x *StopTransactionReq) SetCurrentB(value float64) {
 
 func (x *StopTransactionReq) SetCurrentC(value float64) {
 	x.CurrentC = value
+}
+
+func (x *StopTransactionReq) SetSOC(soc uint32) {
+	x.Soc = soc
 }
 
 func (x *ChargingInfoReq) SetElectricity(value float64) {
@@ -107,6 +116,10 @@ func (x *ChargingInfoReq) SetCurrentC(value float64) {
 	x.CurrentC = value
 }
 
+func (x *ChargingInfoReq) SetSOC(soc uint32) {
+	x.Soc = soc
+}
+
 func (x *MeterValuesReq) SetElectricity(value float64) {
 	x.Electricity = value
 }
@@ -137,4 +150,8 @@ func (x *MeterValuesReq) SetVoltageB(value float64) {
 
 func (x *MeterValuesReq) SetVoltageC(value float64) {
 	x.VoltageC = value
+}
+
+func (x *MeterValuesReq) SetSOC(soc uint32) {
+	x.Soc = soc
 }
