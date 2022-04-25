@@ -1118,6 +1118,14 @@ message TransactionReq
     int32 reservationId = 29;          //预约ID
     int32 remoteStartId = 30;
     string evseId = 31;
+    double currentA = 32;
+    double currentB = 33;
+    double currentC = 34;
+    double voltageA = 35;
+    double voltageB = 36;
+    double voltageC = 37;
+    double power = 38;
+    Tariff tariff = 39;
 }
 
 /**
