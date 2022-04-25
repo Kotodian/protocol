@@ -89,3 +89,19 @@ func (x *ChargingInfoReq) SetEvse(id string) {
 func (x *ChargingInfoReq) SetToken(token *IdToken) {
 	x.IdData = token
 }
+
+func (x *TransactionReq) SetTariff(tariff *Tariff) {
+	x.Tariff = tariff
+}
+
+func (x *TransactionReq) SetConnector(id string) {
+	x.ConnectorId = id
+}
+
+func (x *TransactionReq) SetEvse(id string) {
+	x.EvseId = id
+}
+
+func (x *TransactionReq) SetToken(token *IdToken) {
+	x.IdData = token
+}
