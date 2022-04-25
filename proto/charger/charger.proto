@@ -1126,6 +1126,7 @@ message TransactionReq
     double voltageC = 37;
     double power = 38;
     Tariff tariff = 39;
+    CurrentChargingProfile profile = 40;
 }
 
 /**

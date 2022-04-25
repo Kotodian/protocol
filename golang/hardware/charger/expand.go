@@ -105,3 +105,7 @@ func (x *TransactionReq) SetEvse(id string) {
 func (x *TransactionReq) SetToken(token *IdToken) {
 	x.IdData = token
 }
+
+func (x *TransactionReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
+	x.Profile = chargingProfile
+}
