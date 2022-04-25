@@ -155,3 +155,39 @@ func (x *MeterValuesReq) SetVoltageC(value float64) {
 func (x *MeterValuesReq) SetSOC(soc uint32) {
 	x.Soc = soc
 }
+
+func (x *TransactionReq) SetElectricity(value float64) {
+	x.MeterStop = value
+}
+
+func (x *TransactionReq) SetPower(value float64) {
+	x.Power = value
+}
+
+func (x *TransactionReq) SetVoltageA(value float64) {
+	x.VoltageA = value
+}
+
+func (x *TransactionReq) SetVoltageB(value float64) {
+	x.VoltageB = value
+}
+
+func (x *TransactionReq) SetVoltageC(value float64) {
+	x.VoltageC = value
+}
+
+func (x *TransactionReq) SetCurrentA(value float64) {
+	x.CurrentA = value
+}
+
+func (x *TransactionReq) SetCurrentB(value float64) {
+	x.CurrentB = value
+}
+
+func (x *TransactionReq) SetCurrentC(value float64) {
+	x.CurrentC = value
+}
+
+func (x *TransactionReq) SetSOC(soc uint32) {
+	x.StopSoc = soc
+}
