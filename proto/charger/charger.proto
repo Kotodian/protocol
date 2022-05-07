@@ -780,6 +780,7 @@ message StartTransactionReq
     Tariff tariff = 28;
     CurrentChargingProfile profile = 29;
     int32 intellectId = 30; // 智能充电id
+    int32 batteryTemp = 31;
 }
 
 /**
@@ -872,6 +873,7 @@ message StopTransactionReq
     Tariff tariff = 25;
     CurrentChargingProfile profile = 26;
     int32 seq = 27;
+    int32 batteryTemp = 28;
 }
 
 /**
@@ -1084,6 +1086,7 @@ message ChargingInfoReq
     CurrentChargingProfile profile = 24;
     int64 reservationId = 25;
     uint32 soc = 26;
+    int32 batteryTemp = 27;
 }
 
 /**
@@ -1129,6 +1132,7 @@ message TransactionReq
     double power = 38;
     Tariff tariff = 39;
     CurrentChargingProfile profile = 40;
+    int32 batteryTemp = 41;
 }
 
 /**
