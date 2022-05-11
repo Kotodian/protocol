@@ -794,6 +794,7 @@ message StartTransactionConf
     IdToken idInfo = 2;        //中心平台返回鉴权结果
     string recordID = 3;       //充电桩充电记录号
     string transparent = 4;    // req传过来的， 要透传回去
+    string connectorId = 5;
 }
 
 /**
@@ -886,6 +887,7 @@ message StopTransactionConf
     int32 totalCost = 2;        //中心平台返回的总费用
     bool  charged = 3;          //是否已扣费
     string transactionId = 4;
+    string connectorId = 5;
 }
 
 /**
@@ -1143,6 +1145,7 @@ message TransactionConf
 {
     int32 status = 1;    //状态
     string recordId = 2;   //回复的设备订单号
+    string connectorId = 5;
 }
 
 
@@ -1639,7 +1642,7 @@ message StatusNotificationReq {
 }
 
 message StatusNotificationConf {
-
+    string connectorId = 1;
 }
 
 message GetReportReq {
