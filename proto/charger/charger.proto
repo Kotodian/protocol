@@ -731,8 +731,9 @@ RemoteStopTransactionReq
 */
 message RemoteStopTransactionReq
 {
-    string transactionId = 1;  // 充电交易的订单号
-    StopReason reason = 2;     // 充电结束原因。
+    string connectorID = 1;
+    string transactionId = 2;  // 充电交易的订单号
+    StopReason reason = 3;     // 充电结束原因。
 }
 
 /**
@@ -1362,6 +1363,7 @@ message VariableAttributeType{
  * 上报回复
  */
 message NotifyReportConf {
+    string connectorId = 1;
 }
 
 /**
