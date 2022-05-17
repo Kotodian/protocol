@@ -6,8 +6,12 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
 
-# Make data base, printed on Tue May 17 09:38:49 2022
+
+ 
+# Make data base, printed on Tue May 17 10:32:22 2022
 
 # Variables
 
@@ -44,7 +48,7 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/yc/59w6f9ld2cxf6cxm22p63yz00000gn/T/vscode-ipc-d1161aef-f2b2-4952-974a-8e33fbf1ef63.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/yc/59w6f9ld2cxf6cxm22p63yz00000gn/T/vscode-ipc-5dcd1a58-811e-4e4c-b7f9-78181cd06ad1.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -92,6 +96,7 @@ MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /De
 # environment
 VSCODE_CODE_CACHE_PATH = /Users/linqiankai/Library/Application Support/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
 # environment
+ 
 LOGNAME = linqiankai
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
@@ -172,7 +177,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 11216
+VSCODE_PID = 21685
 # variable set hash-table stats:
 # Load=81/1024=8%, Rehash=0, Collisions=3/102=3%
 
@@ -184,6 +189,7 @@ VSCODE_PID = 11216
 
 # . (device 16777234, inode 11447038): 12 files, no impossibilities.
 
+ 
 # 12 files, no impossibilities in 1 directories.
 
 # Implicit Rules
@@ -256,8 +262,6 @@ GNUmakefile:
 # strcache size: total = 0 / max = 0 / min = 4096 / avg = 0
 # strcache free: total = 0 / max = 0 / min = 4096 / avg = 0
 
-# Finished Make data base on Tue May 17 09:38:49 2022
+# Finished Make data base on Tue May 17 10:32:22 2022
 
  
-make: *** No rule to make target `all'.  Stop.
-

@@ -1387,7 +1387,12 @@ message SetVariablesReq {
  * 设置变量.应答
  */
 message SetVariablesConf {
+   SetVariablesResult status = 1; 
+}
 
+enum SetVariablesResult {
+    Accpeted = 0;
+    Rejected = 1;
 }
 
 /**
