@@ -1674,10 +1674,15 @@ message GetVariablesConf {
 }
 
 message GetVariablesResult {
-    int32 Stauts = 1;
+    GetVariablesResultStatus Status = 1;
     ComponentType component = 2;
     VariableType variable = 3;
     string  attributeValue = 4;
+}
+
+enum GetVariablesResultStatus {
+    GetVariablesResultStatus_Accepted = 0;
+    GetVariablesResultStatus_Rejected = 1;
 }
 
 message SetChargingProfileReq {
