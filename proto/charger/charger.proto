@@ -1674,9 +1674,10 @@ message GetVariablesConf {
 }
 
 message GetVariablesResult {
-    ComponentType component = 1;
-    VariableType variable = 2;
-    string  attributeValue = 3;
+    int32 Stauts = 1;
+    ComponentType component = 2;
+    VariableType variable = 3;
+    string  attributeValue = 4;
 }
 
 message SetChargingProfileReq {
