@@ -1227,7 +1227,7 @@ enum WarningLevel
 message WarningReq
 {
     //WarningCode code = 1;    //告警代码
-    int32 code = 1;            //告警代码
+    int64 code = 1;            //告警代码
     string vendorEx = 2;       //供应商扩展告警代码
     WarningLevel level = 3;    //指定告警等级
     Components component = 4;  //告警所属的组件，组件包括系统，计费控制单元，充电控制单元，电源模块，BMS等
