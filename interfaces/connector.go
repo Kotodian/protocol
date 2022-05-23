@@ -4,11 +4,16 @@ type KindConnectorChargingState int
 type KindConnectorState int
 
 const (
-	KindConnectorStateUnavailable KindConnectorState = 0 //不可用
-	KindConnectorStateAvailable   KindConnectorState = 1 //空闲可用
-	KindConnectorStateOccupied    KindConnectorState = 2 //占用
-	KindConnectorStateReserved    KindConnectorState = 3 //预约
-	KindConnectorStateFaulted     KindConnectorState = 4 //故障
+	KindConnectorStateUnavailable   KindConnectorState = 0 // 不可用
+	KindConnectorStateAvailable     KindConnectorState = 1 // 空闲可用
+	KindConnectorStateOccupied      KindConnectorState = 2 // 占用
+	KindConnectorStateReserved      KindConnectorState = 3 // 预约
+	KindConnectorStateFaulted       KindConnectorState = 4 // 故障
+	KindConnectorStatePreparing     KindConnectorState = 5 // 准备中
+	KindConnectorStateCharging      KindConnectorState = 6 // 充电中
+	KindConnectorStateSuspendedEV   KindConnectorState = 7 // 车端挂起，不输入电能
+	KindConnectorStateSuspendedEVSE KindConnectorState = 8 // 桩端挂起，不输出电能
+	KindConnectorStateFinishing     KindConnectorState = 9 // 结束中
 )
 const (
 	KindConnectorChargingStateIdle          KindConnectorChargingState = 0 //空闲
