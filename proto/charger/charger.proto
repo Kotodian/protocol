@@ -436,6 +436,7 @@ message TriggerMessageReq
 {
     MessageID request = 1;      //请求重发的消息代码
     string connectorId = 2;      //指定充电接口
+    string evseId = 3;
 }
 
 message TriggerMessageConf
