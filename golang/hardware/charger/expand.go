@@ -1,6 +1,7 @@
 package charger
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -108,4 +109,8 @@ func (x *TransactionReq) SetToken(token *IdToken) {
 
 func (x *TransactionReq) SetChargingProfile(chargingProfile *CurrentChargingProfile) {
 	x.Profile = chargingProfile
+}
+
+func (x *Tariff) ToString() string {
+	return fmt.Sprintf("sharp:%fWh valley:%fWh flat:%fWh peak:%fWh", x.GetSharp(), x.GetValley(), x.GetFlat(), x.GetPeak())
 }
