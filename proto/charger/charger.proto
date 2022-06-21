@@ -1334,6 +1334,7 @@ message NotifyReportReq
     bool tbc = 3; //是否还有没传完的报文
     int32 seq = 4; //传输序列，第一帧是0
     repeated ReportDataType reportData = 5; //上报的数据
+    int32 category = 6; //报告类型
 }
 
 message ReportDataType
