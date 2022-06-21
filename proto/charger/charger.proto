@@ -1360,6 +1360,12 @@ message VariableAttributeType{
     string type = 1; //变量类型
     string value = 2; //变量的值
     string mutability = 3; //变量权限
+    enum VariableAttributeTypeEnum
+    {
+        ReadOnly = 0;
+        ReadWrite = 1;
+    }
+    VariableAttributeTypeEnum variableMutability = 4; //变量权限
 }
 
 /**
