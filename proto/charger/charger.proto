@@ -1382,7 +1382,6 @@ message SetVariablesReq {
         VariableType variable = 4; //变量
     }
     repeated SetVariableData setVariableData = 1;//变量
-    int32 category = 2; //变量类别
 }
 
 /**
@@ -1391,6 +1390,7 @@ message SetVariablesReq {
  */
 message SetVariablesConf {
    SetVariablesResult status = 1; 
+   int32 category = 2; //变量类别
 }
 
 enum SetVariablesResult {
@@ -1670,7 +1670,6 @@ message GetReportConf {
 
 message GetVariablesReq {
     repeated GetVariablesData getVariablesData = 1;
-    int32 category = 2;
 }
 
 message GetVariablesData {
@@ -1681,6 +1680,7 @@ message GetVariablesData {
 
 message GetVariablesConf {
     repeated GetVariablesResult getVariablesResult = 1;
+    int32 category = 2;
 }
 
 message GetVariablesResult {
