@@ -371,7 +371,7 @@ message GetDiagnosticsReq
     int32 retries = 2;          //日志上传失败重试次数
     int32 retryInterval = 3;    //重试间隔时间，单位秒
     int64 startTime = 4;        //日志开始时间
-    int32 endTime = 5;          //日志结束时间
+    int64 endTime = 5;          //日志结束时间
 }
 
 /**
@@ -762,7 +762,7 @@ message StartTransactionReq
     ServiceMode serviceMode = 5;       //充电服务模式。按电量充电，按金额充电，按时间充电，自动充满等
     double meterStart = 6;              //充电开始时电表度数，分辨率0.01kwh
     int64 timestamp = 7;               //充电开始时间,时间戳
-    int32 reservationId = 8;          //预约ID
+    int64 reservationId = 8;          //预约ID
     string transactionId = 9;          //平台中心生成的订单号。此订单号是从“远程启动充电”请求消息获取的
     string pin = 10;                   //充电桩校验码。当充电桩离线时，可以通过在充电桩屏幕输入pin码结束充电
     uint64 tariffId = 11;              //计费模版ID。此订单将使用对应的计费模版计费
@@ -770,7 +770,7 @@ message StartTransactionReq
     string transparent = 13;           //透传字段，会在 confi报文里传回来 transparent
     uint32 soc = 14;                   //启动电量的SOC
     bool is_reserved = 15;             //是否预约中
-    int32 remoteStartId = 18;
+    int64 remoteStartId = 18;
     int32 created_at = 16;             //订单创建时间，用于解决部分协议在充电中不上报启动充电时间的bug（启动充电时间会用于协助寻找是否已存在的订单）
     ChargerStatus connectorChargingState = 19;
     bool offline = 20; // 是否是离线订单
@@ -783,7 +783,7 @@ message StartTransactionReq
     double power = 27;
     Tariff tariff = 28;
     CurrentChargingProfile profile = 29;
-    int32 intellectId = 30; // 智能充电id
+    int64 intellectId = 30; // 智能充电id
     int32 batteryTemp = 31;
 }
 
@@ -866,7 +866,7 @@ message StopTransactionReq
     bool is_disabled_time_start = 13;   // 是否禁用开始时间来找订单记录，如有的设备在启动通知报文中没有启动时间，这一项就要设置成true，如盛宏、优力特的设备
     uint32 soc = 14;                    // 停止的SOC
     bool calc_cost_by_backend = 15;     // 后台计费
-    int32 reservationId = 16;          //预约ID
+    int64 reservationId = 16;          //预约ID
     string connectorId = 17;
     double currentA = 18;
     double currentB = 19;
@@ -1319,7 +1319,7 @@ message Configuration {
  */
 message GetBaseReportReq
 {
-    int32 request_id = 1; //请求ID
+    int64 request_id = 1; //请求ID
     enum ReportBaseEnumType
     {
         ConfigurationInventory = 0;
@@ -1337,8 +1337,8 @@ message GetBaseReportReq
  */
 message NotifyReportReq
 {
-    int32 request_id = 1; //请求ID
-    int32 generate_at = 2; //生成时间
+    int64 request_id = 1; //请求ID
+    int64 generate_at = 2; //生成时间
     bool tbc = 3; //是否还有没传完的报文
     int32 seq = 4; //传输序列，第一帧是0
     repeated ReportDataType reportData = 5; //上报的数据
@@ -1423,7 +1423,7 @@ message GetLogReq {
         SecurityLog = 1; // Sent by the CSMS to the Charging Station to request that the Charging Station uploads the security log.
     }
     LogType logType = 1;
-    int32 request_id = 2; //请求ID
+    int64 request_id = 2; //请求ID
     int32 retries = 3;  //重试次数
     int32 retry_interval = 4; //重试间隔
     message LogParametersType {
@@ -1461,7 +1461,7 @@ message LogStatusNotificationReq {
         UploadFailure = 3;
     }
     UploadLogStatusEnumType status = 1; //状态
-    int32 request_id = 2;//请求id
+    int64 request_id = 2;//请求id
 }
 
 /**
@@ -1630,7 +1630,7 @@ message RemoteDiagnosisResp {
 }
 
 message ReserveStopTransactionReq {
-    int32 id = 1;
+    int64 id = 1;
     int64 evseId = 2;
     int64 stopTime = 3;
     string expiryDateTime = 4;
@@ -1656,7 +1656,7 @@ message DataTransferConf {
 }
 
 message CancelReserveStopTransactionReq {
-   int32 reservationId = 1;
+   int64 reservationId = 1;
 }
 
 message StatusNotificationReq {
@@ -1736,9 +1736,9 @@ message ChargingProfile {
 
 message ChargingSchedule {
     message PeriodType {
-        int32 from = 1;
+        int64 from = 1;
         int32 limit = 2;
-        int32 to = 3;
+        int64 to = 3;
     }
     ChargingRateUnit chargingRateUnit = 1;
     repeated PeriodType chargingSchedulePeriod = 2;
