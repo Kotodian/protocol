@@ -1248,7 +1248,8 @@ message WarningReq
  */
 message WarningConf
 {
-
+    int64 code = 1;
+    bool clean = 2;
 }
 
 /**
