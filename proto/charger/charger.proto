@@ -74,6 +74,7 @@ enum MessageID
     ID_InstallCertificateReq = 0x47;
     ID_ClearCacheReq = 0x48;
     ID_SetPriceSchemeReq = 0x49;
+    ID_SendQRCodeReq = 0x50;
 
     ID_BootNotificationConf = 0x81;              //启动通知.应答
     ID_HeartbeatConf = 0x82;                     //心跳.应答
@@ -120,6 +121,7 @@ enum MessageID
     ID_InstallCertificateConf = 0xC7;
     ID_ClearCacheConf = 0xC8;
     ID_SetPriceSchemeConf = 0xC9;
+    ID_SendQRCodeConf = 0xCA;
 
     ID_MessageError = 0xFF;                       //错误
 }
