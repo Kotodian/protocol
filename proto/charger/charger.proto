@@ -787,6 +787,8 @@ message StartTransactionReq
     CurrentChargingProfile profile = 29;
     int64 intellectId = 30; // 智能充电id
     int32 batteryTemp = 31;
+    int32 remainingTime = 32;
+    string vin = 33;
 }
 
 /**
@@ -881,6 +883,8 @@ message StopTransactionReq
     CurrentChargingProfile profile = 26;
     int32 seq = 27;
     int32 batteryTemp = 28;
+    int32 remainingTime = 29;
+    string vin = 30;
 }
 
 /**
@@ -1095,6 +1099,7 @@ message ChargingInfoReq
     int64 reservationId = 25;
     uint32 soc = 26;
     int32 batteryTemp = 27;
+    string vin = 28;
 }
 
 /**
@@ -1141,6 +1146,8 @@ message TransactionReq
     Tariff tariff = 39;
     CurrentChargingProfile profile = 40;
     int32 batteryTemp = 41;
+    int32 remainingTime = 42;
+    string vin = 43;
 }
 
 /**
