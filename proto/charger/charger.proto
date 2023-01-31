@@ -849,7 +849,7 @@ enum StopReason
     SR_ChargingRelayClosingError = 36; // 充电器关闭错误
     SR_InsulationDetectionError = 37; // 绝缘监测错误
     SR_PreChargeVoltageAndMessageFivePercentError = 38; // 预充电池电压和报文差5%错误
-    SR_PreCahrgeVoltageOverMaxVoltageError = 39; // 预充电压大于允许最大电压
+    SR_PreChargeVoltageOverMaxVoltageError = 39; // 预充电压大于允许最大电压
     SR_PreChargeVoltageUnderMinVoltageError = 40; // 预充电压小于允许最小电压
     SR_PreChargeAdapterVoltageError = 41; // 预充适配电压错误
     SR_StopCurrentOverFiveError = 42; // 停止充电电流大于5A
