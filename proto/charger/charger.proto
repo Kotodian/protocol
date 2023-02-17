@@ -891,6 +891,7 @@ enum StopReason
     SR_PowerBatteryConnectorFault = 78; // 动力蓄电池连接器故障
     SR_ChargeNotAllowedStatus = 79; // 充电不允许的状态
     SR_BMSOhterFault = 80; // BMS其他故障
+    SR_PriceSchemeException = 81; // 计费模板异常
 
 
     // 100以内的停止理由留给我们自己的固件扩展
