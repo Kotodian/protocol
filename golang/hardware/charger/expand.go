@@ -19,8 +19,12 @@ func (x *APDU) Action() string {
 	return action
 }
 
-func (x *Tariff) Sum() float64 {
-	return x.GetSharp() + x.GetValley() + x.GetFlat() + x.GetPeak()
+func (x *Tariff) Sum(multiplier ...int) float64 {
+	sum := x.GetSharp() + x.GetValley() + x.GetFlat() + x.GetPeak()
+	if len(multiplier) == 0 {
+		return sum
+	}
+	return sum * float64(multiplier[0])
 }
 
 type ChargingExpand interface {
