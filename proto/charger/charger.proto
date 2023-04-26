@@ -1994,6 +1994,7 @@ message Tariff {
    double flatMoney = 10; // 平费用
    double valley = 11; // 谷
    double valleyMoney = 12; // 谷费用
+   double totalElec = 13; // 总电量
 
 }
 
